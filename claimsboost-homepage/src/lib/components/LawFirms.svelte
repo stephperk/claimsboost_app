@@ -126,12 +126,12 @@
 
 		<div class="see-more">
 			<p>Looking for more options? Discover additional law firms in your area.</p>
-			<button class="see-more-btn">
+			<a href="/search" class="see-more-btn">
 				See more in my area
 				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 					<path d="M5 12h14M12 5l7 7-7 7"/>
 				</svg>
-			</button>
+			</a>
 		</div>
 	</div>
 </section>
