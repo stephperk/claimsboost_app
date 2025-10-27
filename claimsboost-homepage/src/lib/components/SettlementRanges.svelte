@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	import lottie from 'lottie-web';
 
 	let lottieContainers = {};
@@ -136,7 +137,7 @@
 
 		<div class="cta-section">
 			<p>Can't find your injury type? Get a personalized estimate for any injury.</p>
-			<button class="cta-button">
+			<button class="cta-button" onclick={() => goto('/get-started')}>
 				Get my free estimate
 				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 					<path d="M5 12h14M12 5l7 7-7 7"/>
@@ -188,18 +189,18 @@
 
 	.range-card {
 		background: white;
-		border: 2px solid #e0e0e0;
-		border-radius: 12px;
+		border: none;
+		border-radius: 16px;
 		padding: 20px;
 		text-align: center;
-		box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+		box-shadow: 0 2px 8px rgba(0,0,0,0.18);
 		transition: transform 0.2s, box-shadow 0.2s;
 		cursor: pointer;
 	}
 
 	.range-card:hover {
 		transform: translateY(-2px);
-		box-shadow: 0 4px 16px rgba(0,0,0,0.12), 0 0 20px rgba(255, 255, 255, 0.8);
+		box-shadow: 0 4px 16px rgba(0,0,0,0.22);
 	}
 
 	.range-icon {

@@ -176,12 +176,12 @@
 		text-decoration: none;
 		display: flex;
 		align-items: center;
-		margin-left: -40px;
 	}
 
 	.logo-img {
-		height: 300px;
+		max-height: 49px;
 		width: auto;
+		object-fit: contain;
 	}
 
 	.desktop-nav {

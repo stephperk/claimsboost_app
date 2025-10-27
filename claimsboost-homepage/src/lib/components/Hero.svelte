@@ -1,4 +1,6 @@
 <script>
+	import { goto } from '$app/navigation';
+
 	let searchQuery = $state('');
 
 	const suggestions = [
@@ -11,7 +13,7 @@
 	];
 
 	function handleSearch() {
-		console.log('Searching for:', searchQuery);
+		goto('/get-started');
 	}
 
 	function setSuggestion(suggestion) {
@@ -166,23 +168,24 @@
 		gap: 0;
 		max-width: 600px;
 		margin: 0 auto;
-		box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.15);
-		border-radius: 8px;
+		box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+		border-radius: 16px;
+		overflow: hidden;
 	}
 
 	.search-input {
 		flex: 1;
 		padding: 16px 20px;
-		border: 2px solid #e5e5e5;
-		border-radius: 8px 8px 0 0;
-		border-bottom: none;
+		border: none;
+		border-radius: 16px 16px 0 0;
+		border-bottom: 1px solid #e5e5e5;
 		font-size: 16px;
 		transition: border-color 0.2s;
 	}
 
 	.search-input:focus {
 		outline: none;
-		border-color: #FF7B00;
+		box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
 	}
 
 	.search-button {
@@ -190,7 +193,7 @@
 		background: linear-gradient(135deg, #FF7B00 0%, #D85A00 100%);
 		color: white;
 		border: none;
-		border-radius: 0 0 8px 8px;
+		border-radius: 0 0 16px 16px;
 		font-size: 16px;
 		font-weight: 600;
 		cursor: pointer;
@@ -206,6 +209,7 @@
 	.search-button:hover {
 		background: linear-gradient(135deg, #FF9500 0%, #E06500 100%);
 		box-shadow: 0 6px 25px rgba(255, 123, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.15);
+		transform: translateY(-2px);
 	}
 
 	.suggestions {
@@ -373,12 +377,13 @@
 		}
 
 		.search-input {
-			border-radius: 8px 0 0 8px;
+			border-radius: 16px 0 0 16px;
 			border-right: none;
+			border-bottom: none;
 		}
 
 		.search-button {
-			border-radius: 0 8px 8px 0;
+			border-radius: 0 16px 16px 0;
 		}
 
 		.suggestions {

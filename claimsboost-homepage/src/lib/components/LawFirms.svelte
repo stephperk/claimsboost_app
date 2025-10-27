@@ -166,12 +166,13 @@
 		text-align: left;
 		color: #666;
 		font-size: 16px;
-		margin-bottom: 40px;
+		margin-bottom: 20px;
 	}
 
 	.carousel-container {
 		position: relative;
-		margin-bottom: 0;
+		margin: 0px;
+		padding: 0px;
 	}
 
 	.firms-carousel {
@@ -179,7 +180,8 @@
 		gap: 20px;
 		overflow-x: auto;
 		scroll-snap-type: x mandatory;
-		padding: 4px;
+		padding: 20px 10px;
+		margin: 0px;
 		scrollbar-width: none;
 		-ms-overflow-style: none;
 	}
@@ -190,20 +192,20 @@
 
 	.firm-card {
 		background: white;
-		border: 2px solid #e0e0e0;
-		border-radius: 12px;
+		border: none;
+		border-radius: 16px;
 		padding: 20px;
-		width: calc(100vw - 80px);
+		width: calc(100vw - 100px);
 		flex: 0 0 auto;
-		scroll-snap-align: start;
-		box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+		scroll-snap-align: center;
+		box-shadow: 0 2px 8px rgba(0,0,0,0.18);
 		transition: transform 0.2s, box-shadow 0.2s;
 		cursor: pointer;
 	}
 
 	.firm-card:hover {
 		transform: translateY(-2px);
-		box-shadow: 0 4px 16px rgba(0,0,0,0.12), 0 0 20px rgba(255, 255, 255, 0.8);
+		box-shadow: 0 4px 16px rgba(0,0,0,0.22);
 	}
 
 	.firm-header {

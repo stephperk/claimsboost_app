@@ -667,8 +667,8 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0;
-		box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.15);
-		border-radius: 8px;
+		box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+		border-radius: 16px;
 		overflow: hidden;
 	}
 
@@ -691,7 +691,7 @@
 	.search-input {
 		width: 100%;
 		padding: 16px 20px 16px 48px;
-		border: 2px solid #e5e5e5;
+		border: none;
 		font-size: 16px;
 		transition: border-color 0.2s;
 		border-radius: 0;
@@ -701,23 +701,23 @@
 
 	.query-input {
 		border-bottom: 1px solid #e5e5e5;
-		border-radius: 8px 8px 0 0;
+		border-radius: 16px 16px 0 0;
 	}
 
 	.location-input {
 		border-top: 1px solid #e5e5e5;
-		border-radius: 0 0 8px 8px;
+		border-radius: 0;
 	}
 
 	.search-input:focus {
 		outline: none;
-		border-color: #FF7B00;
 		z-index: 2;
+		box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
 	}
 
 	.search-button {
 		padding: 16px 32px;
-		border-radius: 0 0 8px 8px;
+		border-radius: 0 0 16px 16px;
 		background: linear-gradient(135deg, #FF7B00 0%, #D85A00 100%);
 		color: white;
 		border: none;
@@ -730,12 +730,12 @@
 		justify-content: center;
 		gap: 8px;
 		white-space: nowrap;
-		box-shadow: 0 4px 15px rgba(255, 123, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
+		box-shadow: 0 4px 15px rgba(255, 123, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
 
 	.search-button:hover {
 		background: linear-gradient(135deg, #FF9500 0%, #E06500 100%);
-		box-shadow: 0 6px 25px rgba(255, 123, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.15);
+		box-shadow: 0 6px 25px rgba(255, 123, 0, 0.7), 0 3px 6px rgba(0, 0, 0, 0.15);
 	}
 
 	/* Minimal Filter/Sort Bar */
@@ -762,8 +762,8 @@
 	.chip {
 		padding: 8px 16px;
 		background: white;
-		border: 2px solid #e0e0e0;
-		border-radius: 8px;
+		border: none;
+		border-radius: 16px;
 		font-size: 14px;
 		font-weight: 500;
 		cursor: pointer;
@@ -772,6 +772,7 @@
 		display: flex;
 		align-items: center;
 		gap: 8px;
+		box-shadow: 0 2px 8px rgba(0,0,0,0.18);
 	}
 
 	.chip svg {
@@ -780,16 +781,14 @@
 	}
 
 	.chip:hover {
-		border-color: #60A5FA;
 		color: #60A5FA;
+		box-shadow: 0 2px 8px rgba(96, 165, 250, 0.3);
 	}
 
 	.chip.active {
 		background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
 		color: white;
-		border: none;
-		padding: 10px 18px; /* Compensate for removed 2px border */
-		border-radius: 8px;
+		border-radius: 16px;
 		box-shadow: 0 4px 15px rgba(96, 165, 250, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
 
@@ -840,8 +839,8 @@
 
 	.sort-dropdown {
 		padding: 8px 16px;
-		border: 2px solid #e0e0e0;
-		border-radius: 8px;
+		border: none;
+		border-radius: 16px;
 		font-size: 14px;
 		font-weight: 500;
 		cursor: pointer;
@@ -853,11 +852,12 @@
 		display: flex;
 		align-items: center;
 		gap: 8px;
+		box-shadow: 0 2px 8px rgba(0,0,0,0.18);
 	}
 
 	.sort-dropdown:hover {
-		border-color: #60A5FA;
 		color: #60A5FA;
+		box-shadow: 0 2px 8px rgba(96, 165, 250, 0.3);
 	}
 
 	.sort-dropdown svg {
@@ -1022,10 +1022,9 @@
 
 	.firm-card {
 		background: white;
-		border: 2px solid #e0e0e0;
-		border-radius: 12px;
-		padding: 24px 24px 16px 24px;
-		box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+		border-radius: 16px;
+		padding: 24px;
+		box-shadow: 0 2px 8px rgba(0,0,0,0.18);
 		transition: all 0.3s;
 		position: relative;
 		min-width: 0;
@@ -1035,7 +1034,7 @@
 
 	.firm-card:hover {
 		transform: translateY(-2px);
-		box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+		box-shadow: 0 4px 16px rgba(0,0,0,0.22);
 	}
 
 	.firm-header {
@@ -1370,25 +1369,22 @@
 		}
 
 		.query-input {
-			border-bottom: 2px solid #e5e5e5;
 			border-right: 1px solid #e5e5e5;
-			border-radius: 8px 0 0 8px;
+			border-radius: 16px 0 0 16px;
+			border-bottom: 0;
 		}
 
 		.location-input {
-			border-top: 2px solid #e5e5e5;
 			border-left: 1px solid #e5e5e5;
 			border-radius: 0;
-			border-right: none;
-		}
-
-		.location-input:focus {
-			border-right: 2px solid #FF7B00;
+			border-top: 0;
 		}
 
 		.search-button {
-			border-radius: 0 8px 8px 0;
+			border-radius: 0 16px 16px 0;
 			flex-shrink: 0;
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
 		}
 
 		.filter-bar {
