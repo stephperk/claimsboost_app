@@ -1,5 +1,7 @@
 <script>
 	import { goto } from '$app/navigation';
+	import { location } from '$lib/stores/locationStore.js';
+	import SettlementCard from '$lib/components/SettlementCard.svelte';
 
 	const settlements = [
 		{
@@ -51,43 +53,22 @@
 			similarCases: 'Similar cases in your area: 23'
 		}
 	];
-
-	function formatAmount(amount) {
-		return new Intl.NumberFormat('en-US', {
-			style: 'currency',
-			currency: 'USD',
-			minimumFractionDigits: 0,
-			maximumFractionDigits: 0
-		}).format(amount);
-	}
 </script>
 
 <section class="settlements">
 	<div class="container">
-		<h2>Recent settlements in <span class="location-highlight">Raleigh, NC</span></h2>
+		<h2>
+			{#if $location.hasLocation}
+				Recent settlements near <span class="location-highlight">{$location.city}, {$location.state}</span>
+			{:else}
+				Recent settlements
+			{/if}
+		</h2>
 		<p class="subtitle">Real settlement amounts from personal injury cases in your area.</p>
 
 		<div class="settlements-grid">
 			{#each settlements as settlement}
-				<div class="settlement-card">
-					<div class="settlement-header">
-						<h3>{settlement.type}</h3>
-						<span class="amount">{formatAmount(settlement.amount)}</span>
-					</div>
-					<p class="settlement-description">
-						<span class="ai-label">
-							<img src="/ai_icon_star_brand.png" alt="AI" class="ai-icon" />
-							AI Summary:
-						</span> {settlement.description}
-					</p>
-					<div class="settlement-footer">
-						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-							<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-							<circle cx="12" cy="10" r="3"/>
-						</svg>
-						<span>23 similar cases in {settlement.location}</span>
-					</div>
-				</div>
+				<SettlementCard {settlement} matchingCriteria={[]} />
 			{/each}
 		</div>
 
@@ -141,82 +122,6 @@
 		grid-template-columns: 1fr;
 		gap: 16px;
 		margin-bottom: 32px;
-	}
-
-	.settlement-card {
-		background: white;
-		border: none;
-		border-radius: 16px;
-		padding: 20px;
-		box-shadow: 0 2px 8px rgba(0,0,0,0.18);
-		transition: transform 0.2s, box-shadow 0.2s;
-		cursor: pointer;
-	}
-
-	.settlement-card:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 4px 16px rgba(0,0,0,0.22);
-	}
-
-	.settlement-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 12px;
-	}
-
-	.settlement-header h3 {
-		font-size: 18px;
-		font-weight: 600;
-		color: #1a1a1a;
-		margin: 0;
-		line-height: 1.2;
-	}
-
-	.amount {
-		font-size: 24px;
-		font-weight: 700;
-		color: #000000;
-		line-height: 1.2;
-	}
-
-	.settlement-description {
-		color: #666;
-		font-size: 14px;
-		line-height: 1.6;
-		margin-bottom: 12px;
-	}
-
-	.ai-label {
-		font-weight: 600;
-		color: #1a1a1a;
-	}
-
-	.ai-icon {
-		width: 16px;
-		height: 16px;
-		display: inline-block;
-		vertical-align: middle;
-		margin-right: 4px;
-		margin-top: -3px;
-	}
-
-	.settlement-footer {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		padding-top: 12px;
-		border-top: 1px solid #f0f0f0;
-		font-size: 13px;
-		color: #666;
-	}
-
-	.settlement-footer svg {
-		flex-shrink: 0;
-	}
-
-	.settlement-footer span {
-		line-height: 1;
 	}
 
 	.cta-section {

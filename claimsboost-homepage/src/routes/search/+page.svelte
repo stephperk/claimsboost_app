@@ -1,14 +1,32 @@
 <script>
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
+	import SearchBarV2 from '$lib/components/SearchBarV2.svelte';
 	import { onMount } from 'svelte';
+	import { location } from '$lib/stores/locationStore.js';
+	import { searchLocation } from '$lib/stores/searchLocationStore.js';
 
 	let sortBy = $state('relevance');
 	let showFilters = $state(false);
 
 	// Search states
 	let searchQuery = $state('');
-	let location = $state('Raleigh, NC');
+	let locationValue = $state('');
+
+	// Set location input from search location store or fallback to user location
+	// Track if user has manually cleared the location
+	let hasManuallyCleared = $state(false);
+
+	$effect(() => {
+		if ($searchLocation.city && $searchLocation.state) {
+			// Use search location if exists
+			locationValue = $searchLocation.zipCode || `${$searchLocation.city}, ${$searchLocation.state}`;
+			hasManuallyCleared = false;
+		} else if (!hasManuallyCleared && $location.city && $location.state && !locationValue) {
+			// Only fallback to user location if not manually cleared and no value set
+			locationValue = `${$location.city}, ${$location.state}`;
+		}
+	});
 
 	// Filter states
 	let selectedPracticeAreas = $state([]);
@@ -36,20 +54,8 @@
 		}
 	}
 
-	// Fetch user location on mount
+	// Initialize on mount
 	onMount(async () => {
-		try {
-			// Using ipapi.co for IP geolocation (free tier available)
-			const response = await fetch('https://ipapi.co/json/');
-			const data = await response.json();
-			if (data.city && data.region_code) {
-				location = `${data.city}, ${data.region_code}`;
-			}
-		} catch (error) {
-			console.error('Failed to fetch location:', error);
-			// Keep default location
-		}
-
 		// Add click outside listener
 		document.addEventListener('click', handleClickOutside);
 
@@ -68,10 +74,17 @@
 		};
 	});
 
-	function handleSearch(e) {
-		e.preventDefault();
-		console.log('Searching for:', searchQuery, 'in', location);
+	function handleSearch(event) {
+		const { practiceArea, location: searchLocationText } = event.detail;
+		console.log('Searching for:', practiceArea, 'in', searchLocationText);
 		// In production, this would trigger an API call to search for lawyers
+		// Update local state
+		searchQuery = practiceArea;
+	}
+
+	function handleLocationClear() {
+		hasManuallyCleared = true;
+		locationValue = '';
 	}
 
 	const practiceAreaOptions = [
@@ -264,8 +277,8 @@
 </script>
 
 <svelte:head>
-	<title>Find Personal Injury Lawyers in Raleigh, NC | ClaimsBoost</title>
-	<meta name="description" content="Browse top-rated personal injury lawyers in Raleigh, NC. Compare reviews, practice areas, and experience to find the right attorney for your case." />
+	<title>Find Personal Injury Lawyers in {$searchLocation.city || $location.city || 'Your Area'}, {$searchLocation.state || $location.state || 'USA'} | ClaimsBoost</title>
+	<meta name="description" content="Browse top-rated personal injury lawyers in {$searchLocation.city || $location.city || 'your area'}, {$searchLocation.state || $location.state || 'USA'}. Compare reviews, practice areas, and experience to find the right attorney for your case." />
 </svelte:head>
 
 <div class="page">
@@ -275,42 +288,22 @@
 		<div class="container">
 			<!-- Page Header -->
 			<div class="page-header">
-				<h1>Personal Injury Lawyers in <span class="location-highlight">Raleigh, NC</span></h1>
+				<h1>Personal injury law firms {#if $searchLocation.city || $location.city}near <span class="location-highlight">{$searchLocation.city || $location.city || 'Raleigh'}, {$searchLocation.state || $location.state || 'NC'}</span>{/if}</h1>
 				<p class="subtitle">{lawFirms.length} law firms ready to help with your case</p>
 			</div>
 
-			<!-- Search Bar -->
-			<form class="search-form" onsubmit={handleSearch}>
-				<div class="search-wrapper">
-					<div class="search-input-container">
-						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
-							<circle cx="11" cy="11" r="8"/>
-							<path d="m21 21-4.35-4.35"/>
-						</svg>
-						<input
-							type="text"
-							bind:value={searchQuery}
-							placeholder="What type of lawyer do you need?"
-							class="search-input query-input"
-						/>
-					</div>
-					<div class="search-input-container location-container">
-						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="location-icon">
-							<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-							<circle cx="12" cy="10" r="3"/>
-						</svg>
-						<input
-							type="text"
-							bind:value={location}
-							placeholder="City, State"
-							class="search-input location-input"
-						/>
-					</div>
-					<button type="submit" class="search-button">
-						Search
-					</button>
-				</div>
-			</form>
+			<!-- Search Bar V2 -->
+			<div class="search-form">
+				<SearchBarV2
+					bind:practiceAreaValue={searchQuery}
+					bind:locationValue={locationValue}
+					practiceAreaPlaceholder="How were you injured?"
+					locationPlaceholder="City, State or ZIP"
+					buttonText="Search"
+					on:search={handleSearch}
+					on:clear={handleLocationClear}
+				/>
+			</div>
 
 			<!-- Minimal Filter/Sort Bar -->
 			<div class="filter-sort-bar">
@@ -494,7 +487,19 @@
 
 			<!-- Results Grid -->
 			<div class="results-grid">
-				{#each lawFirms as firm}
+				{#each lawFirms as firm, index}
+					{#if index === 2}
+						<!-- CTA Section after first 2 cards -->
+						<div class="cta-between-results">
+							<h3>Accidents are stressful. Getting legal help shouldn't be.</h3>
+							<a href="/get-started" class="cta-button">
+								Get free consultation
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<path d="M5 12h14M12 5l7 7-7 7"/>
+								</svg>
+							</a>
+						</div>
+					{/if}
 					<article class="firm-card">
 						<div class="firm-header">
 							<div class="firm-avatar">
@@ -603,9 +608,12 @@
 						</div>
 
 						<div class="button-wrapper">
-							<button class="connect-btn">
-								Connect
-							</button>
+							<a class="connect-link">
+								View profile
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<path d="M5 12h14M12 5l7 7-7 7"/>
+								</svg>
+							</a>
 						</div>
 					</article>
 				{/each}
@@ -640,7 +648,7 @@
 	}
 
 	h1 {
-		font-size: 32px;
+		font-size: 30px;
 		font-weight: 700;
 		margin-bottom: 8px;
 		color: #1a1a1a;
@@ -669,7 +677,7 @@
 		gap: 0;
 		box-shadow: 0 2px 8px rgba(0,0,0,0.18);
 		border-radius: 16px;
-		overflow: hidden;
+		overflow: visible;
 	}
 
 	.search-input-container {
@@ -730,12 +738,12 @@
 		justify-content: center;
 		gap: 8px;
 		white-space: nowrap;
-		box-shadow: 0 4px 15px rgba(255, 123, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.1);
+		box-shadow: 0 4px 15px rgba(255, 123, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
 
 	.search-button:hover {
 		background: linear-gradient(135deg, #FF9500 0%, #E06500 100%);
-		box-shadow: 0 6px 25px rgba(255, 123, 0, 0.7), 0 3px 6px rgba(0, 0, 0, 0.15);
+		box-shadow: 0 6px 25px rgba(255, 123, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.15);
 	}
 
 	/* Minimal Filter/Sort Bar */
@@ -1020,10 +1028,59 @@
 		gap: 20px;
 	}
 
+	.cta-between-results {
+		grid-column: 1 / -1;
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 20px;
+		padding: 32px 0;
+	}
+
+	.cta-between-results h3 {
+		font-size: 18px;
+		font-weight: 400;
+		color: #666;
+		margin: 0;
+	}
+
+	.cta-button {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 16px 32px;
+		background: linear-gradient(135deg, #FF7B00 0%, #D85A00 100%);
+		color: white;
+		border: none;
+		border-radius: 8px;
+		font-size: 16px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		text-decoration: none;
+		box-shadow: 0 4px 15px rgba(255, 123, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	.cta-button:hover {
+		background: linear-gradient(135deg, #FF9500 0%, #E06500 100%);
+		box-shadow: 0 6px 25px rgba(255, 123, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.15);
+		transform: translateY(-2px);
+	}
+
+	.cta-button svg {
+		transition: transform 0.2s;
+	}
+
+	.cta-button:hover svg {
+		transform: translateX(3px);
+	}
+
 	.firm-card {
 		background: white;
 		border-radius: 16px;
 		padding: 24px;
+		padding-bottom: 80px;
 		box-shadow: 0 2px 8px rgba(0,0,0,0.18);
 		transition: all 0.3s;
 		position: relative;
@@ -1261,38 +1318,34 @@
 	}
 
 	.button-wrapper {
-		display: flex;
-		justify-content: center;
-		margin-top: 14px;
+		position: absolute;
+		bottom: 24px;
+		right: 24px;
 	}
 
-	.connect-btn {
-		padding: 12px 48px;
-		background: linear-gradient(135deg, #FF7B00 0%, #D85A00 100%);
-		color: white;
-		border: none;
-		border-radius: 8px;
-		font-size: 15px;
+	.connect-link {
+		color: #1a1a1a;
+		font-size: 16px;
 		font-weight: 600;
 		cursor: pointer;
-		transition: all 0.3s ease;
+		transition: all 0.2s ease;
 		display: flex;
 		align-items: center;
-		justify-content: center;
-		box-shadow: 0 4px 15px rgba(255, 123, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
+		gap: 8px;
+		text-decoration: none;
 	}
 
-	.connect-btn:hover {
-		background: linear-gradient(135deg, #FF9500 0%, #E06500 100%);
-		box-shadow: 0 6px 25px rgba(255, 123, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.15);
-		transform: translateY(-2px);
+	.connect-link:hover {
+		color: #FF7B00;
 	}
 
-	.connect-btn svg {
+	.connect-link svg {
 		transition: transform 0.2s;
+		width: 20px;
+		height: 20px;
 	}
 
-	.connect-btn:hover svg {
+	.connect-link:hover svg {
 		transform: translateX(3px);
 	}
 
@@ -1353,7 +1406,7 @@
 
 	@media (min-width: 768px) {
 		h1 {
-			font-size: 40px;
+			font-size: 30px;
 		}
 
 		.search-wrapper {

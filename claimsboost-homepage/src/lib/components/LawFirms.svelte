@@ -1,4 +1,6 @@
 <script>
+	import { location } from '$lib/stores/locationStore.js';
+
 	let scrollContainer;
 	let currentIndex = $state(0);
 
@@ -71,11 +73,17 @@
 
 <section class="law-firms">
 	<div class="container">
-		<h2>Top-Rated Law Firms in <span class="location-highlight">Raleigh, NC</span></h2>
+		<h2>
+			{#if $location.hasLocation}
+				Top-rated law firms near <span class="location-highlight">{$location.city}, {$location.state}</span>
+			{:else}
+				Top-rated law firms
+			{/if}
+		</h2>
 		<p class="subtitle">Trusted personal injury law firms with proven track records and satisfied clients.</p>
 
 		<div class="carousel-container">
-			<button class="carousel-button carousel-button-left" onclick={scrollLeft} disabled={currentIndex === 0}>
+			<button class="carousel-button carousel-button-left" onclick={scrollLeft} disabled={currentIndex === 0} aria-label="Previous law firm">
 				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 					<path d="M15 18l-6-6 6-6"/>
 				</svg>
@@ -117,7 +125,7 @@
 				{/each}
 			</div>
 
-			<button class="carousel-button carousel-button-right" onclick={scrollRight} disabled={currentIndex >= firms.length - 1}>
+			<button class="carousel-button carousel-button-right" onclick={scrollRight} disabled={currentIndex >= firms.length - 1} aria-label="Next law firm">
 				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 					<path d="M9 18l6-6-6-6"/>
 				</svg>
@@ -376,6 +384,8 @@
 		align-items: center;
 		gap: 8px;
 		box-shadow: 0 4px 15px rgba(255, 123, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
+		text-decoration: none;
+		line-height: 1.5;
 	}
 
 	.see-more-btn:hover {

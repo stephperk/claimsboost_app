@@ -1,17 +1,76 @@
 <script>
+	import { goto } from '$app/navigation';
+	import { searchLocation } from '$lib/stores/searchLocationStore.js';
+
 	let menuOpen = $state(false);
 	let locationDropdownOpen = $state(false);
 	let practiceAreaDropdownOpen = $state(false);
 
-	const states = [
-		'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
-		'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas',
-		'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi',
-		'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York',
-		'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina',
-		'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia',
-		'Wisconsin', 'Wyoming'
+	const popularCities = [
+		{ name: 'New York', state: 'NY' },
+		{ name: 'Los Angeles', state: 'CA' },
+		{ name: 'Chicago', state: 'IL' },
+		{ name: 'Houston', state: 'TX' },
+		{ name: 'Phoenix', state: 'AZ' },
+		{ name: 'Philadelphia', state: 'PA' },
+		{ name: 'San Antonio', state: 'TX' },
+		{ name: 'San Diego', state: 'CA' },
+		{ name: 'Dallas', state: 'TX' },
+		{ name: 'San Jose', state: 'CA' },
+		{ name: 'Austin', state: 'TX' },
+		{ name: 'Jacksonville', state: 'FL' },
+		{ name: 'Fort Worth', state: 'TX' },
+		{ name: 'Columbus', state: 'OH' },
+		{ name: 'Charlotte', state: 'NC' },
+		{ name: 'San Francisco', state: 'CA' },
+		{ name: 'Indianapolis', state: 'IN' },
+		{ name: 'Seattle', state: 'WA' },
+		{ name: 'Denver', state: 'CO' },
+		{ name: 'Washington', state: 'DC' },
+		{ name: 'Boston', state: 'MA' },
+		{ name: 'El Paso', state: 'TX' },
+		{ name: 'Nashville', state: 'TN' },
+		{ name: 'Detroit', state: 'MI' },
+		{ name: 'Oklahoma City', state: 'OK' },
+		{ name: 'Portland', state: 'OR' },
+		{ name: 'Las Vegas', state: 'NV' },
+		{ name: 'Memphis', state: 'TN' },
+		{ name: 'Louisville', state: 'KY' },
+		{ name: 'Baltimore', state: 'MD' },
+		{ name: 'Milwaukee', state: 'WI' },
+		{ name: 'Albuquerque', state: 'NM' },
+		{ name: 'Tucson', state: 'AZ' },
+		{ name: 'Fresno', state: 'CA' },
+		{ name: 'Mesa', state: 'AZ' },
+		{ name: 'Sacramento', state: 'CA' },
+		{ name: 'Atlanta', state: 'GA' },
+		{ name: 'Kansas City', state: 'MO' },
+		{ name: 'Colorado Springs', state: 'CO' },
+		{ name: 'Raleigh', state: 'NC' },
+		{ name: 'Miami', state: 'FL' },
+		{ name: 'Long Beach', state: 'CA' },
+		{ name: 'Virginia Beach', state: 'VA' },
+		{ name: 'Omaha', state: 'NE' },
+		{ name: 'Oakland', state: 'CA' },
+		{ name: 'Minneapolis', state: 'MN' },
+		{ name: 'Tulsa', state: 'OK' },
+		{ name: 'Tampa', state: 'FL' },
+		{ name: 'Arlington', state: 'TX' },
+		{ name: 'New Orleans', state: 'LA' }
 	];
+
+	function navigateToCity(city) {
+		searchLocation.setSearchLocation({
+			city: city.name,
+			state: city.state,
+			latitude: null,
+			longitude: null,
+			zipCode: null,
+			formatted: `${city.name}, ${city.state}`
+		});
+		locationDropdownOpen = false;
+		goto('/search');
+	}
 
 	const practiceAreas = [
 		'Auto Accidents',
@@ -47,6 +106,7 @@
 			<nav class="desktop-nav">
 				<div
 					class="nav-dropdown"
+					role="group"
 					onmouseenter={() => locationDropdownOpen = true}
 					onmouseleave={() => locationDropdownOpen = false}
 				>
@@ -58,12 +118,12 @@
 					</a>
 					{#if locationDropdownOpen}
 						<div class="dropdown-menu">
-							<div class="dropdown-header">Search Law Firms by State</div>
+							<div class="dropdown-header">Search Law Firms by City</div>
 							<div class="states-grid">
-								{#each states as state}
-									<a href="/law-firms/{state.toLowerCase().replace(' ', '-')}" class="state-link">
-										{state}
-									</a>
+								{#each popularCities as city}
+									<button type="button" class="city-link" onclick={() => navigateToCity(city)}>
+										{city.name}, {city.state}
+									</button>
 								{/each}
 							</div>
 						</div>
@@ -71,6 +131,7 @@
 				</div>
 				<div
 					class="nav-dropdown"
+					role="group"
 					onmouseenter={() => practiceAreaDropdownOpen = true}
 					onmouseleave={() => practiceAreaDropdownOpen = false}
 				>
@@ -245,7 +306,8 @@
 
 	.states-grid {
 		display: grid;
-		grid-template-columns: repeat(4, 1fr);
+		grid-template-rows: repeat(13, auto);
+		grid-auto-flow: column;
 		gap: 4px 16px;
 	}
 
@@ -255,10 +317,33 @@
 		gap: 4px 20px;
 	}
 
-	.state-link {
+	.city-link {
 		color: #666;
 		text-decoration: none;
-		font-size: 14px;
+		font-size: 16px;
+		font-weight: 500;
+		padding: 6px 10px;
+		border-radius: 6px;
+		transition: all 0.2s;
+		display: block;
+		white-space: nowrap;
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		text-align: left;
+		width: 100%;
+		font-family: inherit;
+	}
+
+	.city-link:hover {
+		background: #f8f9fa;
+		color: #FF7B00;
+	}
+
+	.dropdown-menu .state-link {
+		color: #666;
+		text-decoration: none;
+		font-size: 16px;
 		font-weight: 500;
 		padding: 6px 10px;
 		border-radius: 6px;
@@ -267,7 +352,7 @@
 		white-space: nowrap;
 	}
 
-	.state-link:hover {
+	.dropdown-menu .state-link:hover {
 		background: #f8f9fa;
 		color: #FF7B00;
 	}

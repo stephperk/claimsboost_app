@@ -1,5 +1,6 @@
 <script>
 	import { goto } from '$app/navigation';
+	import SearchBarV2 from './SearchBarV2.svelte';
 
 	let searchQuery = $state('');
 
@@ -31,22 +32,15 @@
 				</h1>
 				<p class="subheadline">Start your claim today with a <strong>free settlement estimate</strong>.</p>
 
-				<form class="search-form" onsubmit={(e) => { e.preventDefault(); handleSearch(); }}>
-					<div class="search-wrapper">
-						<input
-							type="text"
-							bind:value={searchQuery}
-							placeholder="I was rear-ended"
-							class="search-input"
-						/>
-						<button type="submit" class="search-button">
-							Get Free Estimate
-							<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-								<path d="M5 12h14M12 5l7 7-7 7"/>
-							</svg>
-						</button>
-					</div>
-				</form>
+				<div class="search-form">
+					<SearchBarV2
+						bind:practiceAreaValue={searchQuery}
+						practiceAreaPlaceholder="I was rear-ended"
+						buttonText="Get Free Estimate"
+						showLocationField={false}
+						on:search={handleSearch}
+					/>
+				</div>
 
 				<div class="suggestions">
 					<span class="suggestions-label">Suggestions:</span>
@@ -138,7 +132,7 @@
 	}
 
 	h1 {
-		font-size: 32px;
+		font-size: 30px;
 		font-weight: 700;
 		line-height: 1.2;
 		color: #1a1a1a;
@@ -160,56 +154,9 @@
 
 	.search-form {
 		margin-bottom: 40px;
-	}
-
-	.search-wrapper {
-		display: flex;
-		flex-direction: column;
-		gap: 0;
 		max-width: 600px;
-		margin: 0 auto;
-		box-shadow: 0 2px 8px rgba(0,0,0,0.18);
-		border-radius: 16px;
-		overflow: hidden;
-	}
-
-	.search-input {
-		flex: 1;
-		padding: 16px 20px;
-		border: none;
-		border-radius: 16px 16px 0 0;
-		border-bottom: 1px solid #e5e5e5;
-		font-size: 16px;
-		transition: border-color 0.2s;
-	}
-
-	.search-input:focus {
-		outline: none;
-		box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
-	}
-
-	.search-button {
-		padding: 16px 32px;
-		background: linear-gradient(135deg, #FF7B00 0%, #D85A00 100%);
-		color: white;
-		border: none;
-		border-radius: 0 0 16px 16px;
-		font-size: 16px;
-		font-weight: 600;
-		cursor: pointer;
-		transition: all 0.3s ease;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 8px;
-		white-space: nowrap;
-		box-shadow: 0 4px 15px rgba(255, 123, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
-	}
-
-	.search-button:hover {
-		background: linear-gradient(135deg, #FF9500 0%, #E06500 100%);
-		box-shadow: 0 6px 25px rgba(255, 123, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.15);
-		transform: translateY(-2px);
+		margin-left: auto;
+		margin-right: auto;
 	}
 
 	.suggestions {
@@ -367,23 +314,11 @@
 		}
 
 		h1 {
-			font-size: 42px;
+			font-size: 38px;
 		}
 
-		.search-wrapper {
-			flex-direction: row;
-			margin: 0;
-			gap: 0;
-		}
-
-		.search-input {
-			border-radius: 16px 0 0 16px;
-			border-right: none;
-			border-bottom: none;
-		}
-
-		.search-button {
-			border-radius: 0 16px 16px 0;
+		.search-form {
+			margin-left: 0;
 		}
 
 		.suggestions {
@@ -402,7 +337,7 @@
 
 	@media (min-width: 1024px) {
 		h1 {
-			font-size: 48px;
+			font-size: 44px;
 		}
 
 		.subheadline {

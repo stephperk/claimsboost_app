@@ -1,0 +1,258 @@
+<script>
+	import { onMount } from 'svelte';
+	import LocationAutocomplete from './LocationAutocomplete.svelte';
+	import { location } from '$lib/stores/locationStore.js';
+	import { searchLocation } from '$lib/stores/searchLocationStore.js';
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher();
+
+	// Props
+	export let practiceAreaValue = '';
+	export let locationValue = '';
+	export let practiceAreaPlaceholder = 'How were you injured?';
+	export let locationPlaceholder = 'City, State';
+	export let buttonText = 'Search';
+	export let showLocationField = true; // Toggle location field visibility
+
+	// Handle location selection from autocomplete
+	function handleLocationSelect(event) {
+		const selected = event.detail;
+		// Update the search location store
+		searchLocation.setSearchLocation(selected);
+		// Update the bound value
+		locationValue = selected.city && selected.state
+			? `${selected.city}, ${selected.state}`
+			: selected.formatted;
+	}
+
+	// Handle location clear
+	function handleLocationClear() {
+		searchLocation.clearSearchLocation();
+		locationValue = '';
+		dispatch('clear');
+	}
+
+	// Handle search submission
+	function handleSearch(e) {
+		e.preventDefault();
+
+		// Dispatch search event with current values
+		dispatch('search', {
+			practiceArea: practiceAreaValue,
+			location: locationValue,
+			locationData: $searchLocation
+		});
+	}
+</script>
+
+<form class="search-bar-v2" on:submit={handleSearch}>
+	<div class="search-wrapper">
+		<!-- Practice Area Input -->
+		<div class="practice-area-container">
+			<div class="input-with-icon">
+				{#if showLocationField}
+					<!-- Search icon for search page -->
+					<svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<circle cx="11" cy="11" r="8"/>
+						<path d="m21 21-4.35-4.35"/>
+					</svg>
+				{/if}
+				<input
+					type="text"
+					class="practice-area-input"
+					class:no-icon={!showLocationField}
+					bind:value={practiceAreaValue}
+					placeholder={practiceAreaPlaceholder}
+				/>
+			</div>
+		</div>
+
+		<!-- Location Input -->
+		{#if showLocationField}
+			<div class="location-container">
+				<LocationAutocomplete
+					bind:value={locationValue}
+					placeholder={locationPlaceholder}
+					userLocation={$location}
+					on:select={handleLocationSelect}
+					on:clear={handleLocationClear}
+				/>
+			</div>
+		{/if}
+
+		<!-- Search Button -->
+		<button type="submit" class="search-button">
+			{buttonText}
+		</button>
+	</div>
+</form>
+
+<style>
+	.search-bar-v2 {
+		width: 100%;
+	}
+
+	.search-wrapper {
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+		border-radius: 16px;
+		overflow: visible;
+		background: white;
+	}
+
+	/* Practice Area Container */
+	.practice-area-container {
+		position: relative;
+		border-radius: 16px 16px 0 0;
+		overflow: hidden;
+		border-bottom: 1px solid #e5e5e5;
+	}
+
+	/* When location field is hidden, keep bottom rounded corners */
+	.search-wrapper:not(:has(.location-container)) .practice-area-container {
+		border-bottom: none;
+		border-radius: 16px 16px 16px 16px;
+	}
+
+	.input-with-icon {
+		position: relative;
+		width: 100%;
+	}
+
+	.search-icon {
+		position: absolute;
+		left: 16px;
+		top: 50%;
+		transform: translateY(-50%);
+		color: #9ca3af;
+		pointer-events: none;
+		z-index: 1;
+	}
+
+	.practice-area-input {
+		width: 100%;
+		padding: 16px 16px 16px 48px;
+		border: none;
+		font-size: 16px;
+		outline: none;
+		background: white;
+		box-sizing: border-box;
+		font-family: inherit;
+		color: #1a1a1a;
+		line-height: 1.5;
+	}
+
+	.practice-area-input.no-icon {
+		padding-left: 20px;
+	}
+
+	.practice-area-input::placeholder {
+		color: #9ca3af;
+	}
+
+	.practice-area-input:focus {
+		outline: none;
+		background: #f9fafb;
+	}
+
+	.practice-area-container:focus-within {
+		background: #f9fafb;
+	}
+
+	.practice-area-container:focus-within .search-icon {
+		color: #FF7B00;
+	}
+
+	/* Location Container */
+	.location-container {
+		position: relative;
+		border-bottom: 1px solid #e5e5e5;
+		display: flex;
+		align-items: stretch;
+	}
+
+	.location-container:focus-within {
+		border-bottom-color: #FF7B00;
+	}
+
+	.location-container :global(.location-autocomplete) {
+		width: 100%;
+	}
+
+	/* Search Button */
+	.search-button {
+		width: 100%;
+		padding: 16px;
+		border: none;
+		background: linear-gradient(135deg, #FF7B00 0%, #D85A00 100%);
+		color: white;
+		font-size: 16px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		font-family: inherit;
+		border-radius: 0 0 16px 16px;
+		box-shadow: 0 4px 15px rgba(255, 123, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
+		margin-bottom: -2px;
+		line-height: 1.5;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.search-button:hover {
+		background: linear-gradient(135deg, #FF9500 0%, #E06500 100%);
+		box-shadow: 0 6px 25px rgba(255, 123, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.15);
+		transform: translateY(-2px);
+	}
+
+	.search-button:active {
+		transform: translateY(1px);
+		box-shadow: 0 2px 8px rgba(255, 123, 0, 0.3);
+	}
+
+	/* Desktop Layout (768px and up) */
+	@media (min-width: 768px) {
+		.search-wrapper {
+			flex-direction: row;
+			align-items: stretch;
+		}
+
+		.practice-area-container {
+			flex: 3;
+			border-bottom: none;
+			border-right: 1px solid #e5e5e5;
+			border-radius: 16px 0 0 16px;
+		}
+
+		.location-container {
+			flex: 2;
+			border-right: 1px solid #e5e5e5;
+			border-bottom: none;
+			border-radius: 0;
+		}
+
+		.location-container :global(gmp-place-autocomplete input) {
+			border-bottom: none !important;
+		}
+
+		.search-button {
+			flex: 1;
+			min-width: 120px;
+			border-radius: 0 16px 16px 0;
+		}
+
+		/* When location field is hidden on desktop */
+		.search-wrapper:not(:has(.location-container)) .practice-area-container {
+			border-right: none;
+			border-radius: 16px 0 0 16px;
+		}
+
+		.search-wrapper:not(:has(.location-container)) .search-button {
+			border-radius: 0 16px 16px 0;
+		}
+	}
+</style>

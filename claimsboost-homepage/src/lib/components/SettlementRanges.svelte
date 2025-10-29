@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import lottie from 'lottie-web';
+	import { location } from '$lib/stores/locationStore.js';
 
 	let lottieContainers = {};
 	let lottieAnimations = {};
@@ -106,13 +107,20 @@
 
 <section class="settlement-ranges">
 	<div class="container">
-		<h2>Settlement ranges in <span class="location-highlight">Raleigh, NC</span></h2>
+		<h2>
+			{#if $location.hasLocation}
+				Settlement ranges near <span class="location-highlight">{$location.city}, {$location.state}</span>
+			{:else}
+				Settlement ranges
+			{/if}
+		</h2>
 		<p class="subtitle">Explore typical settlement amounts by injury type based on local case data.</p>
 
 		<div class="ranges-grid">
 			{#each ranges as range, i}
 				<div
 					class="range-card"
+					role="article"
 					onmouseenter={range.isLottie ? () => handleHover(i) : null}
 					onmouseleave={range.isLottie ? () => handleLeave(i) : null}
 				>
@@ -149,7 +157,7 @@
 
 <style>
 	.settlement-ranges {
-		padding: 32px 20px;
+		padding: 60px 20px;
 		background: white;
 	}
 
@@ -227,7 +235,10 @@
 	.range-amount {
 		font-size: 24px;
 		font-weight: 700;
-		color: #1a1a1a;
+		background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
 		margin-bottom: 6px;
 	}
 
@@ -272,6 +283,8 @@
 		align-items: center;
 		gap: 8px;
 		box-shadow: 0 4px 15px rgba(255, 123, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
+		line-height: 1.5;
+		font-family: inherit;
 	}
 
 	.cta-button:hover {
