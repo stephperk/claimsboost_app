@@ -43,6 +43,7 @@
 	let visiblePillCounts = $state({});
 	let practiceAreaRefs = $state({});
 	let pillsReady = $state({});
+	let cardsReady = $state({}); // Track when entire card is ready to display
 
 	// Close dropdowns when clicking outside
 	function handleClickOutside(event) {
@@ -54,32 +55,26 @@
 		}
 	}
 
-	// Initialize on mount
-	onMount(async () => {
+	// Initialize on mount - only for event listeners
+	onMount(() => {
 		// Add click outside listener
 		document.addEventListener('click', handleClickOutside);
-
-		// Add window resize listener for pill recalculation
-		window.addEventListener('resize', recalculateAllPills);
-
-		// Initial pill calculation (with small delay to ensure DOM is ready)
-		setTimeout(() => {
-			recalculateAllPills();
-		}, 100);
 
 		// Cleanup
 		return () => {
 			document.removeEventListener('click', handleClickOutside);
-			window.removeEventListener('resize', recalculateAllPills);
 		};
 	});
 
 	function handleSearch(event) {
 		const { practiceArea, location: searchLocationText } = event.detail;
 		console.log('Searching for:', practiceArea, 'in', searchLocationText);
-		// In production, this would trigger an API call to search for lawyers
 		// Update local state
 		searchQuery = practiceArea;
+		// Trigger search if we have location
+		if ($searchLocation.latitude || $location.latitude) {
+			performSearch();
+		}
 	}
 
 	function handleLocationClear() {
@@ -98,95 +93,232 @@
 		'Brain Injury'
 	];
 
-	// Mock data - in production this would come from an API
-	const lawFirms = [
-		{
-			id: 1,
-			name: 'Miller & Associates',
-			address: '421 Fayetteville Street, Suite 1100, Raleigh, NC 27601',
-			distance: '2.3 miles',
-			description: 'Specializing in auto accidents, workplace injuries, and slip & fall cases with over 20 years of experience serving the Raleigh area.',
-			practiceAreas: ['Auto Accidents', 'Workplace Injury', 'Slip & Fall', 'Medical Malpractice', 'Product Liability', 'Dog Bites', 'Wrongful Death', 'Brain Injury', 'Nursing Home Abuse', 'Bicycle Accidents', 'Pedestrian Accidents', 'Truck Accidents'],
-			rating: 4.8,
-			reviews: 234,
-			yearsExperience: 20,
-			casesWon: 450,
-			amountCollected: '$12M',
+	// State machine for search page
+	const SearchState = {
+		WAITING_FOR_LOCATION: 'waiting_for_location',
+		SEARCHING: 'searching',
+		TRANSITIONING: 'transitioning',
+		READY: 'ready',
+		ERROR: 'error',
+		NO_RESULTS: 'no_results'
+	};
+
+	// Single source of truth for page state
+	let pageState = $state(SearchState.WAITING_FOR_LOCATION);
+	let hasPerformedInitialSearch = $state(false);
+
+	// API data states
+	let lawFirms = $state([]);
+	let error = $state(null);
+	let totalCount = $state(0);
+	let radiusUsed = $state(50);
+
+	// Derived states for template readability
+	let showSkeletons = $derived(
+		pageState === SearchState.WAITING_FOR_LOCATION ||
+		pageState === SearchState.SEARCHING ||
+		pageState === SearchState.TRANSITIONING
+	);
+
+	let loading = $derived(
+		pageState === SearchState.SEARCHING
+	);
+
+	// Transform database firm to UI format
+	function transformFirm(dbFirm) {
+		return {
+			id: dbFirm.place_id,
+			name: dbFirm.firm_name,
+			address: dbFirm.address,
+			city: dbFirm.city,
+			state: dbFirm.state,
+			distance: `${dbFirm.distance_miles.toFixed(1)} miles`,
+			description: dbFirm.company_description || 'Personal injury law firm dedicated to fighting for your rights.',
+			practiceAreas: dbFirm.practice_areas || [],
+			rating: dbFirm.rating || 0,
+			reviews: dbFirm.review_count || 0,
+			phone: dbFirm.phone,
+			website: dbFirm.website,
 			isOpen: true,
-			featured: true
-		},
-		{
-			id: 2,
-			name: 'Chen Legal Group',
-			address: '3737 Glenwood Avenue, Suite 200, Raleigh, NC 27612',
-			distance: '3.1 miles',
-			description: 'Award-winning personal injury attorneys dedicated to securing maximum compensation for our clients.',
-			practiceAreas: ['Auto Accidents', 'Medical Malpractice', 'Product Liability', 'Wrongful Death', 'Brain Injury', 'Spinal Cord Injury', 'Birth Injury'],
-			rating: 4.9,
-			reviews: 512,
-			yearsExperience: 15,
-			casesWon: 680,
-			amountCollected: '$18M',
-			isOpen: true,
-			featured: true
-		},
-		{
-			id: 3,
-			name: 'Rodriguez Law Firm',
-			address: '1200 Wade Avenue, Raleigh, NC 27605',
-			distance: '4.5 miles',
-			description: 'Compassionate legal representation with a proven track record in personal injury cases.',
-			practiceAreas: ['Workplace Injury', 'Slip & Fall', 'Wrongful Death', 'Construction Accidents', 'Premises Liability'],
-			rating: 4.7,
-			reviews: 389,
-			yearsExperience: 12,
-			casesWon: 320,
-			amountCollected: '$8M',
-			isOpen: false
-		},
-		{
-			id: 4,
-			name: 'Johnson & Partners',
-			address: '8300 Health Park, Suite 223, Raleigh, NC 27615',
-			distance: '5.2 miles',
-			description: 'Dedicated personal injury attorneys fighting for maximum compensation. Free consultation available.',
-			practiceAreas: ['Medical Malpractice', 'Product Liability', 'Dog Bites', 'Pharmaceutical Liability', 'Defective Medical Devices', 'Surgical Errors', 'Misdiagnosis', 'Birth Injury', 'Anesthesia Errors'],
-			rating: 4.6,
-			reviews: 178,
-			yearsExperience: 18,
-			casesWon: 275,
-			amountCollected: '$10M',
-			isOpen: true
-		},
-		{
-			id: 5,
-			name: 'Thompson Injury Law',
-			address: '5540 Centerview Drive, Suite 204, Raleigh, NC 27606',
-			distance: '6.8 miles',
-			description: 'Aggressive representation for injury victims. No fee unless we win your case.',
-			practiceAreas: ['Auto Accidents', 'Brain Injury', 'Wrongful Death', 'Motorcycle Accidents'],
-			rating: 4.5,
-			reviews: 156,
-			yearsExperience: 10,
-			casesWon: 198,
-			amountCollected: '$6M',
-			isOpen: true
-		},
-		{
-			id: 6,
-			name: 'Garcia & Associates',
-			address: '2626 Glenwood Avenue, Suite 550, Raleigh, NC 27608',
-			distance: '7.3 miles',
-			description: 'Trusted legal advocates with a commitment to client satisfaction and justice.',
-			practiceAreas: ['Slip & Fall', 'Workplace Injury', 'Product Liability', 'Premises Liability', 'Swimming Pool Accidents', 'Elevator Accidents', 'Stairway Accidents', 'Inadequate Security', 'Toxic Exposure', 'Burns & Scalds'],
-			rating: 4.7,
-			reviews: 289,
-			yearsExperience: 14,
-			casesWon: 412,
-			amountCollected: '$14M',
-			isOpen: false
+			yearsExperience: null,
+			casesWon: null,
+			amountCollected: null,
+			featured: false
+		};
+	}
+
+	// Perform search with current filters
+	async function performSearch() {
+		// Get coordinates from search location or fallback to user location
+		const lat = $searchLocation.latitude || $location.latitude;
+		const lng = $searchLocation.longitude || $location.longitude;
+
+		// If no location available, show error
+		if (!lat || !lng) {
+			error = 'Location not available. Please enter a city or ZIP code.';
+			lawFirms = [];
+			pageState = SearchState.ERROR;
+			return;
 		}
-	];
+
+		pageState = SearchState.SEARCHING;
+		cardsReady = {}; // Reset cards ready state
+		error = null;
+
+		// Track when search started for minimum skeleton display time
+		const searchStartTime = Date.now();
+
+		try {
+			const params = new URLSearchParams({
+				lat: lat.toString(),
+				lng: lng.toString(),
+				radius: '50',
+				sort_by: sortBy,
+				limit: '50'
+			});
+
+			// Add filters
+			if (selectedPracticeAreas.length > 0) {
+				params.append('practice_areas', selectedPracticeAreas.join(','));
+			}
+			if (selectedRating > 0) {
+				params.append('min_rating', selectedRating.toString());
+			}
+
+			const response = await fetch(`/api/law-firms/search?${params}`);
+			const data = await response.json();
+
+			if (!response.ok) {
+				throw new Error(data.error || 'Failed to search law firms');
+			}
+
+			// Transform firms from database format to UI format
+			lawFirms = data.firms.map(transformFirm);
+			totalCount = data.total_count;
+			radiusUsed = data.radius_used;
+			error = null;
+
+			// Ensure minimum skeleton display time for better UX
+			const elapsed = Date.now() - searchStartTime;
+			const minDisplayTime = 500; // Show skeletons for at least 500ms
+			const remainingTime = Math.max(0, minDisplayTime - elapsed);
+
+			// Delay state transition if search was too fast
+			setTimeout(() => {
+				// Set state based on results
+				if (lawFirms.length > 0) {
+					pageState = SearchState.TRANSITIONING;
+				} else {
+					pageState = SearchState.NO_RESULTS;
+				}
+			}, remainingTime);
+		} catch (err) {
+			console.error('Search error:', err);
+			error = err.message;
+			lawFirms = [];
+			pageState = SearchState.ERROR;
+		}
+	}
+
+	// Unified initialization and location tracking
+	let locationTimeoutId = null;
+
+	$effect(() => {
+		// Track location availability
+		const hasSearchLoc = $searchLocation.hasLocation;
+		const hasUserLoc = $location.hasLocation;
+		const lat = $searchLocation.latitude || $location.latitude;
+		const lng = $searchLocation.longitude || $location.longitude;
+
+		// Clear any existing timeout
+		if (locationTimeoutId) {
+			clearTimeout(locationTimeoutId);
+			locationTimeoutId = null;
+		}
+
+		// Handle location-based initialization
+		if (!hasPerformedInitialSearch) {
+			if (lat && lng) {
+				// Location is available - perform initial search
+				hasPerformedInitialSearch = true;
+				performSearch();
+			} else if (pageState === SearchState.WAITING_FOR_LOCATION) {
+				// Still waiting for location - set timeout for error
+				locationTimeoutId = setTimeout(() => {
+					if (!hasPerformedInitialSearch && pageState === SearchState.WAITING_FOR_LOCATION) {
+						error = 'Unable to determine your location. Please enter a city or ZIP code.';
+						pageState = SearchState.ERROR;
+					}
+				}, 2000);
+			}
+		}
+
+		// Cleanup timeout on unmount
+		return () => {
+			if (locationTimeoutId) {
+				clearTimeout(locationTimeoutId);
+			}
+		};
+	});
+
+	// Re-search when filters or sort change (with debounce)
+	let filterSearchTimeout = null;
+	let filterEffectInitialized = false;
+	let lastFilterState = { practiceAreas: [], rating: 0, sortBy: 'relevance' };
+
+	$effect(() => {
+		// Track filter/sort changes
+		const _practiceAreas = selectedPracticeAreas;
+		const _rating = selectedRating;
+		const _sortBy = sortBy;
+
+		// Skip the first run to avoid triggering on mount
+		if (!filterEffectInitialized) {
+			filterEffectInitialized = true;
+			lastFilterState = {
+				practiceAreas: [..._practiceAreas],
+				rating: _rating,
+				sortBy: _sortBy
+			};
+			return;
+		}
+
+		// Check if filters actually changed
+		const filtersChanged =
+			JSON.stringify(lastFilterState.practiceAreas) !== JSON.stringify(_practiceAreas) ||
+			lastFilterState.rating !== _rating ||
+			lastFilterState.sortBy !== _sortBy;
+
+		// Only trigger search if filters changed and we're in a searchable state
+		if (filtersChanged && hasPerformedInitialSearch &&
+			(pageState === SearchState.READY ||
+			 pageState === SearchState.NO_RESULTS)) {
+
+			// Update last filter state
+			lastFilterState = {
+				practiceAreas: [..._practiceAreas],
+				rating: _rating,
+				sortBy: _sortBy
+			};
+
+			// Clear existing timeout
+			if (filterSearchTimeout) {
+				clearTimeout(filterSearchTimeout);
+			}
+
+			// Debounce the search
+			filterSearchTimeout = setTimeout(() => {
+				performSearch();
+			}, 300);
+		}
+
+		// Cleanup
+		return () => {
+			if (filterSearchTimeout) {
+				clearTimeout(filterSearchTimeout);
+			}
+		};
+	});
 
 	function renderStars(rating) {
 		const fullStars = Math.floor(rating);
@@ -227,13 +359,21 @@
 	}
 
 	function calculateVisiblePills(firmId, containerRef) {
-		if (!containerRef) return;
+		if (!containerRef) {
+			// If no container ref, mark as ready anyway
+			pillsReady = { ...pillsReady, [firmId]: true };
+			return;
+		}
 
 		const pills = Array.from(containerRef.children).filter(el =>
 			el.classList.contains('practice-tag')
 		);
 
-		if (pills.length === 0) return;
+		// If no pills, mark as ready
+		if (pills.length === 0) {
+			pillsReady = { ...pillsReady, [firmId]: true };
+			return;
+		}
 
 		const containerWidth = containerRef.offsetWidth;
 		const gap = 8; // Gap between pills
@@ -274,7 +414,74 @@
 			}
 		});
 	}
-</script>
+
+	// Add resize observer to recalculate pills on container size change
+	$effect(() => {
+		if (lawFirms.length > 0 && pageState === SearchState.READY) {
+			let resizeTimeout;
+			const resizeObserver = new ResizeObserver(() => {
+				clearTimeout(resizeTimeout);
+				resizeTimeout = setTimeout(() => {
+					recalculateAllPills();
+				}, 100);
+			});
+
+			// Observe all practice area containers
+			lawFirms.forEach(firm => {
+				const containerRef = practiceAreaRefs[firm.id];
+				if (containerRef) {
+					resizeObserver.observe(containerRef);
+				}
+			});
+
+			// Cleanup
+			return () => {
+				resizeObserver.disconnect();
+				clearTimeout(resizeTimeout);
+			};
+		}
+	});
+
+	// Mark cards as ready when in transition state and complete animation
+	$effect(() => {
+		if (pageState === SearchState.TRANSITIONING && lawFirms.length > 0) {
+			// Use double RAF for better paint timing
+			requestAnimationFrame(() => {
+				requestAnimationFrame(() => {
+					// Batch update all cards at once
+					const newCardsReady = {};
+					const maxAnimatedCards = 20; // Limit animations for performance
+
+					lawFirms.forEach((firm, index) => {
+						// Only animate first N cards, show rest immediately
+						if (index < maxAnimatedCards) {
+							newCardsReady[firm.id] = true;
+						} else {
+							// For cards beyond limit, show immediately without animation
+							newCardsReady[firm.id] = 'immediate';
+						}
+					});
+
+					cardsReady = newCardsReady;
+
+					// Complete transition to ready state after animation starts
+					const transitionDelay = Math.min(lawFirms.length * 50 + 100, 1100);
+					setTimeout(() => {
+						pageState = SearchState.READY;
+						// Trigger pill calculations after cards are ready
+						requestAnimationFrame(() => {
+							lawFirms.forEach(firm => {
+								const containerRef = practiceAreaRefs[firm.id];
+								if (containerRef) {
+									calculateVisiblePills(firm.id, containerRef);
+								}
+							});
+						});
+					}, transitionDelay);
+				});
+			});
+		}
+	});</script>
 
 <svelte:head>
 	<title>Find Personal Injury Lawyers in {$searchLocation.city || $location.city || 'Your Area'}, {$searchLocation.state || $location.state || 'USA'} | ClaimsBoost</title>
@@ -485,9 +692,56 @@
 				</div>
 			{/if}
 
-			<!-- Results Grid -->
-			<div class="results-grid">
-				{#each lawFirms as firm, index}
+			<!-- Loading State with Skeletons -->
+			{#if showSkeletons}
+				<div class="results-grid skeleton-grid" class:showing={showSkeletons}>
+					{#each Array(6) as _, i}
+						<div class="firm-card skeleton">
+							<div class="firm-header">
+								<div class="skeleton-avatar"></div>
+								<div style="flex: 1;">
+									<div class="skeleton-text" style="width: 60%; height: 16px; margin-bottom: 6px;"></div>
+									<div class="skeleton-text" style="width: 30%; height: 12px;"></div>
+								</div>
+							</div>
+							<div style="margin-bottom: 14px;">
+								<div class="skeleton-text" style="width: 100%; height: 14px; margin-bottom: 6px;"></div>
+								<div class="skeleton-text" style="width: 90%; height: 14px;"></div>
+							</div>
+							<div style="display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap;">
+								<div class="skeleton-text" style="width: 80px; height: 24px; border-radius: 16px;"></div>
+								<div class="skeleton-text" style="width: 100px; height: 24px; border-radius: 16px;"></div>
+								<div class="skeleton-text" style="width: 90px; height: 24px; border-radius: 16px;"></div>
+							</div>
+							<div class="skeleton-text" style="width: 140px; height: 16px; margin-bottom: 14px;"></div>
+							<div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
+								<div class="skeleton-text" style="width: 70px; height: 24px; border-radius: 16px;"></div>
+								<div class="skeleton-text" style="width: 85px; height: 24px; border-radius: 16px;"></div>
+							</div>
+						</div>
+					{/each}
+				</div>
+			{/if}
+
+			<!-- Content States -->
+			{#if pageState === SearchState.ERROR}
+				<!-- Error State -->
+				<div class="error-state">
+					<p class="error-message">{error}</p>
+					<button class="retry-button" onclick={performSearch}>Try Again</button>
+				</div>
+			{:else if pageState === SearchState.NO_RESULTS}
+				<!-- Empty State -->
+				<div class="empty-state">
+					<p>No law firms found in your area.</p>
+					<p class="hint">Try expanding your search radius or adjusting filters.</p>
+				</div>
+			{/if}
+
+			<!-- Results Grid - Render when firms are available, but control visibility with CSS -->
+			{#if lawFirms.length > 0 && pageState !== SearchState.SEARCHING}
+				<div class="results-grid">
+					{#each lawFirms as firm, index}
 					{#if index === 2}
 						<!-- CTA Section after first 2 cards -->
 						<div class="cta-between-results">
@@ -500,7 +754,7 @@
 							</a>
 						</div>
 					{/if}
-					<article class="firm-card">
+					<article class="firm-card" class:ready={cardsReady[firm.id] === true} class:immediate={cardsReady[firm.id] === 'immediate'} style="animation-delay: {Math.min(index * 50, 1000)}ms;">
 						<div class="firm-header">
 							<div class="firm-avatar">
 								{firm.name.charAt(0)}
@@ -520,17 +774,15 @@
 									<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
 									<circle cx="12" cy="10" r="3"/>
 								</svg>
-								<span>{firm.address.split(', ').slice(-2)[0]}, {firm.address.split(', ').slice(-1)[0].split(' ')[0]}</span>
+								<span>{firm.city}, {firm.state}</span>
 								<span class="pipe">|</span>
 								<span>{firm.distance} away</span>
 							</div>
 						</div>
 
 						<p class="firm-description">
-							<span class="ai-label">
-								<img src="/ai_icon_star_brand.png" alt="AI" class="ai-icon" />
-								AI Summary:
-							</span> {firm.description}
+							<img src="/ai_icon_star_brand.png" alt="AI" class="ai-icon" />
+							{firm.description}
 						</p>
 
 						<div class="firm-stats">
@@ -569,46 +821,39 @@
 							</div>
 						</div>
 
-						<div
-							class="practice-areas"
+						<div class="practice-areas"
 							class:expanded={expandedFirms.has(firm.id)}
-							class:measuring={!pillsReady[firm.id]}
-							bind:this={practiceAreaRefs[firm.id]}
-						>
-							{#if expandedFirms.has(firm.id)}
-								<!-- Show all pills when expanded -->
+							bind:this={practiceAreaRefs[firm.id]}>
+							{#if !pillsReady[firm.id]}
+								<!-- Initial render for measurement -->
 								{#each firm.practiceAreas as area}
 									<span class="practice-tag">{area}</span>
 								{/each}
-								<button
-									class="practice-tag see-more-pill"
-									onclick={() => toggleFirmExpansion(firm.id)}
-								>
-									See less
-								</button>
-							{:else if pillsReady[firm.id]}
-								<!-- Show only visible pills when collapsed and measurement is complete -->
-								{#each firm.practiceAreas.slice(0, visiblePillCounts[firm.id] || 3) as area}
+							{:else if expandedFirms.has(firm.id)}
+								<!-- Expanded state: show all -->
+								{#each firm.practiceAreas as area}
 									<span class="practice-tag">{area}</span>
 								{/each}
-								{#if (visiblePillCounts[firm.id] || 3) < firm.practiceAreas.length}
-									<button
-										class="practice-tag see-more-pill"
-										onclick={() => toggleFirmExpansion(firm.id)}
-									>
-										+{firm.practiceAreas.length - (visiblePillCounts[firm.id] || 3)} more
+								{#if firm.practiceAreas.length > 0}
+									<button class="practice-tag more-pill" onclick={() => toggleFirmExpansion(firm.id)}>
+										Show less
 									</button>
 								{/if}
 							{:else}
-								<!-- Render all pills invisibly for measurement -->
-								{#each firm.practiceAreas as area}
+								<!-- Collapsed state: show calculated amount -->
+								{#each firm.practiceAreas.slice(0, visiblePillCounts[firm.id] || 0) as area}
 									<span class="practice-tag">{area}</span>
 								{/each}
+								{#if firm.practiceAreas.length > (visiblePillCounts[firm.id] || 0)}
+									<button class="practice-tag more-pill" onclick={() => toggleFirmExpansion(firm.id)}>
+										+{firm.practiceAreas.length - (visiblePillCounts[firm.id] || 0)} more
+									</button>
+								{/if}
 							{/if}
 						</div>
 
 						<div class="button-wrapper">
-							<a class="connect-link">
+							<a href="/law-firm/{firm.id}" class="connect-link">
 								View profile
 								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 									<path d="M5 12h14M12 5l7 7-7 7"/>
@@ -618,6 +863,7 @@
 					</article>
 				{/each}
 			</div>
+			{/if}
 		</div>
 	</main>
 
@@ -1026,6 +1272,20 @@
 	.results-grid {
 		display: grid;
 		gap: 20px;
+		position: relative;
+	}
+
+	/* Skeleton Grid - overlays during transition */
+	.skeleton-grid {
+		position: relative;
+		z-index: 1;
+		transition: opacity 0.3s ease-out;
+	}
+
+	/* Skeleton grid when showing */
+	.skeleton-grid.showing {
+		opacity: 1;
+		animation: none;
 	}
 
 	.cta-between-results {
@@ -1087,11 +1347,67 @@
 		min-width: 0;
 		width: 100%;
 		cursor: pointer;
+		/* Start invisible but in the DOM */
+		visibility: hidden;
+		opacity: 0;
+		transform: translateY(20px);
+		will-change: transform, opacity, visibility;
 	}
 
-	.firm-card:hover {
+	.firm-card.ready {
+		visibility: visible;
+		animation: fadeInUp 0.5s ease-out forwards;
+	}
+
+	/* Immediate display for cards beyond animation limit */
+	.firm-card.immediate {
+		visibility: visible;
+		opacity: 1;
+		transform: none;
+		animation: none;
+	}
+
+	.firm-card.ready:hover,
+	.firm-card.immediate:hover {
 		transform: translateY(-2px);
 		box-shadow: 0 4px 16px rgba(0,0,0,0.22);
+	}
+
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	/* Respect prefers-reduced-motion for accessibility */
+	@media (prefers-reduced-motion: reduce) {
+		.firm-card {
+			animation: none !important;
+			transition: none !important;
+		}
+
+		.firm-card.ready {
+			visibility: visible;
+			opacity: 1;
+			transform: none;
+		}
+
+		.skeleton-text,
+		.skeleton-avatar {
+			animation: none !important;
+		}
+	}
+
+	/* Performance optimizations for large result sets */
+	.results-grid:has(> :nth-child(20)) .firm-card {
+		/* Reduce animation complexity for 20+ items */
+		animation-duration: 0.3s;
+		will-change: auto;
 	}
 
 	.firm-header {
@@ -1225,14 +1541,14 @@
 
 	.firm-description {
 		color: #666;
-		font-size: 14px;
+		font-size: 16px;
 		line-height: 1.6;
 		margin-bottom: 14px;
 	}
 
 	.ai-label {
-		font-weight: 600;
-		color: #1a1a1a;
+		font-weight: normal;
+		color: #666;
 	}
 
 	.ai-icon {
@@ -1273,12 +1589,6 @@
 		max-width: 100%;
 	}
 
-	.practice-areas.measuring {
-		visibility: hidden;
-		height: 0;
-		min-height: 0;
-	}
-
 	.practice-tag {
 		background: #f0f0f0;
 		color: #666;
@@ -1290,18 +1600,24 @@
 		flex-shrink: 0;
 	}
 
-	.see-more-pill {
+	.more-pill {
 		background: rgba(96, 165, 250, 0.15);
 		color: #2563EB;
-		border: none;
-		cursor: pointer;
-		transition: all 0.2s;
 		font-weight: 600;
+		cursor: pointer;
+		border: none;
+		transition: all 0.2s ease;
 	}
 
-	.see-more-pill:hover {
+	button.practice-tag:hover {
 		background: rgba(96, 165, 250, 0.25);
 		transform: translateY(-1px);
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	button.practice-tag:focus {
+		outline: 2px solid #2563EB;
+		outline-offset: 2px;
 	}
 
 	.stars {
@@ -1457,6 +1773,85 @@
 
 		.results-grid {
 			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	/* Loading, Error, and Empty States */
+	.error-state,
+	.empty-state {
+		text-align: center;
+		padding: 64px 20px;
+	}
+
+	.empty-state p {
+		color: #666;
+		font-size: 16px;
+		margin: 8px 0;
+	}
+
+	.hint {
+		color: #999;
+		font-size: 14px;
+	}
+
+	.error-message {
+		color: #dc2626;
+		font-size: 16px;
+		margin-bottom: 16px;
+	}
+
+	.retry-button {
+		padding: 12px 24px;
+		background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+		color: white;
+		border: none;
+		border-radius: 8px;
+		font-size: 14px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.3s;
+		box-shadow: 0 4px 15px rgba(96, 165, 250, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	.retry-button:hover {
+		background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+		box-shadow: 0 6px 25px rgba(96, 165, 250, 0.5), 0 3px 6px rgba(0, 0, 0, 0.15);
+		transform: translateY(-2px);
+	}
+
+	/* Skeleton loading styles */
+	.skeleton {
+		pointer-events: none;
+		opacity: 1 !important;
+		transform: none !important;
+		animation: none !important;
+		visibility: visible !important;
+		position: relative !important;
+	}
+
+	.skeleton-avatar {
+		width: 56px;
+		height: 56px;
+		border-radius: 50%;
+		background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+		background-size: 200% 100%;
+		animation: loading 1.5s ease-in-out infinite;
+		flex-shrink: 0;
+	}
+
+	.skeleton-text {
+		background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+		background-size: 200% 100%;
+		animation: loading 1.5s ease-in-out infinite;
+		border-radius: 4px;
+	}
+
+	@keyframes loading {
+		0% {
+			background-position: 200% 0;
+		}
+		100% {
+			background-position: -200% 0;
 		}
 	}
 </style>

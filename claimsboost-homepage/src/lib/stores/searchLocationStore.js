@@ -9,7 +9,13 @@ function getInitialValue() {
 		try {
 			const stored = sessionStorage.getItem(STORAGE_KEY);
 			if (stored) {
-				return JSON.parse(stored);
+				const parsed = JSON.parse(stored);
+				// Add hasLocation flag based on whether we have coordinates
+				return {
+					...parsed,
+					hasLocation: Boolean(parsed.latitude && parsed.longitude),
+					loading: false
+				};
 			}
 		} catch (error) {
 			console.error('Failed to load search location from sessionStorage:', error);
@@ -20,7 +26,9 @@ function getInitialValue() {
 		state: null,
 		latitude: null,
 		longitude: null,
-		zipCode: null
+		zipCode: null,
+		hasLocation: false,
+		loading: false
 	};
 }
 
@@ -30,26 +38,38 @@ function createSearchLocationStore() {
 	return {
 		subscribe,
 		set: (value) => {
+			// Ensure hasLocation is always set based on coordinates
+			const enhancedValue = {
+				...value,
+				hasLocation: Boolean(value.latitude && value.longitude),
+				loading: value.loading ?? false
+			};
 			if (browser) {
 				try {
-					sessionStorage.setItem(STORAGE_KEY, JSON.stringify(value));
+					sessionStorage.setItem(STORAGE_KEY, JSON.stringify(enhancedValue));
 				} catch (error) {
 					console.error('Failed to save search location to sessionStorage:', error);
 				}
 			}
-			set(value);
+			set(enhancedValue);
 		},
 		update: (fn) => {
 			update((current) => {
 				const newValue = fn(current);
+				// Ensure hasLocation is always set based on coordinates
+				const enhancedValue = {
+					...newValue,
+					hasLocation: Boolean(newValue.latitude && newValue.longitude),
+					loading: newValue.loading ?? false
+				};
 				if (browser) {
 					try {
-						sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newValue));
+						sessionStorage.setItem(STORAGE_KEY, JSON.stringify(enhancedValue));
 					} catch (error) {
 						console.error('Failed to save search location to sessionStorage:', error);
 					}
 				}
-				return newValue;
+				return enhancedValue;
 			});
 		},
 		setSearchLocation: (location) => {
@@ -58,7 +78,9 @@ function createSearchLocationStore() {
 				state: location.state || null,
 				latitude: location.latitude || null,
 				longitude: location.longitude || null,
-				zipCode: location.zipCode || null
+				zipCode: location.zipCode || null,
+				hasLocation: Boolean(location.latitude && location.longitude),
+				loading: false
 			};
 			if (browser) {
 				try {
@@ -75,7 +97,9 @@ function createSearchLocationStore() {
 				state: null,
 				latitude: null,
 				longitude: null,
-				zipCode: null
+				zipCode: null,
+				hasLocation: false,
+				loading: false
 			};
 			if (browser) {
 				try {
@@ -85,6 +109,10 @@ function createSearchLocationStore() {
 				}
 			}
 			set(emptyValue);
+		},
+		// Helper to check if location is ready to use
+		isReady: (current) => {
+			return current.hasLocation && !current.loading;
 		}
 	};
 }

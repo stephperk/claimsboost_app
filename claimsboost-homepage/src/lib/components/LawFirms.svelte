@@ -1,43 +1,64 @@
 <script>
+	import { onMount } from 'svelte';
 	import { location } from '$lib/stores/locationStore.js';
 
-	let scrollContainer;
+	let scrollContainer = $state(null);
 	let currentIndex = $state(0);
+	let firms = $state([]);
+	let isLoading = $state(true);
+	let error = $state(null);
+	let radiusUsed = $state(50);
 
-	const firms = [
-		{
-			name: 'Miller & Associates',
-			location: 'Raleigh, NC',
-			description: 'Specializing in auto accidents, workplace injuries, and slip & fall cases with over 20 years of experience serving Southern California.',
-			practiceAreas: ['Auto Accidents', 'Workplace Injury', 'Slip & Fall'],
-			rating: 4.5,
-			reviews: 234
-		},
-		{
-			name: 'Chen Legal Group',
-			location: 'Raleigh, NC',
-			description: 'Specializing in auto accidents, workplace injuries, and slip & fall cases with over 20 years of experience serving Southern California.',
-			practiceAreas: ['Auto Accidents', 'Workplace Injury', 'Slip & Fall'],
-			rating: 4.8,
-			reviews: 512
-		},
-		{
-			name: 'Rodriguez Law Firm',
-			location: 'Raleigh, NC',
-			description: 'Specializing in auto accidents, workplace injuries, and slip & fall cases with over 20 years of experience serving Southern California.',
-			practiceAreas: ['Auto Accidents', 'Workplace Injury', 'Slip & Fall'],
-			rating: 4.7,
-			reviews: 389
-		},
-		{
-			name: 'Johnson & Partners',
-			location: 'Raleigh, NC',
-			description: 'Dedicated personal injury attorneys fighting for maximum compensation. Free consultation available.',
-			practiceAreas: ['Medical Malpractice', 'Product Liability', 'Dog Bites'],
-			rating: 4.6,
-			reviews: 178
+	// Fetch law firms based on user location
+	async function fetchNearbyFirms() {
+		// Wait for location to be available with valid coordinates
+		if (!$location.hasLocation || !$location.latitude || !$location.longitude) {
+			isLoading = false;
+			return;
 		}
-	];
+
+		try {
+			isLoading = true;
+			error = null;
+
+			const response = await fetch(
+				`/api/law-firms/nearby?lat=${$location.latitude}&lng=${$location.longitude}`
+			);
+
+			if (!response.ok) {
+				throw new Error('Failed to fetch law firms');
+			}
+
+			const data = await response.json();
+
+			// Map database response to component format
+			firms = data.firms.map((firm) => ({
+				id: firm.place_id,
+				name: firm.firm_name,
+				location: `${firm.city}, ${firm.state}`,
+				description: 'Experienced personal injury attorney dedicated to fighting for your rights and maximizing your compensation.',
+				practiceAreas: firm.practice_areas || ['Personal Injury', 'Auto Accidents'],
+				rating: firm.rating || 0,
+				reviews: firm.review_count || 0,
+				distance: firm.distance_miles
+			}));
+
+			radiusUsed = data.radius_used;
+		} catch (err) {
+			console.error('Error fetching law firms:', err);
+			error = err.message;
+			firms = [];
+		} finally {
+			isLoading = false;
+		}
+	}
+
+	// Fetch firms when location becomes available
+	$effect(() => {
+		if ($location.hasLocation && $location.latitude && $location.longitude) {
+			fetchNearbyFirms();
+		}
+	});
 
 	function scrollLeft() {
 		if (scrollContainer) {
@@ -82,65 +103,101 @@
 		</h2>
 		<p class="subtitle">Trusted personal injury law firms with proven track records and satisfied clients.</p>
 
-		<div class="carousel-container">
-			<button class="carousel-button carousel-button-left" onclick={scrollLeft} disabled={currentIndex === 0} aria-label="Previous law firm">
-				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<path d="M15 18l-6-6 6-6"/>
-				</svg>
-			</button>
-
-			<div class="firms-carousel" bind:this={scrollContainer}>
-				{#each firms as firm}
-					<div class="firm-card">
+		{#if isLoading}
+			<!-- Loading skeleton -->
+			<div class="firms-carousel">
+				{#each Array(4) as _, i}
+					<div class="firm-card skeleton">
 						<div class="firm-header">
-							<div class="firm-avatar">
-								{firm.name.charAt(0)}
-							</div>
-							<div>
-								<h3>{firm.name}</h3>
-								<p class="firm-location">{firm.location}</p>
+							<div class="skeleton-avatar"></div>
+							<div style="flex: 1;">
+								<div class="skeleton-text" style="width: 60%; height: 18px; margin-bottom: 8px;"></div>
+								<div class="skeleton-text" style="width: 40%; height: 14px;"></div>
 							</div>
 						</div>
-
-						<p class="firm-description">
-							<span class="ai-label">
-								<img src="/ai_icon_star_brand.png" alt="AI" class="ai-icon" />
-								AI Summary:
-							</span> {firm.description}
-						</p>
-
-						<div class="practice-areas">
-							{#each firm.practiceAreas as area}
-								<span class="practice-tag">{area}</span>
-							{/each}
+						<div class="skeleton-text" style="width: 100%; height: 14px; margin-bottom: 8px;"></div>
+						<div class="skeleton-text" style="width: 85%; height: 14px; margin-bottom: 16px;"></div>
+						<div style="display: flex; gap: 6px; margin-bottom: 16px;">
+							<div class="skeleton-text" style="width: 80px; height: 24px; border-radius: 16px;"></div>
+							<div class="skeleton-text" style="width: 100px; height: 24px; border-radius: 16px;"></div>
 						</div>
-
-						<div class="firm-rating">
-							<span class="stars">{renderStars(firm.rating)}</span>
-							<span class="rating-text">{firm.rating} ({firm.reviews} reviews)</span>
-						</div>
-
-						<button class="view-profile-btn">View firm profile</button>
+						<div class="skeleton-text" style="width: 120px; height: 18px; margin-bottom: 16px;"></div>
+						<div class="skeleton-text" style="width: 100%; height: 40px; border-radius: 8px;"></div>
 					</div>
 				{/each}
 			</div>
+		{:else if error}
+			<!-- Error state -->
+			<div class="error-message">
+				<p>Unable to load law firms at this time. Please try again later.</p>
+			</div>
+		{:else if firms.length === 0}
+			<!-- No results -->
+			<div class="no-results">
+				<p>No law firms found in your area. Try searching for a specific location.</p>
+			</div>
+		{:else}
+			<!-- Firms loaded successfully -->
+			<div class="carousel-container">
+				<button class="carousel-button carousel-button-left" onclick={scrollLeft} disabled={currentIndex === 0} aria-label="Previous law firm">
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path d="M15 18l-6-6 6-6"/>
+					</svg>
+				</button>
 
-			<button class="carousel-button carousel-button-right" onclick={scrollRight} disabled={currentIndex >= firms.length - 1} aria-label="Next law firm">
-				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<path d="M9 18l6-6-6-6"/>
-				</svg>
-			</button>
-		</div>
+				<div class="firms-carousel" bind:this={scrollContainer}>
+					{#each firms as firm (firm.id)}
+						<div class="firm-card">
+							<div class="firm-header">
+								<div class="firm-avatar">
+									{firm.name.charAt(0)}
+								</div>
+								<div>
+									<h3>{firm.name}</h3>
+									<p class="firm-location">{firm.location}</p>
+								</div>
+							</div>
 
-		<div class="see-more">
-			<p>Looking for more options? Discover additional law firms in your area.</p>
-			<a href="/search" class="see-more-btn">
-				See more in my area
-				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<path d="M5 12h14M12 5l7 7-7 7"/>
-				</svg>
-			</a>
-		</div>
+							<p class="firm-description">
+								<span class="ai-label">
+									<img src="/ai_icon_star_brand.png" alt="AI" class="ai-icon" />
+									AI Summary:
+								</span> {firm.description}
+							</p>
+
+							<div class="practice-areas">
+								{#each firm.practiceAreas as area}
+									<span class="practice-tag">{area}</span>
+								{/each}
+							</div>
+
+							<div class="firm-rating">
+								<span class="stars">{renderStars(firm.rating)}</span>
+								<span class="rating-text">{firm.rating} ({firm.reviews} reviews)</span>
+							</div>
+
+							<button class="view-profile-btn">View firm profile</button>
+						</div>
+					{/each}
+				</div>
+
+				<button class="carousel-button carousel-button-right" onclick={scrollRight} disabled={currentIndex >= firms.length - 1} aria-label="Next law firm">
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path d="M9 18l6-6-6-6"/>
+					</svg>
+				</button>
+			</div>
+
+			<div class="see-more">
+				<p>Looking for more options? Discover additional law firms in your area.</p>
+				<a href="/search" class="see-more-btn">
+					See more in my area
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path d="M5 12h14M12 5l7 7-7 7"/>
+					</svg>
+				</a>
+			</div>
+		{/if}
 	</div>
 </section>
 
@@ -418,5 +475,49 @@
 		h2 {
 			font-size: 30px;
 		}
+	}
+
+	/* Loading skeleton styles */
+	.skeleton {
+		pointer-events: none;
+	}
+
+	.skeleton-avatar {
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+		background-size: 200% 100%;
+		animation: loading 1.5s ease-in-out infinite;
+	}
+
+	.skeleton-text {
+		background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+		background-size: 200% 100%;
+		animation: loading 1.5s ease-in-out infinite;
+		border-radius: 4px;
+	}
+
+	@keyframes loading {
+		0% {
+			background-position: 200% 0;
+		}
+		100% {
+			background-position: -200% 0;
+		}
+	}
+
+	/* Error and no results styles */
+	.error-message,
+	.no-results {
+		text-align: center;
+		padding: 60px 20px;
+		color: #666;
+	}
+
+	.error-message p,
+	.no-results p {
+		font-size: 16px;
+		margin: 0;
 	}
 </style>
