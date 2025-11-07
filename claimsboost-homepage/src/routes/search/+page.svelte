@@ -5,6 +5,7 @@
 	import { onMount } from 'svelte';
 	import { location } from '$lib/stores/locationStore.js';
 	import { searchLocation } from '$lib/stores/searchLocationStore.js';
+	import { geocodeLocation } from '$lib/utils/geocoding.js';
 
 	let sortBy = $state('relevance');
 	let showFilters = $state(false);
@@ -12,6 +13,7 @@
 	// Search states
 	let searchQuery = $state('');
 	let locationValue = $state('');
+	let displayedLocation = $state({ city: null, state: null });
 
 	// Set location input from search location store or fallback to user location
 	// Track if user has manually cleared the location
@@ -66,14 +68,46 @@
 		};
 	});
 
-	function handleSearch(event) {
+	async function handleSearch(event) {
 		const { practiceArea, location: searchLocationText } = event.detail;
 		console.log('Searching for:', practiceArea, 'in', searchLocationText);
 		// Update local state
 		searchQuery = practiceArea;
-		// Trigger search if we have location
-		if ($searchLocation.latitude || $location.latitude) {
+
+		// Check if we need to geocode
+		// Geocode if: no coordinates, OR location text doesn't match stored location
+		const needsGeocoding = !$searchLocation.latitude && !$location.latitude;
+		const locationChanged = locationValue && locationValue.trim() && (
+			!$searchLocation.city ||
+			locationValue !== ($searchLocation.zipCode || `${$searchLocation.city}, ${$searchLocation.state}`)
+		);
+
+		// If we have coordinates AND location hasn't changed, just search
+		if (($searchLocation.latitude || $location.latitude) && !locationChanged) {
 			performSearch();
+			return;
+		}
+
+		// If no coordinates or location changed, try geocoding
+		if (locationValue && locationValue.trim()) {
+			console.log('Attempting to geocode:', locationValue);
+			const geocodedLocation = await geocodeLocation(locationValue);
+
+			if (geocodedLocation) {
+				// Successfully geocoded - update search location store
+				console.log('Geocoding successful:', geocodedLocation);
+				searchLocation.setSearchLocation(geocodedLocation);
+				// Trigger search with the new coordinates
+				performSearch();
+			} else {
+				// Geocoding failed - show error
+				error = 'Unable to find that location. Please select a city from the dropdown menu.';
+				pageState = SearchState.ERROR;
+			}
+		} else {
+			// No location provided at all
+			error = 'Please enter a city or ZIP code.';
+			pageState = SearchState.ERROR;
 		}
 	}
 
@@ -126,6 +160,26 @@
 
 	// Transform database firm to UI format
 	function transformFirm(dbFirm) {
+		// Calculate years of experience from year_founded
+		const currentYear = new Date().getFullYear();
+		const yearsExperience = dbFirm.year_founded
+			? currentYear - dbFirm.year_founded
+			: null;
+
+		// Format total_recovered as currency (millions or billions)
+		let amountCollected = null;
+		if (dbFirm.total_recovered) {
+			if (dbFirm.total_recovered >= 1_000_000_000) {
+				// Billions
+				const billions = Math.floor(dbFirm.total_recovered / 1_000_000_000);
+				amountCollected = `$${billions}B+ Recovered`;
+			} else if (dbFirm.total_recovered >= 1_000_000) {
+				// Millions
+				const millions = Math.floor(dbFirm.total_recovered / 1_000_000);
+				amountCollected = `$${millions}M+ Recovered`;
+			}
+		}
+
 		return {
 			id: dbFirm.place_id,
 			name: dbFirm.firm_name,
@@ -133,22 +187,31 @@
 			city: dbFirm.city,
 			state: dbFirm.state,
 			distance: `${dbFirm.distance_miles.toFixed(1)} miles`,
-			description: dbFirm.company_description || 'Personal injury law firm dedicated to fighting for your rights.',
+			description: dbFirm.short_description || 'Personal injury law firm dedicated to fighting for your rights.',
 			practiceAreas: dbFirm.practice_areas || [],
 			rating: dbFirm.rating || 0,
 			reviews: dbFirm.review_count || 0,
 			phone: dbFirm.phone,
 			website: dbFirm.website,
 			isOpen: true,
-			yearsExperience: null,
-			casesWon: null,
-			amountCollected: null,
+			yearsExperience: yearsExperience,
+			casesWon: dbFirm.cases_won,
+			amountCollected: amountCollected,
+			clientsServed: dbFirm.clients_served,
+			shortFacts: dbFirm.short_facts || [],
+			longFacts: dbFirm.long_facts || [],
 			featured: false
 		};
 	}
 
 	// Perform search with current filters
 	async function performSearch() {
+		// Capture the location we're searching for (for headline display)
+		displayedLocation = {
+			city: $searchLocation.city || $location.city,
+			state: $searchLocation.state || $location.state
+		};
+
 		// Get coordinates from search location or fallback to user location
 		const lat = $searchLocation.latitude || $location.latitude;
 		const lng = $searchLocation.longitude || $location.longitude;
@@ -495,7 +558,7 @@
 		<div class="container">
 			<!-- Page Header -->
 			<div class="page-header">
-				<h1>Personal injury law firms {#if $searchLocation.city || $location.city}near <span class="location-highlight">{$searchLocation.city || $location.city || 'Raleigh'}, {$searchLocation.state || $location.state || 'NC'}</span>{/if}</h1>
+				<h1>Personal injury law firms {#if displayedLocation.city}near <span class="location-highlight">{displayedLocation.city}, {displayedLocation.state}</span>{/if}</h1>
 				<p class="subtitle">{lawFirms.length} law firms ready to help with your case</p>
 			</div>
 
@@ -780,77 +843,99 @@
 							</div>
 						</div>
 
-						<p class="firm-description">
-							<img src="/ai_icon_star_brand.png" alt="AI" class="ai-icon" />
-							{firm.description}
-						</p>
-
-						<div class="firm-stats">
-							{#if firm.isOpen}
-								<div class="stat open-now">
-									<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-										<circle cx="12" cy="12" r="10"/>
-										<polyline points="12 6 12 12 16 14"/>
-									</svg>
-									<span>Open now</span>
-								</div>
-							{/if}
-							<div class="stat">
-								<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-									<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-									<line x1="16" y1="2" x2="16" y2="6"/>
-									<line x1="8" y1="2" x2="8" y2="6"/>
-									<line x1="3" y1="10" x2="21" y2="10"/>
-								</svg>
-								<span>{firm.yearsExperience} years</span>
+						<!-- AI Overview Section -->
+						<div class="info-section">
+							<div class="section-header">
+								<img src="/stars-gradient-blue.svg" alt="AI" class="section-icon" />
+								<span class="section-title">AI OVERVIEW</span>
 							</div>
-							<div class="stat">
-								<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-									<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-									<polyline points="22 4 12 14.01 9 11.01"/>
-								</svg>
-								<span>{firm.casesWon}+ cases won</span>
-							</div>
-							<div class="stat">
-								<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-									<rect x="2" y="6" width="20" height="12" rx="2"/>
-									<circle cx="12" cy="12" r="2"/>
-									<path d="M6 12h.01M18 12h.01"/>
-								</svg>
-								<span>{firm.amountCollected} collected</span>
-							</div>
+							<p class="section-content">{firm.description}</p>
 						</div>
 
-						<div class="practice-areas"
-							class:expanded={expandedFirms.has(firm.id)}
-							bind:this={practiceAreaRefs[firm.id]}>
-							{#if !pillsReady[firm.id]}
-								<!-- Initial render for measurement -->
-								{#each firm.practiceAreas as area}
-									<span class="practice-tag">{area}</span>
-								{/each}
-							{:else if expandedFirms.has(firm.id)}
-								<!-- Expanded state: show all -->
-								{#each firm.practiceAreas as area}
-									<span class="practice-tag">{area}</span>
-								{/each}
-								{#if firm.practiceAreas.length > 0}
-									<button class="practice-tag more-pill" onclick={() => toggleFirmExpansion(firm.id)}>
-										Show less
-									</button>
+						<!-- Firm Highlights Section -->
+						<!-- <div class="info-section firm-highlights-section">
+							<div class="firm-stats">
+								{#if firm.isOpen}
+									<div class="stat open-now">
+										<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+											<circle cx="12" cy="12" r="10"/>
+											<polyline points="12 6 12 12 16 14"/>
+										</svg>
+										<span>Open now</span>
+									</div>
 								{/if}
-							{:else}
-								<!-- Collapsed state: show calculated amount -->
-								{#each firm.practiceAreas.slice(0, visiblePillCounts[firm.id] || 0) as area}
-									<span class="practice-tag">{area}</span>
-								{/each}
-								{#if firm.practiceAreas.length > (visiblePillCounts[firm.id] || 0)}
-									<button class="practice-tag more-pill" onclick={() => toggleFirmExpansion(firm.id)}>
-										+{firm.practiceAreas.length - (visiblePillCounts[firm.id] || 0)} more
-									</button>
+								{#if firm.yearsExperience}
+									<div class="stat">
+										<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+											<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+											<line x1="16" y1="2" x2="16" y2="6"/>
+											<line x1="8" y1="2" x2="8" y2="6"/>
+											<line x1="3" y1="10" x2="21" y2="10"/>
+										</svg>
+										<span>{firm.yearsExperience}+ years</span>
+									</div>
 								{/if}
-							{/if}
+								{#if firm.casesWon}
+									<div class="stat">
+										<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+											<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+											<polyline points="22 4 12 14.01 9 11.01"/>
+										</svg>
+										<span>{firm.casesWon.toLocaleString()}+ cases won</span>
+									</div>
+								{/if}
+								{#if firm.amountCollected}
+									<div class="stat">
+										<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+											<rect x="2" y="6" width="20" height="12" rx="2"/>
+											<circle cx="12" cy="12" r="2"/>
+											<path d="M6 12h.01M18 12h.01"/>
+										</svg>
+										<span>{firm.amountCollected}</span>
+									</div>
+								{/if}
+							</div>
+						</div> -->
+
+						<!-- Practice Areas Section -->
+						{#if firm.practiceAreas && firm.practiceAreas.length > 0}
+						<div class="info-section">
+							<div class="section-header">
+								<img src="/shield-gradient-blue.svg" alt="Practice Areas" class="section-icon" />
+								<span class="section-title">PRACTICE AREAS</span>
+							</div>
+							<div class="practice-areas"
+								class:expanded={expandedFirms.has(firm.id)}
+								bind:this={practiceAreaRefs[firm.id]}>
+								{#if !pillsReady[firm.id]}
+									<!-- Initial render for measurement -->
+									{#each firm.practiceAreas as area}
+										<span class="practice-tag">{area}</span>
+									{/each}
+								{:else if expandedFirms.has(firm.id)}
+									<!-- Expanded state: show all -->
+									{#each firm.practiceAreas as area}
+										<span class="practice-tag">{area}</span>
+									{/each}
+									{#if firm.practiceAreas.length > 0}
+										<button class="practice-tag more-pill" onclick={() => toggleFirmExpansion(firm.id)}>
+											Show less
+										</button>
+									{/if}
+								{:else}
+									<!-- Collapsed state: show calculated amount -->
+									{#each firm.practiceAreas.slice(0, visiblePillCounts[firm.id] || 0) as area}
+										<span class="practice-tag">{area}</span>
+									{/each}
+									{#if firm.practiceAreas.length > (visiblePillCounts[firm.id] || 0)}
+										<button class="practice-tag more-pill" onclick={() => toggleFirmExpansion(firm.id)}>
+											+{firm.practiceAreas.length - (visiblePillCounts[firm.id] || 0)} more
+										</button>
+									{/if}
+								{/if}
+							</div>
 						</div>
+						{/if}
 
 						<div class="button-wrapper">
 							<a href="/law-firm/{firm.id}" class="connect-link">
@@ -1310,7 +1395,7 @@
 		align-items: center;
 		gap: 8px;
 		padding: 16px 32px;
-		background: linear-gradient(135deg, #FF7B00 0%, #D85A00 100%);
+		background: linear-gradient(135deg, #FF6800 0%, #FFA500 100%);
 		color: white;
 		border: none;
 		border-radius: 8px;
@@ -1319,12 +1404,12 @@
 		cursor: pointer;
 		transition: all 0.3s ease;
 		text-decoration: none;
-		box-shadow: 0 4px 15px rgba(255, 123, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
+		box-shadow: 0 4px 15px rgba(255, 104, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
 
 	.cta-button:hover {
-		background: linear-gradient(135deg, #FF9500 0%, #E06500 100%);
-		box-shadow: 0 6px 25px rgba(255, 123, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.15);
+		background: linear-gradient(135deg, #FF8000 0%, #FFB733 100%);
+		box-shadow: 0 6px 25px rgba(255, 104, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.15);
 		transform: translateY(-2px);
 	}
 
@@ -1340,7 +1425,7 @@
 		background: white;
 		border-radius: 16px;
 		padding: 24px;
-		padding-bottom: 80px;
+		padding-bottom: 60px;
 		box-shadow: 0 2px 8px rgba(0,0,0,0.18);
 		transition: all 0.3s;
 		position: relative;
@@ -1487,6 +1572,7 @@
 		font-size: 14px;
 		min-width: 0;
 		flex-wrap: nowrap;
+		margin-left: auto;
 	}
 
 	.location-info .pipe {
@@ -1516,6 +1602,61 @@
 		margin-bottom: 14px;
 		flex-wrap: wrap;
 		min-width: 0;
+		padding-left: 28px;
+	}
+
+	/* New Section Layout Styles */
+	.info-section {
+		margin-bottom: 20px;
+		padding-top: 0;
+	}
+
+	.info-section:first-of-type {
+		padding-top: 0;
+	}
+
+	.info-section:last-of-type {
+		margin-bottom: 0;
+	}
+
+	/* Firm highlights without header */
+	.firm-highlights-section {
+		border-top: none;
+		padding-top: 0;
+		margin-bottom: 16px;
+	}
+
+	.section-header {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-bottom: 12px;
+	}
+
+	.section-icon {
+		width: 20px;
+		height: 20px;
+		flex-shrink: 0;
+	}
+
+	img.section-icon {
+		object-fit: contain;
+	}
+
+	.section-title {
+		font-size: 12px;
+		font-weight: 600;
+		color: #999;
+		text-transform: uppercase;
+	}
+
+	.section-content {
+		color: #1a1a1a;
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 1.5;
+		margin: 0;
+		padding-left: 28px;
 	}
 
 	.stat {
@@ -1552,8 +1693,8 @@
 	}
 
 	.ai-icon {
-		width: 16px;
-		height: 16px;
+		width: 24px;
+		height: 24px;
 		display: inline-block;
 		vertical-align: middle;
 		margin-right: 4px;
@@ -1563,6 +1704,7 @@
 	.rating-location-row {
 		display: flex;
 		align-items: center;
+		justify-content: space-between;
 		gap: 16px;
 		margin-bottom: 14px;
 		flex-wrap: wrap;
@@ -1621,10 +1763,7 @@
 	}
 
 	.stars {
-		background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-clip: text;
+		color: #FFA500;
 		font-size: 18px;
 	}
 

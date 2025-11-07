@@ -45,9 +45,10 @@
 				<div class="suggestions">
 					<span class="suggestions-label">Suggestions:</span>
 					<div class="suggestion-tags">
-						{#each suggestions as suggestion}
+						{#each suggestions as suggestion, i}
 							<button
 								class="suggestion-tag"
+								style="animation-delay: {i * 0.09}s"
 								onclick={() => setSuggestion(suggestion)}
 							>
 								{suggestion}
@@ -195,6 +196,9 @@
 		cursor: pointer;
 		transition: all 0.2s;
 		box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+		opacity: 0;
+		transform: scale(0.8);
+		animation: bubblePop 0.4s ease-out forwards;
 	}
 
 	.suggestion-tag:hover {
@@ -297,6 +301,17 @@
 		}
 		50% {
 			transform: translateY(-10px);
+		}
+	}
+
+	@keyframes bubblePop {
+		0% {
+			opacity: 0;
+			transform: scale(0.8);
+		}
+		100% {
+			opacity: 1;
+			transform: scale(1);
 		}
 	}
 

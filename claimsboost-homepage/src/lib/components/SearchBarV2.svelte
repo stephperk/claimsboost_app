@@ -187,7 +187,7 @@
 		width: 100%;
 		padding: 16px;
 		border: none;
-		background: linear-gradient(135deg, #FF7B00 0%, #D85A00 100%);
+		background: linear-gradient(135deg, #FF6800 0%, #FFA500 100%);
 		color: white;
 		font-size: 16px;
 		font-weight: 600;
@@ -195,18 +195,17 @@
 		transition: all 0.3s ease;
 		font-family: inherit;
 		border-radius: 0 0 16px 16px;
-		box-shadow: 0 4px 15px rgba(255, 123, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
-		margin-bottom: -2px;
+		box-shadow: 0 4px 15px rgba(255, 104, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
 		line-height: 1.5;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		box-sizing: border-box;
 	}
 
 	.search-button:hover {
-		background: linear-gradient(135deg, #FF9500 0%, #E06500 100%);
-		box-shadow: 0 6px 25px rgba(255, 123, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.15);
-		transform: translateY(-2px);
+		background: linear-gradient(135deg, #FF8000 0%, #FFB733 100%);
+		box-shadow: 0 6px 25px rgba(255, 104, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.15);
 	}
 
 	.search-button:active {
