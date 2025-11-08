@@ -2,10 +2,13 @@
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import SearchBarV2 from '$lib/components/SearchBarV2.svelte';
+	import StarRating from '$lib/components/StarRating.svelte';
 	import { onMount } from 'svelte';
 	import { location } from '$lib/stores/locationStore.js';
 	import { searchLocation } from '$lib/stores/searchLocationStore.js';
 	import { geocodeLocation } from '$lib/utils/geocoding.js';
+	import { getStateName, stateNameToUrl } from '$lib/utils/stateMapping.js';
+	import * as PillCalculator from '$lib/utils/pillCalculator.js';
 
 	let sortBy = $state('relevance');
 	let showFilters = $state(false);
@@ -180,20 +183,27 @@
 			}
 		}
 
+		// Get URL-friendly state name
+		const stateName = getStateName(dbFirm.state);
+		const stateUrl = stateName ? stateNameToUrl(stateName) : dbFirm.state.toLowerCase();
+
 		return {
 			id: dbFirm.place_id,
 			name: dbFirm.firm_name,
+			slug: dbFirm.slug,
 			address: dbFirm.address,
 			city: dbFirm.city,
 			state: dbFirm.state,
+			stateUrl: stateUrl,
 			distance: `${dbFirm.distance_miles.toFixed(1)} miles`,
 			description: dbFirm.short_description || 'Personal injury law firm dedicated to fighting for your rights.',
-			practiceAreas: dbFirm.practice_areas || [],
+			practiceAreas: (dbFirm.practice_areas && dbFirm.practice_areas.length > 0) ? dbFirm.practice_areas : ['Personal Injury'],
 			rating: dbFirm.rating || 0,
 			reviews: dbFirm.review_count || 0,
 			phone: dbFirm.phone,
 			website: dbFirm.website,
 			isOpen: true,
+			isVerified: dbFirm.is_personal_injury_firm || false,
 			yearsExperience: yearsExperience,
 			casesWon: dbFirm.cases_won,
 			amountCollected: amountCollected,
@@ -383,20 +393,8 @@
 		};
 	});
 
-	function renderStars(rating) {
-		const fullStars = Math.floor(rating);
-		const hasHalfStar = rating % 1 >= 0.5;
-		let stars = [];
-
-		for (let i = 0; i < fullStars; i++) {
-			stars.push('★');
-		}
-		if (hasHalfStar) {
-			stars.push('☆');
-		}
-
-		return stars.join('');
-	}
+	// Star rating rendering is now handled by the StarRating component
+	// Old renderStars function removed - see StarRating.svelte for implementation
 
 	function togglePracticeArea(area) {
 		if (selectedPracticeAreas.includes(area)) {
@@ -428,41 +426,16 @@
 			return;
 		}
 
-		const pills = Array.from(containerRef.children).filter(el =>
-			el.classList.contains('practice-tag')
-		);
+		// Use the new PillCalculator utility
+		const result = PillCalculator.calculateVisiblePills(containerRef, {
+			gap: 8,
+			minVisiblePills: 1,
+			pillClassName: 'practice-tag',
+			moreButtonClassName: 'practice-tag more-pill',
+			safetyBuffer: 4
+		});
 
-		// If no pills, mark as ready
-		if (pills.length === 0) {
-			pillsReady = { ...pillsReady, [firmId]: true };
-			return;
-		}
-
-		const containerWidth = containerRef.offsetWidth;
-		const gap = 8; // Gap between pills
-		let currentWidth = 0;
-		let visibleCount = 0;
-
-		// Reserve space for "see more" pill with extra buffer
-		const seeMoreWidth = 120; // Increased from 100 to give more space
-		const availableWidth = containerWidth - seeMoreWidth - gap;
-
-		for (let i = 0; i < pills.length; i++) {
-			const pillWidth = pills[i].offsetWidth;
-			if (currentWidth + pillWidth <= availableWidth) {
-				currentWidth += pillWidth + gap;
-				visibleCount++;
-			} else {
-				break;
-			}
-		}
-
-		// If all pills fit, don't need "see more"
-		if (visibleCount === pills.length) {
-			visibleCount = pills.length;
-		}
-
-		visiblePillCounts = { ...visiblePillCounts, [firmId]: visibleCount };
+		visiblePillCounts = { ...visiblePillCounts, [firmId]: result.visibleCount };
 		pillsReady = { ...pillsReady, [firmId]: true };
 	}
 
@@ -505,43 +478,75 @@
 		}
 	});
 
-	// Mark cards as ready when in transition state and complete animation
+	// Use IntersectionObserver for better timing of pill calculations
 	$effect(() => {
-		if (pageState === SearchState.TRANSITIONING && lawFirms.length > 0) {
-			// Use double RAF for better paint timing
-			requestAnimationFrame(() => {
-				requestAnimationFrame(() => {
-					// Batch update all cards at once
-					const newCardsReady = {};
-					const maxAnimatedCards = 20; // Limit animations for performance
-
-					lawFirms.forEach((firm, index) => {
-						// Only animate first N cards, show rest immediately
-						if (index < maxAnimatedCards) {
-							newCardsReady[firm.id] = true;
-						} else {
-							// For cards beyond limit, show immediately without animation
-							newCardsReady[firm.id] = 'immediate';
+		if (browser && lawFirms.length > 0) {
+			// Create an IntersectionObserver to detect when containers are visible
+			const visibilityObserver = new IntersectionObserver(
+				(entries) => {
+					entries.forEach(entry => {
+						if (entry.isIntersecting) {
+							// Find the firm ID from the element
+							const firmId = entry.target.getAttribute('data-firm-id');
+							if (firmId && !pillsReady[firmId]) {
+								// Element is visible and pills haven't been calculated yet
+								// Use RAF to ensure layout is complete
+								requestAnimationFrame(() => {
+									calculateVisiblePills(firmId, entry.target);
+								});
+							}
 						}
 					});
+				},
+				{
+					threshold: 0.1, // Trigger when 10% visible
+					rootMargin: '100px' // Start calculating slightly before visible
+				}
+			);
 
-					cardsReady = newCardsReady;
+			// Observe all practice area containers
+			lawFirms.forEach(firm => {
+				const containerRef = practiceAreaRefs[firm.id];
+				if (containerRef) {
+					// Add data attribute for identification
+					containerRef.setAttribute('data-firm-id', firm.id);
+					visibilityObserver.observe(containerRef);
+				}
+			});
 
-					// Complete transition to ready state after animation starts
-					const transitionDelay = Math.min(lawFirms.length * 50 + 100, 1100);
-					setTimeout(() => {
-						pageState = SearchState.READY;
-						// Trigger pill calculations after cards are ready
-						requestAnimationFrame(() => {
-							lawFirms.forEach(firm => {
-								const containerRef = practiceAreaRefs[firm.id];
-								if (containerRef) {
-									calculateVisiblePills(firm.id, containerRef);
-								}
-							});
-						});
-					}, transitionDelay);
+			// Cleanup
+			return () => {
+				visibilityObserver.disconnect();
+			};
+		}
+	});
+
+	// Simplified card animation logic
+	$effect(() => {
+		if (pageState === SearchState.TRANSITIONING && lawFirms.length > 0) {
+			// Single RAF for paint timing
+			requestAnimationFrame(() => {
+				// Batch update all cards at once
+				const newCardsReady = {};
+				const maxAnimatedCards = 20; // Limit animations for performance
+
+				lawFirms.forEach((firm, index) => {
+					// Only animate first N cards, show rest immediately
+					if (index < maxAnimatedCards) {
+						newCardsReady[firm.id] = true;
+					} else {
+						// For cards beyond limit, show immediately without animation
+						newCardsReady[firm.id] = 'immediate';
+					}
 				});
+
+				cardsReady = newCardsReady;
+
+				// Complete transition to ready state after animation starts
+				const transitionDelay = Math.min(lawFirms.length * 50 + 100, 1100);
+				setTimeout(() => {
+					pageState = SearchState.READY;
+				}, transitionDelay);
 			});
 		}
 	});</script>
@@ -621,13 +626,25 @@
 						{#if showRatingDropdown}
 							<div class="dropdown-menu">
 								<button class="dropdown-item" onclick={() => { selectedRating = 4.5; showRatingDropdown = false; }}>
-									<span>{renderStars(4.5)} 4.5+ Stars</span>
+									<span class="stars">
+										{#each renderStars(4.5) as star}
+											<span class="star star-{star.type}">{star.char}</span>
+										{/each}
+									</span> 4.5+ Stars
 								</button>
 								<button class="dropdown-item" onclick={() => { selectedRating = 4.0; showRatingDropdown = false; }}>
-									<span>{renderStars(4.0)} 4.0+ Stars</span>
+									<span class="stars">
+										{#each renderStars(4.0) as star}
+											<span class="star star-{star.type}">{star.char}</span>
+										{/each}
+									</span> 4.0+ Stars
 								</button>
 								<button class="dropdown-item" onclick={() => { selectedRating = 3.5; showRatingDropdown = false; }}>
-									<span>{renderStars(3.5)} 3.5+ Stars</span>
+									<span class="stars">
+										{#each renderStars(3.5) as star}
+											<span class="star star-{star.type}">{star.char}</span>
+										{/each}
+									</span> 3.5+ Stars
 								</button>
 								<button class="dropdown-item" onclick={() => { selectedRating = 0; showRatingDropdown = false; }}>
 									<span>Any Rating</span>
@@ -732,7 +749,11 @@
 										checked={selectedRating === rating}
 										onchange={() => selectedRating = rating}
 									/>
-									<span>{renderStars(rating)} {rating}+ Stars</span>
+									<span class="stars">
+										{#each renderStars(rating) as star}
+											<span class="star star-{star.type}">{star.char}</span>
+										{/each}
+									</span> {rating}+ Stars
 								</label>
 							{/each}
 						</div>
@@ -760,26 +781,54 @@
 				<div class="results-grid skeleton-grid" class:showing={showSkeletons}>
 					{#each Array(6) as _, i}
 						<div class="firm-card skeleton">
+							<!-- Firm Header -->
 							<div class="firm-header">
 								<div class="skeleton-avatar"></div>
-								<div style="flex: 1;">
-									<div class="skeleton-text" style="width: 60%; height: 16px; margin-bottom: 6px;"></div>
-									<div class="skeleton-text" style="width: 30%; height: 12px;"></div>
+								<div class="skeleton-text" style="width: 50%; height: 16px;"></div>
+								<div class="skeleton-text" style="width: 60px; height: 24px; border-radius: 6px;"></div>
+							</div>
+
+							<!-- Rating and Location Row -->
+							<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; margin-bottom: 8px; gap: 16px;">
+								<div class="skeleton-text" style="width: 140px; height: 16px;"></div>
+								<div class="skeleton-text" style="width: 120px; height: 16px;"></div>
+							</div>
+
+							<!-- Divider -->
+							<div class="card-divider"></div>
+
+							<!-- AI Overview Section -->
+							<div style="margin-bottom: 12px; min-height: 105px; display: flex; flex-direction: column;">
+								<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-shrink: 0;">
+									<div class="skeleton-text" style="width: 20px; height: 20px; border-radius: 4px;"></div>
+									<div class="skeleton-text" style="width: 100px; height: 12px;"></div>
+								</div>
+								<div style="padding-left: 28px;">
+									<div class="skeleton-text" style="width: 100%; height: 14px; margin-bottom: 6px;"></div>
+									<div class="skeleton-text" style="width: 95%; height: 14px; margin-bottom: 6px;"></div>
+									<div class="skeleton-text" style="width: 85%; height: 14px;"></div>
 								</div>
 							</div>
-							<div style="margin-bottom: 14px;">
-								<div class="skeleton-text" style="width: 100%; height: 14px; margin-bottom: 6px;"></div>
-								<div class="skeleton-text" style="width: 90%; height: 14px;"></div>
+
+							<!-- Practice Areas Section -->
+							<div style="margin-bottom: 10px; min-height: 72px;">
+								<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+									<div class="skeleton-text" style="width: 20px; height: 20px; border-radius: 4px;"></div>
+									<div class="skeleton-text" style="width: 110px; height: 12px;"></div>
+								</div>
+								<div style="padding-left: 28px; display: flex; gap: 8px; flex-wrap: wrap;">
+									<div class="skeleton-text" style="width: 90px; height: 28px; border-radius: 16px;"></div>
+									<div class="skeleton-text" style="width: 110px; height: 28px; border-radius: 16px;"></div>
+									<div class="skeleton-text" style="width: 80px; height: 28px; border-radius: 16px;"></div>
+								</div>
 							</div>
-							<div style="display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap;">
-								<div class="skeleton-text" style="width: 80px; height: 24px; border-radius: 16px;"></div>
-								<div class="skeleton-text" style="width: 100px; height: 24px; border-radius: 16px;"></div>
-								<div class="skeleton-text" style="width: 90px; height: 24px; border-radius: 16px;"></div>
-							</div>
-							<div class="skeleton-text" style="width: 140px; height: 16px; margin-bottom: 14px;"></div>
-							<div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
-								<div class="skeleton-text" style="width: 70px; height: 24px; border-radius: 16px;"></div>
-								<div class="skeleton-text" style="width: 85px; height: 24px; border-radius: 16px;"></div>
+
+							<!-- Divider -->
+							<div class="card-divider"></div>
+
+							<!-- View Profile Button -->
+							<div style="position: absolute; bottom: 24px; right: 24px;">
+								<div class="skeleton-text" style="width: 90px; height: 16px;"></div>
 							</div>
 						</div>
 					{/each}
@@ -823,30 +872,31 @@
 								{firm.name.charAt(0)}
 							</div>
 							<h2>{firm.name}</h2>
-							<span class="verified-badge">Verified</span>
+							{#if firm.isVerified}
+								<span class="verified-badge">Verified</span>
+							{/if}
 						</div>
 
 						<div class="rating-location-row">
 							<div class="firm-rating">
-								<span class="stars">{renderStars(firm.rating)}</span>
+								<StarRating rating={firm.rating} size={18} />
 								<span class="rating-text">{firm.rating} ({firm.reviews} reviews)</span>
 							</div>
 
 							<div class="location-info">
-								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-									<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-									<circle cx="12" cy="10" r="3"/>
-								</svg>
-								<span>{firm.city}, {firm.state}</span>
-								<span class="pipe">|</span>
+								<img src="/map-pin-gray.svg" alt="Location" class="location-icon-img" />
 								<span>{firm.distance} away</span>
+								<span class="pipe">|</span>
+								<span>{firm.city}, {firm.state}</span>
 							</div>
 						</div>
+
+						<div class="card-divider"></div>
 
 						<!-- AI Overview Section -->
 						<div class="info-section">
 							<div class="section-header">
-								<img src="/stars-gradient-blue.svg" alt="AI" class="section-icon" />
+								<img src="/stars-gradient-black.svg" alt="AI" class="section-icon" />
 								<span class="section-title">AI OVERVIEW</span>
 							</div>
 							<p class="section-content">{firm.description}</p>
@@ -901,7 +951,7 @@
 						{#if firm.practiceAreas && firm.practiceAreas.length > 0}
 						<div class="info-section">
 							<div class="section-header">
-								<img src="/shield-gradient-blue.svg" alt="Practice Areas" class="section-icon" />
+								<img src="/shield-black.svg" alt="Practice Areas" class="section-icon" />
 								<span class="section-title">PRACTICE AREAS</span>
 							</div>
 							<div class="practice-areas"
@@ -937,10 +987,12 @@
 						</div>
 						{/if}
 
+						<div class="card-divider"></div>
+
 						<div class="button-wrapper">
-							<a href="/law-firm/{firm.id}" class="connect-link">
+							<a href="/law-firm/{firm.stateUrl}/{firm.slug}" class="connect-link">
 								View profile
-								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 									<path d="M5 12h14M12 5l7 7-7 7"/>
 								</svg>
 							</a>
@@ -956,6 +1008,8 @@
 </div>
 
 <style>
+	@import '$lib/styles/practiceAreaPills.css';
+
 	.page {
 		min-height: 100vh;
 		display: flex;
@@ -1424,8 +1478,7 @@
 	.firm-card {
 		background: white;
 		border-radius: 16px;
-		padding: 24px;
-		padding-bottom: 60px;
+		padding: 16px 24px 40px 24px;
 		box-shadow: 0 2px 8px rgba(0,0,0,0.18);
 		transition: all 0.3s;
 		position: relative;
@@ -1437,6 +1490,8 @@
 		opacity: 0;
 		transform: translateY(20px);
 		will-change: transform, opacity, visibility;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.firm-card.ready {
@@ -1499,7 +1554,7 @@
 		display: flex;
 		align-items: center;
 		gap: 12px;
-		margin-bottom: 14px;
+		margin-bottom: 8px;
 		min-width: 0;
 	}
 
@@ -1511,15 +1566,15 @@
 	}
 
 	.firm-avatar {
-		width: 56px;
-		height: 56px;
+		width: 50px;
+		height: 50px;
 		border-radius: 50%;
 		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 		color: white;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 24px;
+		font-size: 22px;
 		font-weight: bold;
 		flex-shrink: 0;
 	}
@@ -1575,6 +1630,13 @@
 		margin-left: auto;
 	}
 
+	.location-icon-img {
+		width: 16px;
+		height: 16px;
+		flex-shrink: 0;
+		object-fit: contain;
+	}
+
 	.location-info .pipe {
 		color: #ccc;
 		margin: 0 2px;
@@ -1607,8 +1669,12 @@
 
 	/* New Section Layout Styles */
 	.info-section {
-		margin-bottom: 20px;
+		margin-bottom: 12px;
 		padding-top: 0;
+		min-height: 105px; /* Fixed height for consistent layout (4 lines × 21px + spacing) */
+		/* Removed flex: 1 to prevent variable expansion */
+		display: flex;
+		flex-direction: column;
 	}
 
 	.info-section:first-of-type {
@@ -1616,7 +1682,13 @@
 	}
 
 	.info-section:last-of-type {
-		margin-bottom: 0;
+		margin-bottom: 2px;
+	}
+
+	/* Specifically target the practice areas section */
+	.info-section:has(.practice-areas) {
+		margin-bottom: 10px;
+		min-height: unset; /* Remove the fixed height for practice areas */
 	}
 
 	/* Firm highlights without header */
@@ -1631,6 +1703,7 @@
 		align-items: center;
 		gap: 8px;
 		margin-bottom: 12px;
+		flex-shrink: 0;
 	}
 
 	.section-icon {
@@ -1657,6 +1730,11 @@
 		line-height: 1.5;
 		margin: 0;
 		padding-left: 28px;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.stat {
@@ -1706,8 +1784,15 @@
 		align-items: center;
 		justify-content: space-between;
 		gap: 16px;
-		margin-bottom: 14px;
+		margin-top: 16px;
+		margin-bottom: 8px;
 		flex-wrap: wrap;
+	}
+
+	.card-divider {
+		height: 1px;
+		background-color: transparent;
+		margin: 6px 0 8px 0;
 	}
 
 	.firm-rating {
@@ -1716,6 +1801,10 @@
 		gap: 8px;
 	}
 
+	/* Practice area styles are imported from shared CSS */
+	/* Additional overrides or specific styles can go here if needed */
+
+	/* Make practice-areas compatible with the standardized container */
 	.practice-areas {
 		display: flex;
 		flex-wrap: nowrap;
@@ -1731,6 +1820,7 @@
 		max-width: 100%;
 	}
 
+	/* Keep existing practice-tag styles for backward compatibility */
 	.practice-tag {
 		background: #f0f0f0;
 		color: #666;
@@ -1763,8 +1853,25 @@
 	}
 
 	.stars {
-		color: #FFA500;
 		font-size: 18px;
+		display: inline-flex;
+		gap: 2px;
+	}
+
+	.star {
+		line-height: 1;
+	}
+
+	.star-full {
+		color: #FFA500;
+	}
+
+	.star-half {
+		color: #FFA500;
+	}
+
+	.star-empty {
+		color: #d0d0d0;
 	}
 
 	.rating-text {
@@ -1774,13 +1881,13 @@
 
 	.button-wrapper {
 		position: absolute;
-		bottom: 24px;
+		bottom: 16px;
 		right: 24px;
 	}
 
 	.connect-link {
 		color: #1a1a1a;
-		font-size: 16px;
+		font-size: 14px;
 		font-weight: 600;
 		cursor: pointer;
 		transition: all 0.2s ease;
@@ -1794,13 +1901,21 @@
 		color: #FF7B00;
 	}
 
+	.firm-card:hover .connect-link {
+		color: #FF7B00;
+	}
+
 	.connect-link svg {
 		transition: transform 0.2s;
-		width: 20px;
-		height: 20px;
+		width: 16px;
+		height: 16px;
 	}
 
 	.connect-link:hover svg {
+		transform: translateX(3px);
+	}
+
+	.firm-card:hover .connect-link svg {
 		transform: translateX(3px);
 	}
 
@@ -1969,8 +2084,8 @@
 	}
 
 	.skeleton-avatar {
-		width: 56px;
-		height: 56px;
+		width: 50px;
+		height: 50px;
 		border-radius: 50%;
 		background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
 		background-size: 200% 100%;

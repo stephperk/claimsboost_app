@@ -1,0 +1,106 @@
+/**
+ * Shared styles for practice area pills across all components
+ * Import this file wherever practice area pills are displayed
+ */
+
+/* Container for practice area pills */
+.practice-areas-container {
+	display: flex;
+	flex-wrap: nowrap;
+	gap: 8px;
+	max-width: 100%;
+	overflow: hidden;
+	position: relative;
+	box-sizing: border-box;
+}
+
+.practice-areas-container.expanded {
+	flex-wrap: wrap;
+	overflow: visible;
+}
+
+/* Individual practice area pill */
+.practice-pill {
+	background: #f0f0f0;
+	color: #666;
+	padding: 6px 12px;
+	border-radius: 16px;
+	font-size: 12px;
+	font-weight: 500;
+	white-space: nowrap;
+	flex-shrink: 0;
+	box-sizing: border-box;
+	transition: all 0.2s ease;
+	border: 1px solid transparent;
+}
+
+.practice-pill:hover {
+	background: #e8e8e8;
+	transform: translateY(-1px);
+}
+
+/* "See more" button pill */
+.practice-pill.more-button {
+	background: rgba(96, 165, 250, 0.15);
+	color: #2563EB;
+	font-weight: 600;
+	cursor: pointer;
+	border: none;
+}
+
+.practice-pill.more-button:hover {
+	background: rgba(96, 165, 250, 0.25);
+	transform: scale(1.05);
+}
+
+/* Show less variant */
+.practice-pill.show-less {
+	background: rgba(220, 38, 38, 0.1);
+	color: #dc2626;
+}
+
+.practice-pill.show-less:hover {
+	background: rgba(220, 38, 38, 0.2);
+}
+
+/* Loading state */
+.practice-pill.skeleton {
+	background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+	background-size: 200% 100%;
+	animation: skeleton-loading 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-loading {
+	0% {
+		background-position: 200% 0;
+	}
+	100% {
+		background-position: -200% 0;
+	}
+}
+
+/* Utility classes for different sizes */
+.practice-pill.small {
+	padding: 4px 8px;
+	font-size: 11px;
+}
+
+.practice-pill.large {
+	padding: 8px 16px;
+	font-size: 14px;
+}
+
+/* Ensure consistent rendering across browsers */
+@supports (font-smoothing: antialiased) {
+	.practice-pill {
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+}
+
+/* High DPI screen support */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+	.practice-pill {
+		border-width: 0.5px;
+	}
+}

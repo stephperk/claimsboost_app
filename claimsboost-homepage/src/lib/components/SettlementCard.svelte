@@ -18,12 +18,13 @@
 		<span class="amount">{formatAmount(settlement.amount)}</span>
 	</div>
 
-	<p class="settlement-description">
-		<span class="ai-label">
-			<img src="/ai_icon_star_brand.png" alt="AI" class="ai-icon" />
-			AI Summary:
-		</span> {settlement.description}
-	</p>
+	<div class="info-section">
+		<div class="section-header">
+			<img src="/stars-gradient-black.svg" alt="AI" class="section-icon" />
+			<span class="section-title">AI OVERVIEW</span>
+		</div>
+		<p class="section-content">{settlement.description}</p>
+	</div>
 
 	{#if matchingCriteria.length > 0}
 		<div class="badges">
@@ -102,24 +103,38 @@
 		line-height: 1.2;
 	}
 
-	.settlement-description {
-		color: #666;
-		font-size: 17px;
-		line-height: 1.6;
+	.info-section {
 		margin-bottom: 20px;
+		padding-top: 0;
 	}
 
-	.ai-label {
+	.section-header {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-bottom: 12px;
+	}
+
+	.section-icon {
+		width: 20px;
+		height: 20px;
+		flex-shrink: 0;
+		object-fit: contain;
+	}
+
+	.section-title {
+		font-size: 12px;
 		font-weight: 600;
-		color: #1a1a1a;
+		color: #999;
+		text-transform: uppercase;
 	}
 
-	.ai-icon {
-		width: 19px;
-		height: 19px;
-		display: inline-block;
-		vertical-align: middle;
-		margin-right: 4px;
-		margin-top: -3px;
+	.section-content {
+		color: #1a1a1a;
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 1.5;
+		margin: 0;
+		padding-left: 28px;
 	}
 </style>

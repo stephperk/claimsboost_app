@@ -1,6 +1,8 @@
 <script>
 	import { onMount } from 'svelte';
 	import { location } from '$lib/stores/locationStore.js';
+	import { getStateName, stateNameToUrl } from '$lib/utils/stateMapping.js';
+	import StarRating from '$lib/components/StarRating.svelte';
 
 	let scrollContainer = $state(null);
 	let currentIndex = $state(0);
@@ -32,16 +34,26 @@
 			const data = await response.json();
 
 			// Map database response to component format
-			firms = data.firms.map((firm) => ({
-				id: firm.place_id,
-				name: firm.firm_name,
-				location: `${firm.city}, ${firm.state}`,
-				description: 'Experienced personal injury attorney dedicated to fighting for your rights and maximizing your compensation.',
-				practiceAreas: firm.practice_areas || ['Personal Injury', 'Auto Accidents'],
-				rating: firm.rating || 0,
-				reviews: firm.review_count || 0,
-				distance: firm.distance_miles
-			}));
+			firms = data.firms.map((firm) => {
+				// Get URL-friendly state name
+				const stateName = getStateName(firm.state);
+				const stateUrl = stateName ? stateNameToUrl(stateName) : firm.state.toLowerCase();
+
+				return {
+					id: firm.place_id,
+					name: firm.firm_name,
+					slug: firm.slug,
+					city: firm.city,
+					state: firm.state,
+					stateUrl: stateUrl,
+					location: `${firm.city}, ${firm.state}`,
+					description: firm.short_description || 'Experienced personal injury attorney dedicated to fighting for your rights and maximizing your compensation.',
+					practiceAreas: firm.practice_areas || ['Personal Injury', 'Auto Accidents'],
+					rating: firm.rating || 0,
+					reviews: firm.review_count || 0,
+					distance: firm.distance_miles
+				};
+			});
 
 			radiusUsed = data.radius_used;
 		} catch (err) {
@@ -76,20 +88,8 @@
 		}
 	}
 
-	function renderStars(rating) {
-		const fullStars = Math.floor(rating);
-		const hasHalfStar = rating % 1 >= 0.5;
-		let stars = [];
-
-		for (let i = 0; i < fullStars; i++) {
-			stars.push('★');
-		}
-		if (hasHalfStar) {
-			stars.push('☆');
-		}
-
-		return stars.join('');
-	}
+	// Star rating rendering is now handled by the StarRating component
+	// Old renderStars function removed - see StarRating.svelte for implementation
 </script>
 
 <section class="law-firms">
@@ -148,35 +148,37 @@
 				<div class="firms-carousel" bind:this={scrollContainer}>
 					{#each firms as firm (firm.id)}
 						<div class="firm-card">
+							<!-- Row 1: Logo and Name -->
 							<div class="firm-header">
 								<div class="firm-avatar">
 									{firm.name.charAt(0)}
 								</div>
-								<div>
-									<h3>{firm.name}</h3>
-									<p class="firm-location">{firm.location}</p>
-								</div>
+								<h3>{firm.name}</h3>
 							</div>
 
-							<p class="firm-description">
-								<span class="ai-label">
-									<img src="/ai_icon_star_brand.png" alt="AI" class="ai-icon" />
-									AI Summary:
-								</span> {firm.description}
-							</p>
-
-							<div class="practice-areas">
-								{#each firm.practiceAreas as area}
-									<span class="practice-tag">{area}</span>
-								{/each}
-							</div>
-
+							<!-- Row 2: Rating -->
 							<div class="firm-rating">
-								<span class="stars">{renderStars(firm.rating)}</span>
+								<StarRating rating={firm.rating} size={18} />
 								<span class="rating-text">{firm.rating} ({firm.reviews} reviews)</span>
 							</div>
 
-							<button class="view-profile-btn">View firm profile</button>
+							<!-- Row 3: AI Overview -->
+							<div class="info-section">
+								<div class="section-header">
+									<img src="/stars-gradient-black.svg" alt="AI" class="section-icon" />
+									<span class="section-title">AI OVERVIEW</span>
+								</div>
+								<p class="section-content">{firm.description}</p>
+							</div>
+
+							<!-- Row 4: Location -->
+							<div class="firm-location">
+								<img src="/map-pin-gray.svg" alt="Location" class="location-icon" />
+								<span>{firm.distance.toFixed(1)} miles away | {firm.city}, {firm.state}</span>
+							</div>
+
+							<!-- Row 5: View Profile Button -->
+							<a href="/law-firm/{firm.stateUrl}/{firm.slug}" class="view-profile-btn">View firm profile</a>
 						</div>
 					{/each}
 				</div>
@@ -266,6 +268,8 @@
 		box-shadow: 0 2px 8px rgba(0,0,0,0.18);
 		transition: transform 0.2s, box-shadow 0.2s;
 		cursor: pointer;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.firm-card:hover {
@@ -273,22 +277,24 @@
 		box-shadow: 0 4px 16px rgba(0,0,0,0.22);
 	}
 
+	/* Row 1: Logo and Name */
 	.firm-header {
 		display: flex;
+		align-items: center;
 		gap: 12px;
-		margin-bottom: 16px;
+		margin-bottom: 12px;
 	}
 
 	.firm-avatar {
-		width: 48px;
-		height: 48px;
+		width: 56px;
+		height: 56px;
 		border-radius: 50%;
 		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 		color: white;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 20px;
+		font-size: 24px;
 		font-weight: bold;
 		flex-shrink: 0;
 	}
@@ -297,64 +303,38 @@
 		font-size: 18px;
 		font-weight: 600;
 		color: #1a1a1a;
-		margin: 0 0 4px;
-	}
-
-	.firm-location {
-		font-size: 14px;
-		color: #666;
 		margin: 0;
+		flex: 1;
 	}
 
-	.firm-description {
-		color: #666;
-		font-size: 14px;
-		line-height: 1.5;
-		margin-bottom: 16px;
-	}
-
-	.ai-label {
-		font-weight: 600;
-		color: #1a1a1a;
-	}
-
-	.ai-icon {
-		width: 16px;
-		height: 16px;
-		display: inline-block;
-		vertical-align: middle;
-		margin-right: 4px;
-		margin-top: -3px;
-	}
-
-	.practice-areas {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 6px;
-		margin-bottom: 16px;
-	}
-
-	.practice-tag {
-		background: #f0f0f0;
-		color: #666;
-		padding: 4px 10px;
-		border-radius: 16px;
-		font-size: 12px;
-	}
-
+	/* Row 2: Rating */
 	.firm-rating {
 		display: flex;
 		align-items: center;
 		gap: 8px;
-		margin-bottom: 16px;
+		margin-bottom: 20px;
 	}
 
 	.stars {
-		background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-clip: text;
 		font-size: 18px;
+		display: inline-flex;
+		gap: 2px;
+	}
+
+	.star {
+		line-height: 1;
+	}
+
+	.star-full {
+		color: #FFA500;
+	}
+
+	.star-half {
+		color: #FFA500;
+	}
+
+	.star-empty {
+		color: #d0d0d0;
 	}
 
 	.rating-text {
@@ -362,7 +342,70 @@
 		color: #666;
 	}
 
+	/* Row 4: Location */
+	.firm-location {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 14px;
+		color: #666;
+		margin-bottom: 16px;
+	}
+
+	.location-icon {
+		width: 16px;
+		height: 16px;
+		flex-shrink: 0;
+	}
+
+	/* Row 3: AI Overview */
+	.info-section {
+		margin-bottom: 12px;
+		min-height: 126px; /* Fixed height for consistent layout (5 lines × 22.4px + spacing) */
+		/* Removed flex: 1 to prevent variable expansion */
+		display: flex;
+		flex-direction: column;
+	}
+
+	.section-header {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-bottom: 8px;
+		flex-shrink: 0;
+	}
+
+	.section-icon {
+		width: 20px;
+		height: 20px;
+		flex-shrink: 0;
+		object-fit: contain;
+	}
+
+	.section-title {
+		font-size: 12px;
+		font-weight: 600;
+		color: #999;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+	}
+
+	.section-content {
+		color: #1a1a1a;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 1.6;
+		margin: 0;
+		display: -webkit-box;
+		-webkit-line-clamp: 4;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	/* Row 5: Button */
 	.view-profile-btn {
+		display: block;
 		width: 100%;
 		padding: 12px;
 		background: #1a1a1a;
@@ -373,6 +416,8 @@
 		font-weight: 600;
 		cursor: pointer;
 		transition: all 0.3s ease;
+		text-decoration: none;
+		text-align: center;
 	}
 
 	.view-profile-btn:hover {
