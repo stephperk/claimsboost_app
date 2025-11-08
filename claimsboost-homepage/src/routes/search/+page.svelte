@@ -828,7 +828,7 @@
 
 							<!-- View Profile Button -->
 							<div style="position: absolute; bottom: 24px; right: 24px;">
-								<div class="skeleton-text" style="width: 90px; height: 16px;"></div>
+								<div class="skeleton-text" style="width: 95px; height: 18px;"></div>
 							</div>
 						</div>
 					{/each}
@@ -992,7 +992,7 @@
 						<div class="button-wrapper">
 							<a href="/law-firm/{firm.stateUrl}/{firm.slug}" class="connect-link">
 								View profile
-								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 									<path d="M5 12h14M12 5l7 7-7 7"/>
 								</svg>
 							</a>
@@ -1627,7 +1627,6 @@
 		font-size: 14px;
 		min-width: 0;
 		flex-wrap: nowrap;
-		margin-left: auto;
 	}
 
 	.location-icon-img {
@@ -1729,7 +1728,6 @@
 		font-weight: 500;
 		line-height: 1.5;
 		margin: 0;
-		padding-left: 28px;
 		display: -webkit-box;
 		-webkit-line-clamp: 3;
 		-webkit-box-orient: vertical;
@@ -1887,7 +1885,7 @@
 
 	.connect-link {
 		color: #1a1a1a;
-		font-size: 14px;
+		font-size: 15px;
 		font-weight: 600;
 		cursor: pointer;
 		transition: all 0.2s ease;
@@ -1907,8 +1905,8 @@
 
 	.connect-link svg {
 		transition: transform 0.2s;
-		width: 16px;
-		height: 16px;
+		width: 18px;
+		height: 18px;
 	}
 
 	.connect-link:hover svg {
@@ -2017,6 +2015,14 @@
 		.filter-toggle, .sort-select {
 			flex: 0 0 auto;
 			width: 140px;
+		}
+
+		.location-info {
+			margin-left: auto;
+		}
+
+		.section-content {
+			padding-left: 28px;
 		}
 	}
 

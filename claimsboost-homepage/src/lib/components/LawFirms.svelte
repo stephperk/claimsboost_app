@@ -108,20 +108,35 @@
 			<div class="firms-carousel">
 				{#each Array(4) as _, i}
 					<div class="firm-card skeleton">
+						<!-- Row 1: Logo and Name -->
 						<div class="firm-header">
 							<div class="skeleton-avatar"></div>
-							<div style="flex: 1;">
-								<div class="skeleton-text" style="width: 60%; height: 18px; margin-bottom: 8px;"></div>
-								<div class="skeleton-text" style="width: 40%; height: 14px;"></div>
+							<div class="skeleton-text" style="width: 60%; height: 18px;"></div>
+						</div>
+
+						<!-- Row 2: Rating -->
+						<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px;">
+							<div class="skeleton-text" style="width: 120px; height: 18px;"></div>
+						</div>
+
+						<!-- Row 3: AI Overview -->
+						<div style="margin-bottom: 12px; min-height: 126px; display: flex; flex-direction: column;">
+							<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+								<div class="skeleton-text" style="width: 20px; height: 20px; border-radius: 4px;"></div>
+								<div class="skeleton-text" style="width: 100px; height: 12px;"></div>
 							</div>
+							<div class="skeleton-text" style="width: 100%; height: 14px; margin-bottom: 6px;"></div>
+							<div class="skeleton-text" style="width: 95%; height: 14px; margin-bottom: 6px;"></div>
+							<div class="skeleton-text" style="width: 85%; height: 14px;"></div>
 						</div>
-						<div class="skeleton-text" style="width: 100%; height: 14px; margin-bottom: 8px;"></div>
-						<div class="skeleton-text" style="width: 85%; height: 14px; margin-bottom: 16px;"></div>
-						<div style="display: flex; gap: 6px; margin-bottom: 16px;">
-							<div class="skeleton-text" style="width: 80px; height: 24px; border-radius: 16px;"></div>
-							<div class="skeleton-text" style="width: 100px; height: 24px; border-radius: 16px;"></div>
+
+						<!-- Row 4: Location -->
+						<div style="display: flex; align-items: center; gap: 6px; margin-bottom: 16px;">
+							<div class="skeleton-text" style="width: 16px; height: 16px; border-radius: 4px;"></div>
+							<div class="skeleton-text" style="width: 140px; height: 14px;"></div>
 						</div>
-						<div class="skeleton-text" style="width: 120px; height: 18px; margin-bottom: 16px;"></div>
+
+						<!-- Row 5: Button -->
 						<div class="skeleton-text" style="width: 100%; height: 40px; border-radius: 8px;"></div>
 					</div>
 				{/each}
@@ -527,8 +542,8 @@
 	}
 
 	.skeleton-avatar {
-		width: 48px;
-		height: 48px;
+		width: 56px;
+		height: 56px;
 		border-radius: 50%;
 		background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
 		background-size: 200% 100%;
