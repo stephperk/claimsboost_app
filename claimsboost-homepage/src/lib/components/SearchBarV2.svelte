@@ -33,6 +33,19 @@
 		dispatch('clear');
 	}
 
+	// Handle location input events
+	function handleLocationInput() {
+		dispatch('locationInput', { value: locationValue });
+	}
+
+	function handleLocationFocus() {
+		dispatch('locationFocus');
+	}
+
+	function handleLocationBlur() {
+		dispatch('locationBlur');
+	}
+
 	// Handle search submission
 	function handleSearch(e) {
 		e.preventDefault();
@@ -77,6 +90,9 @@
 					userLocation={$location}
 					on:select={handleLocationSelect}
 					on:clear={handleLocationClear}
+					on:input={handleLocationInput}
+					on:focus={handleLocationFocus}
+					on:blur={handleLocationBlur}
 				/>
 			</div>
 		{/if}

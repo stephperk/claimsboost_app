@@ -77,9 +77,8 @@ export function getStateAbbreviation(stateName) {
 		return stateName.toUpperCase();
 	}
 
-	// Convert to title case and lookup
-	const titleCase = stateName.charAt(0).toUpperCase() + stateName.slice(1).toLowerCase();
-	return STATE_ABBREVIATIONS[titleCase] || null;
+	// Lookup by lowercase (STATE_ABBREVIATIONS has lowercase keys)
+	return STATE_ABBREVIATIONS[stateName.toLowerCase()] || null;
 }
 
 /**
@@ -108,6 +107,28 @@ export function stateNameToUrl(stateName) {
  */
 export function urlToStateName(urlState) {
 	return urlState
+		.split('-')
+		.map(word => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(' ');
+}
+
+/**
+ * Convert city name to URL-friendly format (lowercase, hyphens)
+ * @param {string} cityName - City name (e.g., 'New York' or 'Lake Worth Corridor')
+ * @returns {string} - URL-friendly name (e.g., 'new-york' or 'lake-worth-corridor')
+ */
+export function cityNameToUrl(cityName) {
+	if (!cityName) return '';
+	return cityName.toLowerCase().replace(/\s+/g, '-');
+}
+
+/**
+ * Convert URL-friendly city name to proper format
+ * @param {string} urlCity - URL city name (e.g., 'new-york')
+ * @returns {string} - Proper city name (e.g., 'New York')
+ */
+export function urlToCityName(urlCity) {
+	return urlCity
 		.split('-')
 		.map(word => word.charAt(0).toUpperCase() + word.slice(1))
 		.join(' ');

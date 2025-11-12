@@ -227,7 +227,7 @@
 
 					<p class="estimate-basis" class:fade-in={showSubtext} class:hidden={!showSubtext}>Your estimate is based on similar personal injury cases in {$location.state || 'your state'}.</p>
 
-					<button class="consultation-button" class:fade-in={showButton} class:hidden={!showButton} onclick={() => goto('/search')}>
+					<button class="consultation-button" class:fade-in={showButton} class:hidden={!showButton} onclick={() => goto('/injury-law-firms/search')}>
 						Get Free Consultation
 						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 							<path d="M5 12h14M12 5l7 7-7 7"/>
@@ -257,7 +257,7 @@
 			<div class="cta-section below-content">
 			<h2>Prefer to browse on your own?</h2>
 			<p>Search over 20,000 verified personal injury law firms across the country.</p>
-			<button class="cta-button" onclick={() => goto('/search')}>
+			<button class="cta-button" onclick={() => goto('/injury-law-firms/search')}>
 				Search law firms
 				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 					<path d="M5 12h14M12 5l7 7-7 7"/>

@@ -4,33 +4,38 @@ import { supabaseServer } from '$lib/supabaseServer';
 /**
  * GET /api/law-firms/by-slug
  *
- * Fetch a single law firm by its slug and state.
+ * Fetch a single law firm by its slug.
  *
  * Query Parameters:
- * - state (required): Two-letter state code (e.g., 'NC')
- * - slug (required): URL-safe slug for the firm
+ * - slug (required): URL-safe slug for the firm (unique across all firms)
+ * - state (optional): Two-letter state code for backward compatibility
  *
  * Response:
  * - firm: Complete law firm object
  * - error: Error message if firm not found
  */
 export async function GET({ url }) {
-	const state = url.searchParams.get('state');
 	const slug = url.searchParams.get('slug');
+	const state = url.searchParams.get('state');
 
 	// Validate required parameters
-	if (!state || !slug) {
-		return json({ error: 'State and slug are required' }, { status: 400 });
+	if (!slug) {
+		return json({ error: 'Slug is required' }, { status: 400 });
 	}
 
 	try {
-		// Query the verified_law_firms table directly
-		const { data, error } = await supabaseServer
+		// Build query - slug is unique so we can query by slug alone
+		let query = supabaseServer
 			.from('verified_law_firms')
 			.select('*')
-			.eq('state', state)
-			.eq('slug', slug)
-			.single();
+			.eq('slug', slug);
+
+		// Add state filter if provided (for backward compatibility)
+		if (state) {
+			query = query.eq('state', state);
+		}
+
+		const { data, error } = await query.single();
 
 		if (error) {
 			if (error.code === 'PGRST116') {

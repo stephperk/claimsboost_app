@@ -169,6 +169,7 @@
 	function handleInput(event) {
 		value = event.target.value;
 		fetchSuggestions(value);
+		dispatch('input', { value: value });
 	}
 
 	// Handle suggestion selection
@@ -341,6 +342,8 @@
 			class="autocomplete-input"
 			bind:value={value}
 			on:input={handleInput}
+			on:focus={() => dispatch('focus')}
+			on:blur={() => dispatch('blur')}
 			on:keydown={handleKeyDown}
 			placeholder={placeholder}
 			autocomplete="off"

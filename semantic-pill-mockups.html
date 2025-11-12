@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semantic Similarity Pills - Design Mockups</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .search-example {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 32px;
+        }
+
+        .search-query {
+            display: inline-block;
+            background: #f0f9ff;
+            color: #0369a1;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        .option-section {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            margin-bottom: 32px;
+        }
+
+        .option-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .option-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .option-description {
+            color: #666;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: #fafafa;
+            border-radius: 8px;
+        }
+
+        .pros-cons h4 {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .pros h4 {
+            color: #059669;
+        }
+
+        .cons h4 {
+            color: #dc2626;
+        }
+
+        .pros-cons ul {
+            list-style: none;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .pros-cons li {
+            padding-left: 20px;
+            position: relative;
+            margin-bottom: 6px;
+        }
+
+        .pros li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #059669;
+            font-weight: bold;
+        }
+
+        .cons li:before {
+            content: "×";
+            position: absolute;
+            left: 0;
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .firm-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+            background: white;
+            margin-bottom: 16px;
+        }
+
+        .firm-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .firm-initial {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .firm-info h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .rating {
+            color: #f59e0b;
+            font-size: 14px;
+        }
+
+        .practice-areas-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .pills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        /* Base pill style */
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            background: #f3f4f6;
+            color: #4b5563;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        /* Option 1: Gradient Opacity */
+        .option1 .pill[data-score="high"] {
+            background: #10b981;
+            color: white;
+            opacity: 1;
+        }
+
+        .option1 .pill[data-score="medium"] {
+            background: #10b981;
+            color: white;
+            opacity: 0.75;
+        }
+
+        .option1 .pill[data-score="low"] {
+            background: #10b981;
+            color: white;
+            opacity: 0.5;
+        }
+
+        /* Option 2: Color Scale */
+        .option2 .pill[data-score="high"] {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: 1px solid #059669;
+        }
+
+        .option2 .pill[data-score="medium"] {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border: 1px solid #d97706;
+        }
+
+        /* Option 3: Highlight Top Match */
+        .option3 .pill.top-match {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: 1px solid #059669;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+
+        .option3 .pill.top-match .badge {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Option 4: Border + Icon */
+        .option4 .pill[data-score="high"],
+        .option4 .pill[data-score="medium"] {
+            border-left: 3px solid #10b981;
+            background: #f0fdf4;
+            color: #166534;
+        }
+
+        .option4 .pill .icon {
+            font-size: 12px;
+        }
+
+        /* Option 5: Progressive Border Weight */
+        .option5 .pill[data-score="high"] {
+            border: 3px solid #10b981;
+            color: #166534;
+            background: #f0fdf4;
+        }
+
+        .option5 .pill[data-score="medium"] {
+            border: 2px solid #10b981;
+            color: #166534;
+            background: #f0fdf4;
+        }
+
+        .option5 .pill[data-score="low"] {
+            border: 1px solid #d1d5db;
+        }
+
+        /* Option 6: Hybrid */
+        .option6 .pill.top-match {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: 1px solid #059669;
+        }
+
+        .option6 .pill.top-match .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .option6 .pill[data-score="high"]:not(.top-match) {
+            border-left: 3px solid #10b981;
+            background: #f0fdf4;
+            color: #166534;
+        }
+
+        .similarity-score {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 8px;
+            font-family: 'Courier New', monospace;
+        }
+
+        @media (max-width: 768px) {
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Semantic Similarity Pills - Design Mockups</h1>
+        <p class="subtitle">Comparing different visual approaches for indicating practice area relevance</p>
+
+        <div class="search-example">
+            <div class="search-query">🔍 Search: "roller coaster accident"</div>
+            <p style="color: #666; font-size: 14px;">These mockups show how practice areas might be styled based on their semantic similarity to the user's search query.</p>
+        </div>
+
+        <!-- Option 1 -->
+        <div class="option-section">
+            <div class="option-header">
+                <h2 class="option-title">Option 1: Gradient Opacity</h2>
+            </div>
+            <p class="option-description">Same color, varying opacity based on semantic match strength</p>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Clean, doesn't clutter UI</li>
+                        <li>Maintains color consistency</li>
+                        <li>Elegant and subtle</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>May be too subtle</li>
+                        <li>Lower opacity = harder to read</li>
+                        <li>Less accessible</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="firm-card option1">
+                <div class="firm-header">
+                    <div class="firm-initial">L</div>
+                    <div class="firm-info">
+                        <h3>Law Offices of James O. Cunningham</h3>
+                        <div class="rating">★★★★★ 4.9 (45 reviews)</div>
+                    </div>
+                </div>
+                <div class="practice-areas-label">Practice Areas</div>
+                <div class="pills-container">
+                    <div class="pill" data-score="high">Amusement Park Accidents</div>
+                    <div class="pill" data-score="medium">Premises Liability</div>
+                    <div class="pill" data-score="low">Slip and Fall</div>
+                    <div class="pill">Brain Injury</div>
+                    <div class="pill">Wrongful Death</div>
+                </div>
+                <div class="similarity-score">Scores: 89.6%, 72.3%, 58.1%, no match, no match</div>
+            </div>
+        </div>
+
+        <!-- Option 2 -->
+        <div class="option-section">
+            <div class="option-header">
+                <h2 class="option-title">Option 2: Color Scale</h2>
+            </div>
+            <p class="option-description">Different colors indicate match strength (green = high, orange = medium, gray = low/none)</p>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Immediately clear hierarchy</li>
+                        <li>Strong visual impact</li>
+                        <li>Easy to scan</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>Could look busy</li>
+                        <li>May clash with brand</li>
+                        <li>Needs color accessibility testing</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="firm-card option2">
+                <div class="firm-header">
+                    <div class="firm-initial">L</div>
+                    <div class="firm-info">
+                        <h3>Law Offices of James O. Cunningham</h3>
+                        <div class="rating">★★★★★ 4.9 (45 reviews)</div>
+                    </div>
+                </div>
+                <div class="practice-areas-label">Practice Areas</div>
+                <div class="pills-container">
+                    <div class="pill" data-score="high">Amusement Park Accidents</div>
+                    <div class="pill" data-score="medium">Premises Liability</div>
+                    <div class="pill">Slip and Fall</div>
+                    <div class="pill">Brain Injury</div>
+                    <div class="pill">Wrongful Death</div>
+                </div>
+                <div class="similarity-score">Scores: 89.6%, 72.3%, 58.1%, no match, no match</div>
+            </div>
+        </div>
+
+        <!-- Option 3 -->
+        <div class="option-section">
+            <div class="option-header">
+                <h2 class="option-title">Option 3: Highlight Top Match Only</h2>
+            </div>
+            <p class="option-description">Only the best matching practice area gets special treatment</p>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Focused, not overwhelming</li>
+                        <li>Clear primary action</li>
+                        <li>Simple to implement</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>Doesn't show other matches</li>
+                        <li>Less informative</li>
+                        <li>Only highlights one pill</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="firm-card option3">
+                <div class="firm-header">
+                    <div class="firm-initial">L</div>
+                    <div class="firm-info">
+                        <h3>Law Offices of James O. Cunningham</h3>
+                        <div class="rating">★★★★★ 4.9 (45 reviews)</div>
+                    </div>
+                </div>
+                <div class="practice-areas-label">Practice Areas</div>
+                <div class="pills-container">
+                    <div class="pill top-match">
+                        Amusement Park Accidents
+                        <span class="badge">Top Match</span>
+                    </div>
+                    <div class="pill">Premises Liability</div>
+                    <div class="pill">Slip and Fall</div>
+                    <div class="pill">Brain Injury</div>
+                    <div class="pill">Wrongful Death</div>
+                </div>
+                <div class="similarity-score">Scores: 89.6%, 72.3%, 58.1%, no match, no match</div>
+            </div>
+        </div>
+
+        <!-- Option 4 -->
+        <div class="option-section">
+            <div class="option-header">
+                <h2 class="option-title">Option 4: Border + Icon Approach</h2>
+            </div>
+            <p class="option-description">Colored left border and icon for matches above threshold</p>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Clear without being loud</li>
+                        <li>Good accessibility</li>
+                        <li>Shows multiple matches</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>Icons might feel gimmicky</li>
+                        <li>Border could be subtle</li>
+                        <li>More elements to style</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="firm-card option4">
+                <div class="firm-header">
+                    <div class="firm-initial">L</div>
+                    <div class="firm-info">
+                        <h3>Law Offices of James O. Cunningham</h3>
+                        <div class="rating">★★★★★ 4.9 (45 reviews)</div>
+                    </div>
+                </div>
+                <div class="practice-areas-label">Practice Areas</div>
+                <div class="pills-container">
+                    <div class="pill" data-score="high">
+                        <span class="icon">✓</span>
+                        Amusement Park Accidents
+                    </div>
+                    <div class="pill" data-score="medium">
+                        <span class="icon">✓</span>
+                        Premises Liability
+                    </div>
+                    <div class="pill">Slip and Fall</div>
+                    <div class="pill">Brain Injury</div>
+                    <div class="pill">Wrongful Death</div>
+                </div>
+                <div class="similarity-score">Scores: 89.6%, 72.3%, 58.1%, no match, no match</div>
+            </div>
+        </div>
+
+        <!-- Option 5 -->
+        <div class="option-section">
+            <div class="option-header">
+                <h2 class="option-title">Option 5: Progressive Border Weight</h2>
+            </div>
+            <p class="option-description">Border thickness varies with semantic score strength</p>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Professional appearance</li>
+                        <li>Doesn't disrupt color harmony</li>
+                        <li>Subtle hierarchy</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>Differences may be subtle</li>
+                        <li>Hard to see on mobile</li>
+                        <li>Requires close attention</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="firm-card option5">
+                <div class="firm-header">
+                    <div class="firm-initial">L</div>
+                    <div class="firm-info">
+                        <h3>Law Offices of James O. Cunningham</h3>
+                        <div class="rating">★★★★★ 4.9 (45 reviews)</div>
+                    </div>
+                </div>
+                <div class="practice-areas-label">Practice Areas</div>
+                <div class="pills-container">
+                    <div class="pill" data-score="high">Amusement Park Accidents</div>
+                    <div class="pill" data-score="medium">Premises Liability</div>
+                    <div class="pill" data-score="low">Slip and Fall</div>
+                    <div class="pill">Brain Injury</div>
+                    <div class="pill">Wrongful Death</div>
+                </div>
+                <div class="similarity-score">Scores: 89.6%, 72.3%, 58.1%, no match, no match</div>
+            </div>
+        </div>
+
+        <!-- Option 6 -->
+        <div class="option-section">
+            <div class="option-header">
+                <h2 class="option-title">Option 6: Hybrid Approach ⭐ Recommended</h2>
+            </div>
+            <p class="option-description">Combines top match badge with subtle indicators for other relevant matches</p>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Best of multiple approaches</li>
+                        <li>Clear hierarchy</li>
+                        <li>Not overwhelming</li>
+                        <li>Actionable and informative</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>More complex to implement</li>
+                        <li>Requires threshold tuning</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="firm-card option6">
+                <div class="firm-header">
+                    <div class="firm-initial">L</div>
+                    <div class="firm-info">
+                        <h3>Law Offices of James O. Cunningham</h3>
+                        <div class="rating">★★★★★ 4.9 (45 reviews)</div>
+                    </div>
+                </div>
+                <div class="practice-areas-label">Practice Areas</div>
+                <div class="pills-container">
+                    <div class="pill top-match">
+                        <span class="badge">✓ Top Match</span>
+                        Amusement Park Accidents
+                    </div>
+                    <div class="pill" data-score="high">Premises Liability</div>
+                    <div class="pill">Slip and Fall</div>
+                    <div class="pill">Brain Injury</div>
+                    <div class="pill">Wrongful Death</div>
+                </div>
+                <div class="similarity-score">Scores: 89.6%, 72.3%, 58.1%, no match, no match</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; padding: 24px; background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 8px;">
+            <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 8px; color: #92400e;">💡 Recommendation</h3>
+            <p style="color: #78350f; font-size: 14px;">
+                <strong>Option 6 (Hybrid)</strong> provides the best balance of clarity and subtlety. It clearly highlights the top match while still indicating other relevant practice areas without overwhelming the user. The "Top Match" badge gives users confidence that this firm specializes in their specific issue.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

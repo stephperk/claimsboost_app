@@ -1,7 +1,9 @@
 <script>
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	import { location } from '$lib/stores/locationStore.js';
-	import { getStateName, stateNameToUrl } from '$lib/utils/stateMapping.js';
+	import { searchLocation } from '$lib/stores/searchLocationStore.js';
+	import { getStateName, stateNameToUrl, cityNameToUrl } from '$lib/utils/stateMapping.js';
 	import StarRating from '$lib/components/StarRating.svelte';
 
 	let scrollContainer = $state(null);
@@ -35,9 +37,8 @@
 
 			// Map database response to component format
 			firms = data.firms.map((firm) => {
-				// Get URL-friendly state name
-				const stateName = getStateName(firm.state);
-				const stateUrl = stateName ? stateNameToUrl(stateName) : firm.state.toLowerCase();
+				// Get URL-friendly city name
+				const cityUrl = cityNameToUrl(firm.city);
 
 				return {
 					id: firm.place_id,
@@ -45,8 +46,9 @@
 					slug: firm.slug,
 					city: firm.city,
 					state: firm.state,
-					stateUrl: stateUrl,
-					location: `${firm.city}, ${firm.state}`,
+					cityUrl: cityUrl,
+				stateUrl: firm.state.toLowerCase(),
+				location: `${firm.city}, ${firm.state}`,
 					description: firm.short_description || 'Experienced personal injury attorney dedicated to fighting for your rights and maximizing your compensation.',
 					practiceAreas: firm.practice_areas || ['Personal Injury', 'Auto Accidents'],
 					rating: firm.rating || 0,
@@ -86,6 +88,14 @@
 			scrollContainer.scrollBy({ left: cardWidth, behavior: 'smooth' });
 			currentIndex = Math.min(firms.length - 1, currentIndex + 1);
 		}
+	}
+
+	// Handle "See more in my area" button click
+	function seeMoreInMyArea() {
+		// Clear search location so the search page uses IP location
+		searchLocation.clearSearchLocation();
+		// Navigate to search page
+		goto('/injury-law-firms/search');
 	}
 
 	// Star rating rendering is now handled by the StarRating component
@@ -193,7 +203,7 @@
 							</div>
 
 							<!-- Row 5: View Profile Button -->
-							<a href="/law-firm/{firm.stateUrl}/{firm.slug}" class="view-profile-btn">View firm profile</a>
+							<a href="/injury-law-firms/{firm.stateUrl}/{firm.cityUrl}/{firm.slug}" class="view-profile-btn">View firm profile</a>
 						</div>
 					{/each}
 				</div>
@@ -207,12 +217,12 @@
 
 			<div class="see-more">
 				<p>Looking for more options? Discover additional law firms in your area.</p>
-				<a href="/search" class="see-more-btn">
+				<button onclick={seeMoreInMyArea} class="see-more-btn">
 					See more in my area
 					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 						<path d="M5 12h14M12 5l7 7-7 7"/>
 					</svg>
-				</a>
+				</button>
 			</div>
 		{/if}
 	</div>
