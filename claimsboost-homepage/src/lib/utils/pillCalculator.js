@@ -34,6 +34,11 @@ const DEFAULT_CONFIG = {
 };
 
 /**
+ * Cache for button widths to avoid repeated DOM measurements
+ */
+const buttonWidthCache = new Map();
+
+/**
  * Measures the actual width of a "see more" button
  * @param {number} hiddenCount - Number of hidden pills
  * @param {HTMLElement} container - Container element for styling context
@@ -41,8 +46,31 @@ const DEFAULT_CONFIG = {
  * @returns {number} Actual width of the button in pixels
  */
 export function measureSeeMoreButton(hiddenCount, container, className = 'practice-tag more-pill') {
-	const tempButton = document.createElement('button');
-	tempButton.className = className;
+	// Clone an existing pill to get all the scoped CSS classes
+	const existingPill = container.querySelector('.practice-tag:not(.measuring):not(.more-pill)');
+	let tempButton;
+	let actualClassName;
+
+	if (existingPill) {
+		// Clone the existing pill to preserve all classes (including Svelte scoped classes)
+		tempButton = existingPill.cloneNode(false);
+		tempButton.className = existingPill.className + ' more-pill';
+		actualClassName = tempButton.className;
+	} else {
+		// Fallback to creating a new button if no pills exist yet
+		tempButton = document.createElement('button');
+		tempButton.className = className;
+		actualClassName = className;
+	}
+
+	// Use actual class name in cache key to account for scoped CSS
+	const cacheKey = `${actualClassName}_${hiddenCount}`;
+
+	// Check cache first
+	if (buttonWidthCache.has(cacheKey)) {
+		return buttonWidthCache.get(cacheKey);
+	}
+
 	tempButton.textContent = `+${hiddenCount} more`;
 	tempButton.style.position = 'absolute';
 	tempButton.style.visibility = 'hidden';
@@ -52,7 +80,10 @@ export function measureSeeMoreButton(hiddenCount, container, className = 'practi
 	const buttonWidth = tempButton.getBoundingClientRect().width;
 	container.removeChild(tempButton);
 
-	return Math.ceil(buttonWidth); // Round up to avoid subpixel issues
+	const width = Math.ceil(buttonWidth); // Round up to avoid subpixel issues
+	buttonWidthCache.set(cacheKey, width);
+
+	return width;
 }
 
 /**
@@ -63,7 +94,9 @@ export function measureSeeMoreButton(hiddenCount, container, className = 'practi
  */
 export function getPillElements(container, pillClassName = 'practice-tag') {
 	return Array.from(container.children).filter(el =>
-		el.classList.contains(pillClassName) && !el.classList.contains('more-pill')
+		el.classList.contains(pillClassName) &&
+		!el.classList.contains('more-pill')
+		// Include measuring pills - they ARE the pills being measured!
 	);
 }
 
@@ -76,8 +109,20 @@ export function getPillElements(container, pillClassName = 'practice-tag') {
 export function calculateVisiblePills(container, config = {}) {
 	const cfg = { ...DEFAULT_CONFIG, ...config };
 
-	// Get container width
+	// Get container width and subtract padding and safety buffer
 	const containerWidth = container.getBoundingClientRect().width;
+	const computedStyle = window.getComputedStyle(container);
+	const paddingLeft = parseFloat(computedStyle.paddingLeft) || 0;
+	const paddingRight = parseFloat(computedStyle.paddingRight) || 0;
+	const availableWidth = containerWidth - paddingLeft - paddingRight - cfg.safetyBuffer;
+
+	// Debug logging
+	console.log('Container calc:', {
+		containerWidth,
+		paddingLeft,
+		paddingRight,
+		availableWidth
+	});
 
 	// Get all pill elements
 	const pills = getPillElements(container, cfg.pillClassName);
@@ -104,6 +149,8 @@ export function calculateVisiblePills(container, config = {}) {
 	// Calculate pill widths
 	const pillWidths = pills.map(pill => Math.ceil(pill.getBoundingClientRect().width));
 
+	console.log('Pill widths:', pillWidths);
+
 	// Try to fit pills from left to right
 	let currentWidth = 0;
 	let visibleCount = 0;
@@ -116,7 +163,7 @@ export function calculateVisiblePills(container, config = {}) {
 		// Check if this is the last pill
 		if (i === pillWidths.length - 1) {
 			// Last pill - just check if it fits
-			if (tempWidth + cfg.safetyBuffer <= containerWidth) {
+			if (tempWidth <= availableWidth) {
 				visibleCount++;
 				currentWidth = tempWidth;
 			}
@@ -132,7 +179,7 @@ export function calculateVisiblePills(container, config = {}) {
 		);
 
 		// Check if current pill + gap + see more button fits
-		if (tempWidth + cfg.gap + seeMoreWidth + cfg.safetyBuffer <= containerWidth) {
+		if (tempWidth + cfg.gap + seeMoreWidth <= availableWidth) {
 			// This pill fits with room for "see more" button
 			visibleCount++;
 			currentWidth = tempWidth;
@@ -160,6 +207,15 @@ export function calculateVisiblePills(container, config = {}) {
 		);
 		totalWidth += cfg.gap + seeMoreWidth;
 	}
+
+	console.log('Final calc:', {
+		visibleCount,
+		hiddenCount,
+		currentWidth,
+		totalWidth,
+		availableWidth,
+		overflow: totalWidth > availableWidth ? 'YES - PROBLEM!' : 'no'
+	});
 
 	return {
 		visibleCount,
@@ -210,4 +266,12 @@ export function setupAutoRecalculation(container, config, callback) {
 	return () => {
 		resizeObserver.disconnect();
 	};
+}
+
+/**
+ * Clears the button width cache
+ * Useful when styles change or to free memory
+ */
+export function clearButtonWidthCache() {
+	buttonWidthCache.clear();
 }

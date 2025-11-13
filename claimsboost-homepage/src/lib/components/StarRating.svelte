@@ -66,8 +66,6 @@
 				<path
 					d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
 					fill="url(#{gradientId}-{index})"
-					stroke={emptyColor}
-					stroke-width="0.5"
 				/>
 			</svg>
 		{/each}
@@ -81,22 +79,28 @@
 	.star-rating {
 		display: inline-flex;
 		align-items: center;
-		gap: 8px;
+		gap: 4px;
 		line-height: 1;
 	}
 
 	.stars-container {
 		display: inline-flex;
-		gap: 1px;
+		gap: 0;
 	}
 
 	.star {
 		display: block;
 	}
 
+	.star:not(:first-child) {
+		margin-left: -2px;
+	}
+
 	.rating-value {
 		font-size: 14px;
-		color: #666;
+		color: #FFA500;
 		margin-left: 4px;
+		font-weight: 500;
+		line-height: 1;
 	}
 </style>

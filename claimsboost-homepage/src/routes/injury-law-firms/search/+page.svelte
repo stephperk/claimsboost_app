@@ -57,6 +57,8 @@
 	let practiceAreaRefs = $state({});
 	let pillsReady = $state({});
 	let cardsReady = $state({}); // Track when entire card is ready to display
+	let pillOrderHashes = $state({}); // Track pill order to detect changes
+	let pillCalculationCache = $state({}); // Cache calculations by firm ID and order hash
 
 	// Close dropdowns when clicking outside
 	function handleClickOutside(event) {
@@ -279,6 +281,7 @@
 			distance: `${dbFirm.distance_miles.toFixed(1)} miles`,
 			description: dbFirm.short_description || 'Personal injury law firm dedicated to fighting for your rights.',
 			practiceAreas: practiceAreas,
+			practiceAreaScores: dbFirm.practice_area_scores || {},
 			rating: dbFirm.rating || 0,
 			reviews: dbFirm.review_count || 0,
 			phone: dbFirm.phone,
@@ -319,6 +322,8 @@
 		cardsReady = {}; // Reset cards ready state
 		pillsReady = {}; // Reset pills ready state for recalculation
 		visiblePillCounts = {}; // Reset pill counts for new firms
+		pillOrderHashes = {}; // Reset pill order hashes
+		// Keep pillCalculationCache as it can be reused if same order appears
 		error = null;
 
 		// Track when search started for minimum skeleton display time
@@ -494,6 +499,11 @@
 		selectedExperience = 'all';
 	}
 
+	// Generate a hash for pill order to detect when pills have been reordered
+	function getPillOrderHash(practiceAreas) {
+		return practiceAreas.join('|');
+	}
+
 	function toggleFirmExpansion(firmId) {
 		if (expandedFirms.has(firmId)) {
 			expandedFirms.delete(firmId);
@@ -501,36 +511,54 @@
 			expandedFirms.add(firmId);
 		}
 		expandedFirms = new Set(expandedFirms);
+
+		// No recalculation needed - use cached values
+		// If we don't have a value yet, the IntersectionObserver will handle it
 	}
 
-	function calculateVisiblePills(firmId, containerRef) {
-		if (!containerRef) {
-			// If no container ref, mark as ready anyway
-			pillsReady = { ...pillsReady, [firmId]: true };
+	function calculateVisiblePills(firmId, containerRef, practiceAreas) {
+		if (!containerRef || !practiceAreas || practiceAreas.length === 0) {
+			// No calculation possible without container and areas
 			return;
 		}
 
-		// Use the new PillCalculator utility
+		// Generate hash for current pill order
+		const orderHash = getPillOrderHash(practiceAreas);
+		const cacheKey = `${firmId}_${orderHash}`;
+
+		// Check if we have a cached calculation for this exact order
+		if (pillCalculationCache[cacheKey]) {
+			visiblePillCounts = { ...visiblePillCounts, [firmId]: pillCalculationCache[cacheKey] };
+			pillsReady = { ...pillsReady, [firmId]: true };
+			pillOrderHashes = { ...pillOrderHashes, [firmId]: orderHash };
+			return;
+		}
+
+		// Use the new PillCalculator utility with more conservative settings
 		const result = PillCalculator.calculateVisiblePills(containerRef, {
 			gap: 8,
 			minVisiblePills: 1,
 			pillClassName: 'practice-tag',
 			moreButtonClassName: 'practice-tag more-pill',
-			safetyBuffer: 4
+			safetyBuffer: 100 // Increased buffer to prevent cutoff from rounding errors
 		});
 
+		// Cache the result
+		pillCalculationCache = { ...pillCalculationCache, [cacheKey]: result.visibleCount };
 		visiblePillCounts = { ...visiblePillCounts, [firmId]: result.visibleCount };
 		pillsReady = { ...pillsReady, [firmId]: true };
+		pillOrderHashes = { ...pillOrderHashes, [firmId]: orderHash };
 	}
 
 	function recalculateAllPills() {
-		// Reset ready state for recalculation
-		pillsReady = {};
-
+		// Only recalculate for firms whose pill order has changed
 		lawFirms.forEach(firm => {
 			const containerRef = practiceAreaRefs[firm.id];
-			if (containerRef) {
-				calculateVisiblePills(firm.id, containerRef);
+			const newOrderHash = getPillOrderHash(firm.practiceAreas);
+			const hasOrderChanged = pillOrderHashes[firm.id] !== newOrderHash;
+
+			if (containerRef && (hasOrderChanged || !pillsReady[firm.id])) {
+				calculateVisiblePills(firm.id, containerRef, firm.practiceAreas);
 			}
 		});
 	}
@@ -562,22 +590,44 @@
 		}
 	});
 
-	// Use IntersectionObserver for better timing of pill calculations
+	// Calculate pills as soon as containers are available
 	$effect(() => {
 		if (browser && lawFirms.length > 0) {
-			// Create an IntersectionObserver to detect when containers are visible
+			// Clear button width cache to ensure fresh measurements with current styles
+			PillCalculator.clearButtonWidthCache();
+
+			// Wait for measurement pills to be in DOM before calculating
+			requestAnimationFrame(() => {
+				// Double RAF ensures measuring pills have been painted
+				requestAnimationFrame(() => {
+					lawFirms.forEach(firm => {
+						const containerRef = practiceAreaRefs[firm.id];
+						if (containerRef && visiblePillCounts[firm.id] === undefined) {
+							// Calculate after measuring pills are fully rendered
+							calculateVisiblePills(firm.id, containerRef, firm.practiceAreas);
+						}
+					});
+				});
+			});
+
+			// Also set up IntersectionObserver for recalculation on visibility changes
 			const visibilityObserver = new IntersectionObserver(
 				(entries) => {
 					entries.forEach(entry => {
 						if (entry.isIntersecting) {
 							// Find the firm ID from the element
 							const firmId = entry.target.getAttribute('data-firm-id');
-							if (firmId && !pillsReady[firmId]) {
-								// Element is visible and pills haven't been calculated yet
-								// Use RAF to ensure layout is complete
-								requestAnimationFrame(() => {
-									calculateVisiblePills(firmId, entry.target);
-								});
+							const firm = lawFirms.find(f => f.id === firmId);
+							if (firmId && firm) {
+								const newOrderHash = getPillOrderHash(firm.practiceAreas);
+								const hasOrderChanged = pillOrderHashes[firmId] !== newOrderHash;
+
+								// Recalculate if order has changed
+								if (hasOrderChanged && visiblePillCounts[firmId] !== undefined) {
+									requestAnimationFrame(() => {
+										calculateVisiblePills(firmId, entry.target, firm.practiceAreas);
+									});
+								}
 							}
 						}
 					});
@@ -860,53 +910,71 @@
 					{#each Array(6) as _, i}
 						<div class="firm-card skeleton">
 							<!-- Firm Header -->
-							<div class="firm-header">
-								<div class="skeleton-avatar"></div>
-								<div class="skeleton-text" style="width: 50%; height: 16px;"></div>
-								<div class="skeleton-text" style="width: 60px; height: 24px; border-radius: 6px;"></div>
+							<div class="firm-header" style="min-height: 80px;">
+								<div class="skeleton-avatar" style="width: 55px; height: 55px;"></div>
+								<div class="firm-header-content" style="min-height: 55px;">
+									<div style="display: flex; align-items: center; gap: 8px;">
+										<div class="skeleton-text" style="width: 180px; height: 20px;"></div>
+										<div class="skeleton-text" style="width: 60px; height: 24px; border-radius: 6px;"></div>
+									</div>
+									<div style="display: flex; align-items: center; gap: 4px; margin-top: 6px;">
+										<div class="skeleton-text" style="width: 90px; height: 18px;"></div>
+										<div class="skeleton-text" style="width: 80px; height: 16px;"></div>
+									</div>
+								</div>
 							</div>
 
-							<!-- Rating and Location Row -->
-							<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; margin-bottom: 8px; gap: 16px;">
-								<div class="skeleton-text" style="width: 140px; height: 16px;"></div>
-								<div class="skeleton-text" style="width: 120px; height: 16px;"></div>
+							<!-- Divider -->
+							<div class="card-divider" style="margin: 2px 0 2px 0;"></div>
+
+							<!-- Practice Areas Section -->
+							<div class="info-section">
+								<div class="section-header">
+									<div class="skeleton-text" style="width: 20px; height: 20px; border-radius: 4px;"></div>
+									<div class="skeleton-text" style="width: 110px; height: 14px;"></div>
+								</div>
+								<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+									<div class="skeleton-text" style="width: 90px; height: 32px; border-radius: 20px;"></div>
+									<div class="skeleton-text" style="width: 110px; height: 32px; border-radius: 20px;"></div>
+									<div class="skeleton-text" style="width: 80px; height: 32px; border-radius: 20px;"></div>
+								</div>
 							</div>
 
 							<!-- Divider -->
 							<div class="card-divider"></div>
 
 							<!-- AI Overview Section -->
-							<div style="margin-bottom: 12px; min-height: 105px; display: flex; flex-direction: column;">
-								<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-shrink: 0;">
+							<div class="info-section ai-overview-section" style="min-height: 100px;">
+								<div class="section-header">
 									<div class="skeleton-text" style="width: 20px; height: 20px; border-radius: 4px;"></div>
-									<div class="skeleton-text" style="width: 100px; height: 12px;"></div>
+									<div class="skeleton-text" style="width: 100px; height: 14px;"></div>
 								</div>
-								<div style="padding-left: 28px;">
-									<div class="skeleton-text" style="width: 100%; height: 14px; margin-bottom: 6px;"></div>
-									<div class="skeleton-text" style="width: 95%; height: 14px; margin-bottom: 6px;"></div>
-									<div class="skeleton-text" style="width: 85%; height: 14px;"></div>
-								</div>
-							</div>
-
-							<!-- Practice Areas Section -->
-							<div style="margin-bottom: 10px; min-height: 72px;">
-								<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-									<div class="skeleton-text" style="width: 20px; height: 20px; border-radius: 4px;"></div>
-									<div class="skeleton-text" style="width: 110px; height: 12px;"></div>
-								</div>
-								<div style="padding-left: 28px; display: flex; gap: 8px; flex-wrap: wrap;">
-									<div class="skeleton-text" style="width: 90px; height: 28px; border-radius: 16px;"></div>
-									<div class="skeleton-text" style="width: 110px; height: 28px; border-radius: 16px;"></div>
-									<div class="skeleton-text" style="width: 80px; height: 28px; border-radius: 16px;"></div>
+								<div>
+									<div class="skeleton-text" style="width: 100%; height: 15px; margin-bottom: 6px;"></div>
+									<div class="skeleton-text" style="width: 95%; height: 15px; margin-bottom: 6px;"></div>
+									<div class="skeleton-text" style="width: 85%; height: 15px;"></div>
 								</div>
 							</div>
 
 							<!-- Divider -->
 							<div class="card-divider"></div>
 
+							<!-- Location Section -->
+							<div class="info-section" style="margin-bottom: 0;">
+								<div class="section-header">
+									<div class="skeleton-text" style="width: 20px; height: 20px; border-radius: 4px;"></div>
+									<div class="skeleton-text" style="width: 80px; height: 14px;"></div>
+								</div>
+								<div>
+									<div class="skeleton-text" style="width: 200px; height: 15px;"></div>
+								</div>
+							</div>
+
+							<!-- No divider before button -->
+
 							<!-- View Profile Button -->
-							<div style="position: absolute; bottom: 24px; right: 24px;">
-								<div class="skeleton-text" style="width: 95px; height: 18px;"></div>
+							<div class="button-wrapper" style="margin-top: 0;">
+								<div class="skeleton-text" style="width: 95px; height: 16px;"></div>
 							</div>
 						</div>
 					{/each}
@@ -949,36 +1017,22 @@
 							<div class="firm-avatar">
 								{firm.name.charAt(0)}
 							</div>
-							<h2>{firm.name}</h2>
-							{#if firm.isVerified}
-								<span class="verified-badge">Verified</span>
-							{/if}
-						</div>
-
-						<div class="rating-location-row">
-							<div class="firm-rating">
-								<StarRating rating={firm.rating} size={18} />
-								<span class="rating-text">{firm.rating} ({firm.reviews} reviews)</span>
-							</div>
-
-							<div class="location-info">
-								<img src="/map-pin-gray.svg" alt="Location" class="location-icon-img" />
-								<span>{firm.distance} away</span>
-								<span class="pipe">|</span>
-								<span>{firm.city}, {firm.state}</span>
+							<div class="firm-header-content">
+								<div class="firm-name-row">
+									<h2>{firm.name}</h2>
+									{#if firm.isVerified}
+										<span class="verified-badge">Verified</span>
+									{/if}
+								</div>
+								<div class="firm-rating">
+									<StarRating rating={firm.rating} size={18} />
+									<span class="rating-text">{firm.rating} ({firm.reviews} reviews)</span>
+								</div>
 							</div>
 						</div>
 
 						<div class="card-divider"></div>
 
-						<!-- AI Overview Section -->
-						<div class="info-section">
-							<div class="section-header">
-								<img src="/stars-gradient-black.svg" alt="AI" class="section-icon" />
-								<span class="section-title">AI OVERVIEW</span>
-							</div>
-							<p class="section-content">{firm.description}</p>
-						</div>
 
 						<!-- Firm Highlights Section -->
 						<!-- <div class="info-section firm-highlights-section">
@@ -1034,38 +1088,85 @@
 							</div>
 							<div class="practice-areas"
 								class:expanded={expandedFirms.has(firm.id)}
-								bind:this={practiceAreaRefs[firm.id]}>
-								{#if !pillsReady[firm.id]}
-									<!-- Initial render for measurement -->
-									{#each firm.practiceAreas as area}
-										<span class="practice-tag">{area}</span>
-									{/each}
-								{:else if expandedFirms.has(firm.id)}
+								bind:this={practiceAreaRefs[firm.id]}
+								data-firm-id={firm.id}>
+								{#if expandedFirms.has(firm.id)}
 									<!-- Expanded state: show all -->
-									{#each firm.practiceAreas as area}
-										<span class="practice-tag">{area}</span>
+									{#each firm.practiceAreas as area, i}
+										{@const score = firm.practiceAreaScores?.[area] || 0}
+										{@const isTopMatch = score >= 0.85}
+										<span class="practice-tag" class:top-match={isTopMatch} style="animation-delay: {i * 0.045}s">
+											{#if isTopMatch}
+												<span class="check">✓</span>
+											{/if}
+											{area}
+										</span>
 									{/each}
 									{#if firm.practiceAreas.length > 0}
-										<button class="practice-tag more-pill" onclick={() => toggleFirmExpansion(firm.id)}>
+										<button class="practice-tag more-pill" onclick={() => toggleFirmExpansion(firm.id)}
+											style="animation-delay: {firm.practiceAreas.length * 0.045}s">
 											Show less
 										</button>
 									{/if}
-								{:else}
-									<!-- Collapsed state: show calculated amount -->
-									{#each firm.practiceAreas.slice(0, visiblePillCounts[firm.id] || 0) as area}
-										<span class="practice-tag">{area}</span>
+								{:else if visiblePillCounts[firm.id] !== undefined}
+									<!-- Collapsed state: only show when calculation is ready -->
+									{@const pillCount = visiblePillCounts[firm.id]}
+									{#each firm.practiceAreas.slice(0, pillCount) as area, i}
+										{@const score = firm.practiceAreaScores?.[area] || 0}
+										{@const isTopMatch = score >= 0.85}
+										<span class="practice-tag" class:top-match={isTopMatch} style="animation-delay: {i * 0.09}s">
+											{#if isTopMatch}
+												<span class="check">✓</span>
+											{/if}
+											{area}
+										</span>
 									{/each}
-									{#if firm.practiceAreas.length > (visiblePillCounts[firm.id] || 0)}
-										<button class="practice-tag more-pill" onclick={() => toggleFirmExpansion(firm.id)}>
-											+{firm.practiceAreas.length - (visiblePillCounts[firm.id] || 0)} more
+									{#if firm.practiceAreas.length > pillCount}
+										<button class="practice-tag more-pill" onclick={() => toggleFirmExpansion(firm.id)}
+											style="animation-delay: {pillCount * 0.09}s">
+											+{firm.practiceAreas.length - pillCount} more
 										</button>
 									{/if}
+								{:else}
+									<!-- Loading state: measure all pills invisibly to calculate -->
+									{#each firm.practiceAreas as area}
+										{@const score = firm.practiceAreaScores?.[area] || 0}
+										{@const isTopMatch = score >= 0.85}
+										<span class="practice-tag measuring" class:top-match={isTopMatch} style="opacity: 0; pointer-events: none;">
+											{#if isTopMatch}
+												<span class="check">✓</span>
+											{/if}
+											{area}
+										</span>
+									{/each}
 								{/if}
 							</div>
 						</div>
 						{/if}
 
 						<div class="card-divider"></div>
+
+						<!-- AI Overview Section -->
+						<div class="info-section ai-overview-section">
+							<div class="section-header">
+								<img src="/stars-gradient-black.svg" alt="AI" class="section-icon" />
+								<span class="section-title">AI OVERVIEW</span>
+							</div>
+							<p class="section-content">{firm.description}</p>
+						</div>
+
+						<div class="card-divider"></div>
+
+						<!-- Location Section -->
+						<div class="info-section">
+							<div class="section-header">
+								<img src="/map-pin-gray.svg" alt="Location" class="section-icon" />
+								<span class="section-title">LOCATION</span>
+							</div>
+							<p class="section-content">{firm.city}, {firm.state} | {firm.distance} away</p>
+						</div>
+
+						<div class="card-divider location-button-divider"></div>
 
 						<div class="button-wrapper">
 							<a href="/injury-law-firms/{firm.stateUrl}/{firm.cityUrl}/{firm.slug}" class="connect-link">
@@ -1556,7 +1657,7 @@
 	.firm-card {
 		background: white;
 		border-radius: 16px;
-		padding: 16px 24px 40px 24px;
+		padding: 24px 24px 16px 24px;
 		box-shadow: 0 2px 8px rgba(0,0,0,0.18);
 		transition: all 0.3s;
 		position: relative;
@@ -1602,6 +1703,17 @@
 		}
 	}
 
+	@keyframes bubblePop {
+		0% {
+			opacity: 0;
+			transform: scale(0.8);
+		}
+		100% {
+			opacity: 1;
+			transform: scale(1);
+		}
+	}
+
 	/* Respect prefers-reduced-motion for accessibility */
 	@media (prefers-reduced-motion: reduce) {
 		.firm-card {
@@ -1619,6 +1731,12 @@
 		.skeleton-avatar {
 			animation: none !important;
 		}
+
+		.practice-tag {
+			animation: none !important;
+			opacity: 1;
+			transform: none;
+		}
 	}
 
 	/* Performance optimizations for large result sets */
@@ -1629,45 +1747,57 @@
 	}
 
 	.firm-header {
-		display: flex;
-		align-items: center;
-		gap: 12px;
+		display: grid;
+		grid-template-columns: auto 1fr;
+		grid-template-rows: auto auto;
+		gap: 0 12px;
 		margin-bottom: 8px;
 		min-width: 0;
-	}
-
-	.firm-header h2 {
-		font-size: 16px;
-		font-weight: 600;
-		color: #1a1a1a;
-		margin: 0;
+		min-height: 80px; /* Ensures consistent height regardless of name length */
 	}
 
 	.firm-avatar {
-		width: 50px;
-		height: 50px;
+		width: 55px;
+		height: 55px;
 		border-radius: 50%;
 		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 		color: white;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 22px;
+		font-size: 24px;
 		font-weight: bold;
 		flex-shrink: 0;
+		grid-row: 1 / 3;
 	}
 
-	.firm-title-section {
-		flex: 1;
+	.firm-header-content {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		gap: 4px;
 		min-width: 0;
+		min-height: 55px; /* Match avatar height to ensure consistent content positioning */
 	}
 
 	.firm-name-row {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
-		margin-bottom: 8px;
-		gap: 12px;
+		gap: 8px;
+		min-width: 0;
+	}
+
+	.firm-header h2 {
+		font-size: 20px;
+		font-weight: 700;
+		color: #1a1a1a;
+		margin: 0;
+		min-width: 0;
+	}
+
+	.firm-title-section {
+		flex: 1;
+		min-width: 0;
 	}
 
 	.name-badges {
@@ -1748,8 +1878,6 @@
 	.info-section {
 		margin-bottom: 12px;
 		padding-top: 0;
-		min-height: 105px; /* Fixed height for consistent layout (4 lines × 21px + spacing) */
-		/* Removed flex: 1 to prevent variable expansion */
 		display: flex;
 		flex-direction: column;
 	}
@@ -1759,13 +1887,19 @@
 	}
 
 	.info-section:last-of-type {
-		margin-bottom: 2px;
+		margin-bottom: 0; /* No space before button */
+		min-height: auto; /* Remove fixed height for location section */
 	}
 
 	/* Specifically target the practice areas section */
 	.info-section:has(.practice-areas) {
 		margin-bottom: 10px;
 		min-height: unset; /* Remove the fixed height for practice areas */
+	}
+
+	/* AI Overview section needs consistent height */
+	.ai-overview-section {
+		min-height: 100px; /* Ensures consistent positioning of location section */
 	}
 
 	/* Firm highlights without header */
@@ -1781,6 +1915,7 @@
 		gap: 8px;
 		margin-bottom: 12px;
 		flex-shrink: 0;
+		padding-left: 4px;
 	}
 
 	.section-icon {
@@ -1794,7 +1929,7 @@
 	}
 
 	.section-title {
-		font-size: 12px;
+		font-size: 14px;
 		font-weight: 600;
 		color: #999;
 		text-transform: uppercase;
@@ -1802,10 +1937,11 @@
 
 	.section-content {
 		color: #1a1a1a;
-		font-size: 14px;
+		font-size: 15px;
 		font-weight: 500;
 		line-height: 1.5;
 		margin: 0;
+		padding-left: 4px;
 		display: -webkit-box;
 		-webkit-line-clamp: 3;
 		-webkit-box-orient: vertical;
@@ -1871,10 +2007,27 @@
 		margin: 6px 0 8px 0;
 	}
 
+	/* Extra space only after the header section */
+	.firm-header + .card-divider {
+		margin: 2px 0 2px 0;
+	}
+
+	/* Reduce space before the button */
+	.info-section:last-of-type + .card-divider {
+		display: none; /* Hide the last divider before button */
+	}
+
+	/* Hide the divider between location and button */
+	.location-button-divider {
+		display: none;
+	}
+
 	.firm-rating {
 		display: flex;
 		align-items: center;
-		gap: 8px;
+		gap: 4px;
+		line-height: 1;
+		margin-top: 6px;
 	}
 
 	/* Practice area styles are imported from shared CSS */
@@ -1888,6 +2041,8 @@
 		max-width: 100%;
 		overflow: hidden;
 		position: relative;
+		padding-left: 4px;
+		min-height: 32px; /* Prevent layout shift */
 	}
 
 	.practice-areas.expanded {
@@ -1898,14 +2053,44 @@
 
 	/* Keep existing practice-tag styles for backward compatibility */
 	.practice-tag {
-		background: #f0f0f0;
-		color: #666;
-		padding: 6px 12px;
-		border-radius: 16px;
-		font-size: 12px;
+		background: #f3f4f6;
+		color: #374151;
+		padding: 6px 14px;
+		border-radius: 20px;
+		font-size: 13px;
 		font-weight: 500;
 		white-space: nowrap;
 		flex-shrink: 0;
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		transition: all 0.2s ease;
+		border: 1px solid transparent;
+		opacity: 0;
+		transform: scale(0.8);
+		animation: bubblePop 0.4s ease-out forwards;
+	}
+
+	/* Skip animation for measurement pills */
+	.practice-tag.measuring {
+		animation: none !important;
+		opacity: 0 !important;
+		pointer-events: none !important;
+		/* Keep in document flow for container width calculation */
+	}
+
+	.practice-tag.top-match {
+		background: #10b981;
+		color: white;
+		font-weight: 600;
+		border: 1px solid #34d399;
+	}
+
+	.practice-tag .check {
+		font-size: 14px;
+		font-weight: bold;
+		line-height: 1;
+		filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
 	}
 
 	.more-pill {
@@ -1932,18 +2117,21 @@
 
 	.rating-text {
 		font-size: 14px;
-		color: #666;
+		color: #FFA500;
+		font-weight: 500;
+		line-height: 1;
 	}
 
 	.button-wrapper {
-		position: absolute;
-		bottom: 16px;
-		right: 24px;
+		display: flex;
+		justify-content: flex-end;
+		margin-top: 0;
+		padding-right: 0;
 	}
 
 	.connect-link {
 		color: #1a1a1a;
-		font-size: 15px;
+		font-size: 16px;
 		font-weight: 600;
 		cursor: pointer;
 		transition: all 0.2s ease;
@@ -1954,11 +2142,11 @@
 	}
 
 	.connect-link:hover {
-		color: #FF7B00;
+		color: #FF9933;
 	}
 
 	.firm-card:hover .connect-link {
-		color: #FF7B00;
+		color: #FF9933;
 	}
 
 	.connect-link svg {
@@ -2077,10 +2265,6 @@
 
 		.location-info {
 			margin-left: auto;
-		}
-
-		.section-content {
-			padding-left: 28px;
 		}
 	}
 
