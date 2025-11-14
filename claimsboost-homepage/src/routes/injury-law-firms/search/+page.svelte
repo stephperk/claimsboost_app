@@ -1095,7 +1095,7 @@
 									{#each firm.practiceAreas as area, i}
 										{@const score = firm.practiceAreaScores?.[area] || 0}
 										{@const isTopMatch = score >= 0.85}
-										<span class="practice-tag" class:top-match={isTopMatch} style="animation-delay: {i * 0.045}s">
+										<span class="practice-tag no-animation" class:top-match={isTopMatch}>
 											{#if isTopMatch}
 												<span class="check">✓</span>
 											{/if}
@@ -1103,18 +1103,21 @@
 										</span>
 									{/each}
 									{#if firm.practiceAreas.length > 0}
-										<button class="practice-tag more-pill" onclick={() => toggleFirmExpansion(firm.id)}
-											style="animation-delay: {firm.practiceAreas.length * 0.045}s">
+										<button class="practice-tag more-pill no-animation" onclick={() => toggleFirmExpansion(firm.id)}>
 											Show less
 										</button>
 									{/if}
 								{:else if visiblePillCounts[firm.id] !== undefined}
 									<!-- Collapsed state: only show when calculation is ready -->
 									{@const pillCount = visiblePillCounts[firm.id]}
+									{@const isInitialRender = pageState === SearchState.TRANSITIONING || pageState === SearchState.SEARCHING}
+									{@const cardDelay = isInitialRender ? Math.min(index * 50, 1000) : 0}
+									{@const cardAnimDuration = isInitialRender ? 500 : 0}
+									{@const pillBaseDelay = cardDelay + cardAnimDuration}
 									{#each firm.practiceAreas.slice(0, pillCount) as area, i}
 										{@const score = firm.practiceAreaScores?.[area] || 0}
 										{@const isTopMatch = score >= 0.85}
-										<span class="practice-tag" class:top-match={isTopMatch} style="animation-delay: {i * 0.09}s">
+										<span class="practice-tag" class:no-animation={!isInitialRender} class:top-match={isTopMatch} style="animation-delay: {pillBaseDelay + (i * 100)}ms">
 											{#if isTopMatch}
 												<span class="check">✓</span>
 											{/if}
@@ -1122,8 +1125,8 @@
 										</span>
 									{/each}
 									{#if firm.practiceAreas.length > pillCount}
-										<button class="practice-tag more-pill" onclick={() => toggleFirmExpansion(firm.id)}
-											style="animation-delay: {pillCount * 0.09}s">
+										<button class="practice-tag more-pill" class:no-animation={!isInitialRender} onclick={() => toggleFirmExpansion(firm.id)}
+											style="animation-delay: {pillBaseDelay + (pillCount * 100)}ms">
 											+{firm.practiceAreas.length - pillCount} more
 										</button>
 									{/if}
@@ -1708,6 +1711,9 @@
 			opacity: 0;
 			transform: scale(0.8);
 		}
+		60% {
+			transform: scale(1.05);
+		}
 		100% {
 			opacity: 1;
 			transform: scale(1);
@@ -2077,6 +2083,13 @@
 		opacity: 0 !important;
 		pointer-events: none !important;
 		/* Keep in document flow for container width calculation */
+	}
+
+	/* Skip animation when toggling expanded/collapsed */
+	.practice-tag.no-animation {
+		animation: none !important;
+		opacity: 1 !important;
+		transform: scale(1) !important;
 	}
 
 	.practice-tag.top-match {
