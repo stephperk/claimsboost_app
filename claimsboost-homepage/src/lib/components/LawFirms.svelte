@@ -42,7 +42,7 @@
 
 				return {
 					id: firm.place_id,
-					name: firm.firm_name,
+					name: firm.display_name || firm.firm_name,
 					slug: firm.slug,
 					city: firm.city,
 					state: firm.state,
@@ -118,15 +118,13 @@
 			<div class="firms-carousel">
 				{#each Array(4) as _, i}
 					<div class="firm-card skeleton">
-						<!-- Row 1: Logo and Name -->
+						<!-- Row 1: Logo, Name and Rating -->
 						<div class="firm-header">
 							<div class="skeleton-avatar"></div>
-							<div class="skeleton-text" style="width: 60%; height: 18px;"></div>
-						</div>
-
-						<!-- Row 2: Rating -->
-						<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px;">
-							<div class="skeleton-text" style="width: 120px; height: 18px;"></div>
+							<div style="display: flex; flex-direction: column; gap: 8px;">
+								<div class="skeleton-text" style="width: 60%; height: 18px;"></div>
+								<div class="skeleton-text" style="width: 120px; height: 16px;"></div>
+							</div>
 						</div>
 
 						<!-- Row 3: AI Overview -->
@@ -143,7 +141,10 @@
 						<!-- Row 4: Location -->
 						<div style="display: flex; align-items: center; gap: 6px; margin-bottom: 16px;">
 							<div class="skeleton-text" style="width: 16px; height: 16px; border-radius: 4px;"></div>
-							<div class="skeleton-text" style="width: 140px; height: 14px;"></div>
+							<div style="display: flex; gap: 12px;">
+								<div class="skeleton-text" style="width: 100px; height: 16px;"></div>
+								<div class="skeleton-text" style="width: 80px; height: 14px;"></div>
+							</div>
 						</div>
 
 						<!-- Row 5: Button -->
@@ -173,18 +174,18 @@
 				<div class="firms-carousel" bind:this={scrollContainer}>
 					{#each firms as firm (firm.id)}
 						<div class="firm-card">
-							<!-- Row 1: Logo and Name -->
+							<!-- Row 1: Logo, Name, and Rating -->
 							<div class="firm-header">
 								<div class="firm-avatar">
 									{firm.name.charAt(0)}
 								</div>
-								<h3>{firm.name}</h3>
-							</div>
-
-							<!-- Row 2: Rating -->
-							<div class="firm-rating">
-								<StarRating rating={firm.rating} size={18} />
-								<span class="rating-text">{firm.rating} ({firm.reviews} reviews)</span>
+								<div class="firm-header-content">
+									<h3>{firm.name}</h3>
+									<div class="firm-rating">
+										<StarRating rating={firm.rating} size={18} />
+										<span class="rating-text">{firm.rating} ({firm.reviews} reviews)</span>
+									</div>
+								</div>
 							</div>
 
 							<!-- Row 3: AI Overview -->
@@ -199,7 +200,10 @@
 							<!-- Row 4: Location -->
 							<div class="firm-location">
 								<img src="/map-pin-gray.svg" alt="Location" class="location-icon" />
-								<span>{firm.distance.toFixed(1)} miles away | {firm.city}, {firm.state}</span>
+								<span class="location-text">
+									<span class="location-primary">{firm.city}, {firm.state}</span>
+									<span class="location-distance">{firm.distance.toFixed(1)} miles away</span>
+								</span>
 							</div>
 
 							<!-- Row 5: View Profile Button -->
@@ -304,16 +308,25 @@
 
 	/* Row 1: Logo and Name */
 	.firm-header {
-		display: flex;
-		align-items: center;
-		gap: 12px;
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 0 12px;
 		margin-bottom: 12px;
+	}
+
+	.firm-header-content {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		min-width: 0;
+		padding-top: 6px;
 	}
 
 	.firm-avatar {
 		width: 56px;
 		height: 56px;
 		border-radius: 50%;
+		grid-row: 1 / 3;
 		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 		color: white;
 		display: flex;
@@ -338,6 +351,7 @@
 		align-items: center;
 		gap: 8px;
 		margin-bottom: 20px;
+		margin-top: 6px;
 	}
 
 	.stars {
@@ -364,7 +378,9 @@
 
 	.rating-text {
 		font-size: 14px;
-		color: #666;
+		color: #FFA500;
+		font-weight: 500;
+		line-height: 1;
 	}
 
 	/* Row 4: Location */
@@ -372,8 +388,6 @@
 		display: flex;
 		align-items: center;
 		gap: 6px;
-		font-size: 14px;
-		color: #666;
 		margin-bottom: 16px;
 	}
 
@@ -381,6 +395,23 @@
 		width: 16px;
 		height: 16px;
 		flex-shrink: 0;
+	}
+
+	.location-text {
+		display: inline;
+	}
+
+	.location-primary {
+		font-size: 16px;
+		font-weight: 600;
+		color: #1a1a1a;
+	}
+
+	.location-distance {
+		font-size: 14px;
+		font-weight: 400;
+		color: #6b7280;
+		margin-left: 12px;
 	}
 
 	/* Row 3: AI Overview */

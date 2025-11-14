@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Text Format Design Options - ClaimsBoost</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f9fafb;
+            color: #1a1a1a;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+        }
+
+        .header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 24px 0 12px 0;
+            color: #2563EB;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .context-box {
+            background: #eff6ff;
+            border-left: 4px solid #2563EB;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 24px 0;
+        }
+
+        .context-box p {
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+
+        .context-box strong {
+            color: #2563EB;
+        }
+
+        .option-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .option-card h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+        }
+
+        .option-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            color: white;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: 700;
+            margin-right: 12px;
+        }
+
+        .description {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .pros, .cons {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .pros h4 {
+            color: #10b981;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cons h4 {
+            color: #ef4444;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pros ul, .cons ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .pros li, .cons li {
+            padding-left: 24px;
+            position: relative;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #4b5563;
+        }
+
+        .pros li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .cons li::before {
+            content: "×";
+            position: absolute;
+            left: 4px;
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        .mockup-container {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .mockup-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        /* Law firm card mockup */
+        .firm-card-preview {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+            max-width: 600px;
+        }
+
+        .firm-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .firm-avatar {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .firm-header-content {
+            flex: 1;
+        }
+
+        .firm-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .card-divider {
+            height: 1px;
+            background-color: #e5e7eb;
+            margin: 16px 0;
+        }
+
+        .info-section {
+            margin-bottom: 16px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .section-icon {
+            width: 20px;
+            height: 20px;
+            color: #6b7280;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+        }
+
+        .section-content {
+            color: #1a1a1a;
+            font-size: 15px;
+            font-weight: 500;
+            padding-left: 4px;
+        }
+
+        /* Option-specific styles */
+
+        /* Option 1: Visual Hierarchy with Size Variation */
+        .location-1 {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .location-1 .city-state {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .location-1 .distance {
+            font-size: 13px;
+            font-weight: 400;
+            color: #6b7280;
+        }
+
+        /* Option 2: Badge Style Distance */
+        .location-2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .location-2 .city-state {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+
+        .location-2 .distance {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background: rgba(96, 165, 250, 0.15);
+            color: #2563EB;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Option 3: Icon-Separated Layout */
+        .location-3 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .location-3 .city-state {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+
+        .location-3 .separator {
+            width: 4px;
+            height: 4px;
+            background: #d1d5db;
+            border-radius: 50%;
+        }
+
+        .location-3 .distance {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6b7280;
+        }
+
+        .location-3 .distance svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Option 4: Stacked Layout */
+        .location-4 {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .location-4 .city-state {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .location-4 .distance {
+            font-size: 13px;
+            font-weight: 400;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .location-4 .distance svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Option 5: Color-Coded Distance */
+        .location-5 {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .location-5 .city-state {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+
+        .location-5 .separator {
+            color: #d1d5db;
+            font-weight: 300;
+        }
+
+        .location-5 .distance {
+            font-size: 14px;
+            font-weight: 600;
+            color: #10b981;
+        }
+
+        /* Option 6: Minimal with Enhanced Spacing */
+        .location-6 {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .location-6 .city-state {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+
+        .location-6 .separator {
+            color: #d1d5db;
+            font-weight: 300;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .location-6 .distance {
+            font-size: 14px;
+            font-weight: 400;
+            color: #6b7280;
+        }
+
+        /* Recommendation section */
+        .recommendation {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 2px solid #60A5FA;
+            border-radius: 16px;
+            padding: 32px;
+            margin-top: 40px;
+        }
+
+        .recommendation h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .recommendation h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2563EB;
+            margin: 24px 0 12px 0;
+        }
+
+        .recommendation p {
+            color: #1e40af;
+            font-size: 16px;
+            margin-bottom: 12px;
+            line-height: 1.7;
+        }
+
+        .recommendation ul {
+            list-style: none;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .recommendation li {
+            padding-left: 28px;
+            position: relative;
+            margin-bottom: 10px;
+            color: #1e40af;
+            font-size: 15px;
+        }
+
+        .recommendation li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #2563EB;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .star-icon {
+            font-size: 28px;
+        }
+
+        @media (max-width: 768px) {
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .option-card h3 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1>Location Text Format Design Options</h1>
+            <p>Exploring different ways to display law firm location and distance information on search result cards</p>
+
+            <h2>Problem Statement</h2>
+            <p>The current location text on law firm cards displays as:</p>
+            <div class="context-box">
+                <p><strong>Current Format:</strong> "Charlotte, NC | 3.4 miles away"</p>
+            </div>
+
+            <h2>Design Context</h2>
+            <p><strong>Where it appears:</strong> In the "LOCATION" section of law firm cards on the search results page</p>
+            <p><strong>Current implementation:</strong> Plain text with a pipe separator (|) between city/state and distance</p>
+            <p><strong>User need:</strong> Quickly understand where the law firm is located and how far it is from their search location</p>
+
+            <div class="context-box">
+                <p><strong>Design System Notes:</strong></p>
+                <p>• Primary blue: #2563EB (used for CTAs and highlights)</p>
+                <p>• Light blue: #60A5FA (used for accents)</p>
+                <p>• Success green: #10b981 (used for verification badges)</p>
+                <p>• Gray text: #666, #999, #6b7280 (used for secondary information)</p>
+                <p>• Card style: Clean white background, rounded corners, subtle shadows</p>
+            </div>
+        </div>
+
+        <!-- Option 1 -->
+        <div class="option-card">
+            <h3><span class="option-number">1</span>Visual Hierarchy with Size Variation</h3>
+            <p class="description">
+                Uses font size and weight to create a clear visual hierarchy. The city/state is displayed prominently in a larger, bolder font, while the distance is shown in a smaller, lighter weight to indicate it's secondary information.
+            </p>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>✓ Pros</h4>
+                    <ul>
+                        <li>Clear visual hierarchy distinguishes primary from secondary info</li>
+                        <li>Minimal design change from current implementation</li>
+                        <li>Easy to scan at a glance</li>
+                        <li>Works well on mobile with natural text wrapping</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>× Cons</h4>
+                    <ul>
+                        <li>Distance might feel de-emphasized for users who prioritize proximity</li>
+                        <li>Less visual interest compared to other options</li>
+                        <li>Relies heavily on typography for differentiation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup-container">
+                <div class="mockup-label">Live Preview in Card Context</div>
+                <div class="firm-card-preview">
+                    <div class="firm-header">
+                        <div class="firm-avatar">S</div>
+                        <div class="firm-header-content">
+                            <div class="firm-name">Smith & Associates Law Firm</div>
+                        </div>
+                    </div>
+                    <div class="card-divider"></div>
+                    <div class="info-section">
+                        <div class="section-header">
+                            <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            <span class="section-title">LOCATION</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="location-1">
+                                <span class="city-state">Charlotte, NC</span>
+                                <span class="distance">3.4 miles away</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Option 2 -->
+        <div class="option-card">
+            <h3><span class="option-number">2</span>Badge Style Distance</h3>
+            <p class="description">
+                Presents the distance as a subtle badge or pill with a light blue background. This draws attention to the proximity information while maintaining a clean, modern aesthetic that aligns with the existing practice area pills.
+            </p>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>✓ Pros</h4>
+                    <ul>
+                        <li>Visually highlights proximity, which is important for local searches</li>
+                        <li>Matches the design language of practice area pills</li>
+                        <li>Creates visual interest and breaks up text-heavy content</li>
+                        <li>Blue accent reinforces brand colors</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>× Cons</h4>
+                    <ul>
+                        <li>May add too much visual weight to secondary information</li>
+                        <li>Could compete with other UI elements like badges</li>
+                        <li>Takes up slightly more vertical space</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup-container">
+                <div class="mockup-label">Live Preview in Card Context</div>
+                <div class="firm-card-preview">
+                    <div class="firm-header">
+                        <div class="firm-avatar">S</div>
+                        <div class="firm-header-content">
+                            <div class="firm-name">Smith & Associates Law Firm</div>
+                        </div>
+                    </div>
+                    <div class="card-divider"></div>
+                    <div class="info-section">
+                        <div class="section-header">
+                            <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            <span class="section-title">LOCATION</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="location-2">
+                                <span class="city-state">Charlotte, NC</span>
+                                <span class="distance">3.4 miles away</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Option 3 -->
+        <div class="option-card">
+            <h3><span class="option-number">3</span>Icon-Separated Layout</h3>
+            <p class="description">
+                Replaces the pipe separator with a subtle dot separator and adds a small route/navigation icon before the distance. This creates a more modern, icon-driven interface that's common in location-based services.
+            </p>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>✓ Pros</h4>
+                    <ul>
+                        <li>Icon reinforces the concept of travel distance</li>
+                        <li>Dot separator is more subtle and modern than pipe</li>
+                        <li>Better visual balance between location and distance</li>
+                        <li>Familiar pattern from maps and location apps</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>× Cons</h4>
+                    <ul>
+                        <li>Additional icon may feel redundant with section icon</li>
+                        <li>Slightly more complex layout to implement</li>
+                        <li>Icon choice needs to be intuitive and accessible</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup-container">
+                <div class="mockup-label">Live Preview in Card Context</div>
+                <div class="firm-card-preview">
+                    <div class="firm-header">
+                        <div class="firm-avatar">S</div>
+                        <div class="firm-header-content">
+                            <div class="firm-name">Smith & Associates Law Firm</div>
+                        </div>
+                    </div>
+                    <div class="card-divider"></div>
+                    <div class="info-section">
+                        <div class="section-header">
+                            <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            <span class="section-title">LOCATION</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="location-3">
+                                <span class="city-state">Charlotte, NC</span>
+                                <span class="separator"></span>
+                                <span class="distance">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                                    </svg>
+                                    3.4 miles away
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Option 4 -->
+        <div class="option-card">
+            <h3><span class="option-number">4</span>Stacked Layout</h3>
+            <p class="description">
+                Displays city/state and distance on separate lines, creating a more structured, two-tier information hierarchy. This layout gives each piece of information its own space and improves scannability.
+            </p>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>✓ Pros</h4>
+                    <ul>
+                        <li>Excellent scannability with clear information grouping</li>
+                        <li>No wrapping issues on narrow screens</li>
+                        <li>Clean separation between location and distance</li>
+                        <li>Consistent with other multi-line information patterns</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>× Cons</h4>
+                    <ul>
+                        <li>Uses more vertical space in the card</li>
+                        <li>May feel over-structured for simple information</li>
+                        <li>Could increase overall card height unnecessarily</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup-container">
+                <div class="mockup-label">Live Preview in Card Context</div>
+                <div class="firm-card-preview">
+                    <div class="firm-header">
+                        <div class="firm-avatar">S</div>
+                        <div class="firm-header-content">
+                            <div class="firm-name">Smith & Associates Law Firm</div>
+                        </div>
+                    </div>
+                    <div class="card-divider"></div>
+                    <div class="info-section">
+                        <div class="section-header">
+                            <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            <span class="section-title">LOCATION</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="location-4">
+                                <div class="city-state">Charlotte, NC</div>
+                                <div class="distance">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                                    </svg>
+                                    3.4 miles away
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Option 5 -->
+        <div class="option-card">
+            <h3><span class="option-number">5</span>Color-Coded Distance</h3>
+            <p class="description">
+                Uses green color to highlight proximity, creating a positive association with nearby locations. The distance appears more prominent while the city/state remains neutral. This taps into familiar UI patterns where green indicates "good" or "nearby."
+            </p>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>✓ Pros</h4>
+                    <ul>
+                        <li>Green creates positive association with proximity</li>
+                        <li>Distance stands out for users who prioritize location</li>
+                        <li>Minimal design with intentional color accent</li>
+                        <li>Consistent with "nearby" patterns in other apps</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>× Cons</h4>
+                    <ul>
+                        <li>Green might compete with "Verified" badge color</li>
+                        <li>Could be misleading if firm is actually far away</li>
+                        <li>May need dynamic color based on actual distance</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup-container">
+                <div class="mockup-label">Live Preview in Card Context</div>
+                <div class="firm-card-preview">
+                    <div class="firm-header">
+                        <div class="firm-avatar">S</div>
+                        <div class="firm-header-content">
+                            <div class="firm-name">Smith & Associates Law Firm</div>
+                        </div>
+                    </div>
+                    <div class="card-divider"></div>
+                    <div class="info-section">
+                        <div class="section-header">
+                            <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            <span class="section-title">LOCATION</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="location-5">
+                                <span class="city-state">Charlotte, NC</span>
+                                <span class="separator">|</span>
+                                <span class="distance">3.4 miles away</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Option 6 -->
+        <div class="option-card">
+            <h3><span class="option-number">6</span>Minimal with Enhanced Spacing</h3>
+            <p class="description">
+                A refined version of the current design that keeps the pipe separator but increases spacing and adjusts the visual weight slightly. This provides better breathing room while maintaining familiarity.
+            </p>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>✓ Pros</h4>
+                    <ul>
+                        <li>Easiest to implement - minimal code changes</li>
+                        <li>Familiar format that users already understand</li>
+                        <li>Improved spacing creates better readability</li>
+                        <li>Low risk of unintended visual conflicts</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>× Cons</h4>
+                    <ul>
+                        <li>Least innovative of all options</li>
+                        <li>Doesn't fully leverage design system potential</li>
+                        <li>Pipe separator feels dated compared to modern UI patterns</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup-container">
+                <div class="mockup-label">Live Preview in Card Context</div>
+                <div class="firm-card-preview">
+                    <div class="firm-header">
+                        <div class="firm-avatar">S</div>
+                        <div class="firm-header-content">
+                            <div class="firm-name">Smith & Associates Law Firm</div>
+                        </div>
+                    </div>
+                    <div class="card-divider"></div>
+                    <div class="info-section">
+                        <div class="section-header">
+                            <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            <span class="section-title">LOCATION</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="location-6">
+                                <span class="city-state">Charlotte, NC</span>
+                                <span class="separator">|</span>
+                                <span class="distance">3.4 miles away</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendation Section -->
+        <div class="recommendation">
+            <h2><span class="star-icon">⭐</span> Design Recommendation</h2>
+
+            <h3>Recommended Option: Option 1 - Visual Hierarchy with Size Variation</h3>
+
+            <p>
+                After analyzing all six options, <strong>Option 1 (Visual Hierarchy with Size Variation)</strong> is the recommended choice for the following reasons:
+            </p>
+
+            <ul>
+                <li><strong>Optimal Information Hierarchy:</strong> The larger, bolder city/state naturally draws the eye first, which aligns with user behavior - most users want to know WHERE the firm is located before considering HOW FAR it is.</li>
+
+                <li><strong>Clean & Scannable:</strong> Users can quickly scan down a list of cards and immediately identify the locations. The secondary distance information is still visible but doesn't compete for attention.</li>
+
+                <li><strong>Mobile-Friendly:</strong> The flexible inline layout wraps gracefully on narrow screens without breaking the visual hierarchy or requiring additional layout logic.</li>
+
+                <li><strong>Low Implementation Risk:</strong> This is a simple typography adjustment that won't conflict with other UI elements (badges, pills, icons) or require new assets.</li>
+
+                <li><strong>Accessibility Win:</strong> Screen readers will naturally announce the city/state first, then distance, which is the logical reading order. No additional ARIA labels needed.</li>
+            </ul>
+
+            <h3>Why Not the Other Options?</h3>
+
+            <p><strong>Option 2 (Badge Style):</strong> While visually appealing, the badge may over-emphasize distance and compete with the verified badge and practice area pills.</p>
+
+            <p><strong>Option 3 (Icon-Separated):</strong> The additional icon is redundant with the section location icon and adds visual complexity.</p>
+
+            <p><strong>Option 4 (Stacked):</strong> Uses too much vertical space for relatively simple information, which could make cards unnecessarily tall.</p>
+
+            <p><strong>Option 5 (Color-Coded):</strong> Green distance could be misleading when firms are actually far away, and conflicts with the existing verified badge color.</p>
+
+            <p><strong>Option 6 (Minimal):</strong> While safe, it doesn't improve the user experience enough to justify the effort of making changes.</p>
+
+            <h3>Implementation Notes</h3>
+
+            <p>To implement Option 1, update the location section content styling:</p>
+
+            <ul>
+                <li>City/State: font-size: 15px, font-weight: 600, color: #1a1a1a</li>
+                <li>Distance: font-size: 13px, font-weight: 400, color: #6b7280</li>
+                <li>Gap between elements: 8px</li>
+                <li>Remove pipe separator entirely for cleaner appearance</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

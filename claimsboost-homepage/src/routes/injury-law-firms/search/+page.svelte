@@ -271,7 +271,7 @@
 
 		return {
 			id: dbFirm.place_id,
-			name: dbFirm.firm_name,
+			name: dbFirm.display_name || dbFirm.firm_name || dbFirm.name,
 			slug: dbFirm.slug,
 			address: dbFirm.address,
 			city: dbFirm.city,
@@ -1166,18 +1166,19 @@
 								<img src="/map-pin-gray.svg" alt="Location" class="section-icon" />
 								<span class="section-title">LOCATION</span>
 							</div>
-							<p class="section-content">{firm.city}, {firm.state} | {firm.distance} away</p>
-						</div>
-
-						<div class="card-divider location-button-divider"></div>
-
-						<div class="button-wrapper">
-							<a href="/injury-law-firms/{firm.stateUrl}/{firm.cityUrl}/{firm.slug}" class="connect-link">
-								View profile
-								<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-									<path d="M5 12h14M12 5l7 7-7 7"/>
-								</svg>
-							</a>
+							<div class="location-row">
+								<p class="section-content location-text">
+									<span class="location-primary">{firm.city}, {firm.state}</span>
+									<span class="location-separator">|</span>
+									<span class="location-distance">{firm.distance} away</span>
+								</p>
+								<a href="/injury-law-firms/{firm.stateUrl}/{firm.cityUrl}/{firm.slug}" class="connect-link">
+									View profile
+									<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<path d="M5 12h14M12 5l7 7-7 7"/>
+									</svg>
+								</a>
+							</div>
 						</div>
 					</article>
 				{/each}
@@ -1955,6 +1956,39 @@
 		text-overflow: ellipsis;
 	}
 
+	/* Option 1: Visual Hierarchy for Location Text */
+	.location-row {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 16px;
+	}
+
+	.location-text {
+		display: block;
+		-webkit-line-clamp: unset;
+		-webkit-box-orient: unset;
+		overflow: visible;
+		margin: 0;
+	}
+
+	.location-primary {
+		font-size: 16px;
+		font-weight: 600;
+		color: #1a1a1a;
+	}
+
+	.location-separator {
+		display: none;
+	}
+
+	.location-distance {
+		font-size: 14px;
+		font-weight: 400;
+		color: #6b7280;
+		margin-left: 12px;
+	}
+
 	.stat {
 		display: flex;
 		align-items: center;
@@ -2124,6 +2158,10 @@
 	button.practice-tag:focus {
 		outline: 2px solid #2563EB;
 		outline-offset: 2px;
+	}
+
+	button.more-pill:focus {
+		outline: none;
 	}
 
 	/* Star styles removed - using StarRating component instead */
