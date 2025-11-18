@@ -1161,24 +1161,22 @@
 						<div class="card-divider"></div>
 
 						<!-- Location Section -->
-						<div class="info-section">
-							<div class="section-header">
-								<img src="/map-pin-gray.svg" alt="Location" class="section-icon" />
-								<span class="section-title">LOCATION</span>
-							</div>
-							<div class="location-row">
-								<p class="section-content location-text">
-									<span class="location-primary">{firm.city}, {firm.state}</span>
-									<span class="location-separator">|</span>
-									<span class="location-distance">{firm.distance} away</span>
-								</p>
-								<a href="/injury-law-firms/{firm.stateUrl}/{firm.cityUrl}/{firm.slug}" class="connect-link">
-									View profile
-									<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-										<path d="M5 12h14M12 5l7 7-7 7"/>
-									</svg>
-								</a>
-							</div>
+						<div class="firm-location">
+							<img src="/map-pin-gray.svg" alt="Location" class="location-icon" />
+							<span class="location-text">
+								<span class="location-primary">{firm.city}, {firm.state}</span>
+								<span class="location-distance">{firm.distance} away</span>
+							</span>
+						</div>
+
+						<!-- View Profile Footer -->
+						<div class="firm-footer">
+							<a href="/injury-law-firms/{firm.stateUrl}/{firm.cityUrl}/{firm.slug}" class="view-profile-link">
+								View profile
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<path d="M5 12h14M12 5l7 7-7 7"/>
+								</svg>
+							</a>
 						</div>
 					</article>
 				{/each}
@@ -1987,6 +1985,57 @@
 		font-weight: 400;
 		color: #6b7280;
 		margin-left: 12px;
+	}
+
+	.firm-location {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		margin-bottom: 4px;
+	}
+
+	.firm-location .location-icon {
+		width: 16px;
+		height: 16px;
+		flex-shrink: 0;
+		position: static;
+		transform: none;
+	}
+
+	.firm-footer {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 10px 16px;
+		margin: 16px -24px -20px -24px;
+		background: #f9fafb;
+		border-radius: 0 0 16px 16px;
+		border-top: 1px solid #e5e7eb;
+	}
+
+	.view-profile-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		color: #1a1a1a;
+		text-decoration: none;
+		font-weight: 600;
+		font-size: 16px;
+		transition: color 0.2s;
+	}
+
+	.firm-footer:hover .view-profile-link,
+	.firm-card:hover .view-profile-link {
+		color: #FF6800;
+	}
+
+	.firm-card:has(.practice-tag:hover) .view-profile-link {
+		color: #1a1a1a;
+	}
+
+	.view-profile-link svg {
+		width: 16px;
+		height: 16px;
 	}
 
 	.stat {
