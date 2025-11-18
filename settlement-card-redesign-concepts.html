@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settlement Card Redesign - 6 Design Concepts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+            line-height: 1.6;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 60px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #2563EB;
+        }
+
+        .section p, .section ul {
+            color: #444;
+            margin-bottom: 16px;
+        }
+
+        .section ul {
+            padding-left: 24px;
+        }
+
+        .section li {
+            margin-bottom: 8px;
+        }
+
+        .concept {
+            margin-bottom: 80px;
+            padding-bottom: 60px;
+            border-bottom: 2px solid #e5e5e5;
+        }
+
+        .concept:last-of-type {
+            border-bottom: none;
+        }
+
+        .concept-header {
+            margin-bottom: 30px;
+        }
+
+        .concept-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .concept-description {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .pros, .cons {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .pros h4, .cons h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .pros h4 {
+            color: #16A34A;
+        }
+
+        .cons h4 {
+            color: #DC2626;
+        }
+
+        .pros ul, .cons ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .pros li::before {
+            content: "✓ ";
+            color: #16A34A;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .cons li::before {
+            content: "− ";
+            color: #DC2626;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .mockup-container {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .mockup {
+            background: white;
+            border: none;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+            flex: 1;
+            min-width: 340px;
+            max-width: 400px;
+        }
+
+        .mockup:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.22);
+        }
+
+        /* Concept 1: Top Badge Layout */
+        .concept1 .practice-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+            color: #1E40AF;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+        }
+
+        .concept1 .settlement-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .concept1 .settlement-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .concept1 .amount {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .concept1 .law-firm {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .concept1 .law-firm-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Concept 2: Header Integration */
+        .concept2 .header-wrapper {
+            margin-bottom: 20px;
+        }
+
+        .concept2 .meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .concept2 .practice-tag {
+            font-size: 11px;
+            font-weight: 600;
+            color: #7C3AED;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .concept2 .law-firm {
+            font-size: 12px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .concept2 .settlement-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .concept2 .settlement-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .concept2 .amount {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        /* Concept 3: Sidebar Accent */
+        .concept3 .mockup {
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .concept3 .category-bar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #F59E0B 0%, #EF4444 100%);
+            border-radius: 16px 0 0 16px;
+        }
+
+        .concept3 .practice-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #F59E0B;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .concept3 .settlement-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .concept3 .settlement-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .concept3 .amount {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .concept3 .law-firm-footer {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e5e5;
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+        }
+
+        /* Concept 4: Bottom Attribution */
+        .concept4 .settlement-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .concept4 .settlement-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .concept4 .amount {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .concept4 .footer-meta {
+            margin-top: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .concept4 .practice-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #F3F4F6;
+            color: #374151;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        .concept4 .practice-icon {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        .concept4 .law-firm {
+            font-size: 12px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Concept 5: Icon-Based Tags */
+        .concept5 .tag-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .concept5 .practice-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+            color: #92400E;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 6px 10px;
+            border-radius: 6px;
+        }
+
+        .concept5 .law-firm-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #E0E7FF 0%, #C7D2FE 100%);
+            color: #3730A3;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 6px 10px;
+            border-radius: 6px;
+        }
+
+        .concept5 .tag-icon {
+            width: 12px;
+            height: 12px;
+        }
+
+        .concept5 .settlement-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .concept5 .settlement-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .concept5 .amount {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        /* Concept 6: Compact Integrated */
+        .concept6 .compact-header {
+            margin-bottom: 20px;
+        }
+
+        .concept6 .title-amount-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .concept6 .title-section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin: 0 0 6px 0;
+            line-height: 1.2;
+        }
+
+        .concept6 .meta-inline {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+        }
+
+        .concept6 .practice-inline {
+            color: #7C3AED;
+            font-weight: 600;
+        }
+
+        .concept6 .law-firm-inline {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .concept6 .meta-inline span:not(:last-child)::after {
+            content: "•";
+            margin-left: 12px;
+            color: #ddd;
+        }
+
+        .concept6 .amount {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+            flex-shrink: 0;
+        }
+
+        /* Shared styles */
+        .info-section {
+            margin-bottom: 20px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .section-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+        }
+
+        .section-content {
+            color: #1a1a1a;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .badges {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #16A34A;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .recommendation {
+            background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+            border: 2px solid #60A5FA;
+            border-radius: 12px;
+            padding: 32px;
+            margin-top: 60px;
+        }
+
+        .recommendation h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+
+        .recommendation p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 16px;
+        }
+
+        .recommendation ul {
+            padding-left: 24px;
+            margin-bottom: 16px;
+        }
+
+        .recommendation li {
+            margin-bottom: 12px;
+            color: #444;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+
+            .mockup-container {
+                flex-direction: column;
+            }
+
+            .mockup {
+                max-width: 100%;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .concept-title {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Settlement Card Redesign: Design Concepts</h1>
+        <p class="subtitle">6 approaches to integrating practice area tags and law firm names</p>
+
+        <div class="section">
+            <h2>Problem Statement</h2>
+            <p>The current settlement cards display case type, settlement amount, AI-generated description, and optional matching criteria badges. We need to add two new data points without compromising the existing information hierarchy:</p>
+            <ul>
+                <li><strong>Practice area classification:</strong> Category tag (e.g., "Motor Vehicle Accident", "Slip & Fall", "Workplace Injury")</li>
+                <li><strong>Law firm name:</strong> Attribution to the firm that handled the case (e.g., "Smith & Associates", "Johnson Law Firm")</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Context & Constraints</h2>
+            <ul>
+                <li>Cards appear in a responsive grid: 3 columns (desktop), 2 columns (tablet), 1 column (mobile)</li>
+                <li>Settlement amount is the primary data point and must remain highly visible</li>
+                <li>Current design uses: white background, 16px border radius, 20px padding, shadow on hover</li>
+                <li>Existing color scheme: gradient blue for amounts, green for matching badges, black/gray for text</li>
+                <li>Must maintain professional, trustworthy appearance</li>
+                <li>Accessibility compliance required (WCAG AA contrast ratios)</li>
+            </ul>
+        </div>
+
+        <!-- Concept 1 -->
+        <div class="concept concept1">
+            <div class="concept-header">
+                <div class="concept-title">Concept 1: Top Badge + Subtle Attribution</div>
+                <p class="concept-description">
+                    Places the practice area as a prominent badge at the very top of the card, establishing category context immediately. The law firm appears below the title as a subtle attribution line with an icon. This approach prioritizes practice area visibility while keeping law firm information present but secondary.
+                </p>
+            </div>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Practice area is immediately visible, enabling quick scanning</li>
+                        <li>Badge creates strong visual category system for filtering/recognition</li>
+                        <li>Law firm doesn't compete with primary information</li>
+                        <li>Clean, uncluttered design maintains current aesthetic</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>Law firm might be too subtle for firms wanting visibility</li>
+                        <li>Adds vertical height to card</li>
+                        <li>Badge could feel redundant if case title already indicates type</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup-container">
+                <div class="mockup">
+                    <span class="practice-badge">Motor Vehicle Accident</span>
+                    <div class="settlement-header">
+                        <h3>Rear-end car accident</h3>
+                        <span class="amount">$85,000</span>
+                    </div>
+                    <div class="law-firm">
+                        <svg class="law-firm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        Smith & Associates Law Firm
+                    </div>
+                    <div class="info-section">
+                        <div class="section-header">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span class="section-title">AI OVERVIEW</span>
+                        </div>
+                        <p class="section-content">Whiplash and back injury from highway collision. Medical bills and lost wages covered.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Concept 2 -->
+        <div class="concept concept2">
+            <div class="concept-header">
+                <div class="concept-title">Concept 2: Header Integration - Dual Meta Row</div>
+                <p class="concept-description">
+                    Integrates both new fields into a compact meta row above the main title and amount. Practice area appears as an uppercase label on the left, law firm on the right. This creates a clear header structure with three tiers: meta info, primary info, details.
+                </p>
+            </div>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Both fields receive equal visual weight</li>
+                        <li>Compact layout doesn't add much vertical space</li>
+                        <li>Creates clear information hierarchy with distinct zones</li>
+                        <li>Law firm gets better visibility than Concept 1</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>Could feel cluttered on narrow mobile screens</li>
+                        <li>Meta row might compete with title for attention</li>
+                        <li>Requires careful text truncation on smaller screens</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup-container">
+                <div class="mockup">
+                    <div class="header-wrapper">
+                        <div class="meta-row">
+                            <span class="practice-tag">Motor Vehicle</span>
+                            <span class="law-firm">Smith & Associates</span>
+                        </div>
+                        <div class="settlement-header">
+                            <h3>Rear-end car accident</h3>
+                            <span class="amount">$85,000</span>
+                        </div>
+                    </div>
+                    <div class="info-section">
+                        <div class="section-header">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span class="section-title">AI OVERVIEW</span>
+                        </div>
+                        <p class="section-content">Whiplash and back injury from highway collision. Medical bills and lost wages covered.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Concept 3 -->
+        <div class="concept concept3">
+            <div class="concept-header">
+                <div class="concept-title">Concept 3: Sidebar Accent + Footer Attribution</div>
+                <p class="concept-description">
+                    Uses a colored left-border accent (changes per practice area) with a small practice area label at the top. Law firm appears in a subtle footer section at the bottom, separated by a divider. This approach uses color and position to organize information without badges.
+                </p>
+            </div>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Color-coded sidebar enables instant category recognition</li>
+                        <li>Unique visual treatment stands out from other concepts</li>
+                        <li>Footer placement for law firm feels like natural attribution</li>
+                        <li>Maintains clean central content area</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>Requires color system definition and maintenance</li>
+                        <li>Law firm visibility is lowest of all concepts</li>
+                        <li>Footer might be missed during quick scanning</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup-container">
+                <div class="mockup">
+                    <div class="category-bar"></div>
+                    <span class="practice-label">Motor Vehicle</span>
+                    <div class="settlement-header">
+                        <h3>Rear-end car accident</h3>
+                        <span class="amount">$85,000</span>
+                    </div>
+                    <div class="info-section">
+                        <div class="section-header">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span class="section-title">AI OVERVIEW</span>
+                        </div>
+                        <p class="section-content">Whiplash and back injury from highway collision. Medical bills and lost wages covered.</p>
+                    </div>
+                    <div class="law-firm-footer">via Smith & Associates Law Firm</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Concept 4 -->
+        <div class="concept concept4">
+            <div class="concept-header">
+                <div class="concept-title">Concept 4: Bottom Meta Bar - Equal Prominence</div>
+                <p class="concept-description">
+                    Preserves the original header completely unchanged and adds both new fields in a footer meta bar below the AI overview. Practice area appears as a chip/pill on the left, law firm as text on the right. This minimizes disruption to the existing design.
+                </p>
+            </div>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Zero changes to existing header - lowest implementation risk</li>
+                        <li>Both fields clearly visible in dedicated space</li>
+                        <li>Easy to scan footer meta bar for additional details</li>
+                        <li>Practice chip creates visual interest at bottom</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>Information is furthest from settlement amount</li>
+                        <li>May be overlooked if users focus on header/amount</li>
+                        <li>Adds card height more than top-placement concepts</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup-container">
+                <div class="mockup">
+                    <div class="settlement-header">
+                        <h3>Rear-end car accident</h3>
+                        <span class="amount">$85,000</span>
+                    </div>
+                    <div class="info-section">
+                        <div class="section-header">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span class="section-title">AI OVERVIEW</span>
+                        </div>
+                        <p class="section-content">Whiplash and back injury from highway collision. Medical bills and lost wages covered.</p>
+                    </div>
+                    <div class="footer-meta">
+                        <span class="practice-chip">
+                            <svg class="practice-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                            Motor Vehicle
+                        </span>
+                        <span class="law-firm">Smith & Associates</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Concept 5 -->
+        <div class="concept concept5">
+            <div class="concept-header">
+                <div class="concept-title">Concept 5: Icon-Based Tag System</div>
+                <p class="concept-description">
+                    Both practice area and law firm appear as colorful, icon-enhanced tags at the top of the card. Each tag has a distinct gradient background and icon, creating a badge-like system that's visually engaging and easy to scan. This is the most vibrant approach.
+                </p>
+            </div>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Most visually distinctive and engaging design</li>
+                        <li>Icons aid quick recognition and add personality</li>
+                        <li>Color differentiation makes both fields stand out</li>
+                        <li>Tag system feels modern and user-friendly</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>Could feel too colorful/busy for professional context</li>
+                        <li>Requires icon library for practice areas and law firms</li>
+                        <li>Takes up most horizontal space at top of card</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup-container">
+                <div class="mockup">
+                    <div class="tag-row">
+                        <span class="practice-tag">
+                            <svg class="tag-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M23 12l-2.44-2.78.34-3.68-3.61-.82-1.89-3.18L12 3 8.6 1.54 6.71 4.72l-3.61.81.34 3.68L1 12l2.44 2.78-.34 3.69 3.61.82 1.89 3.18L12 21l3.4 1.46 1.89-3.18 3.61-.82-.34-3.68L23 12z"/>
+                            </svg>
+                            Motor Vehicle
+                        </span>
+                        <span class="law-firm-tag">
+                            <svg class="tag-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                            Smith & Associates
+                        </span>
+                    </div>
+                    <div class="settlement-header">
+                        <h3>Rear-end car accident</h3>
+                        <span class="amount">$85,000</span>
+                    </div>
+                    <div class="info-section">
+                        <div class="section-header">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span class="section-title">AI OVERVIEW</span>
+                        </div>
+                        <p class="section-content">Whiplash and back injury from highway collision. Medical bills and lost wages covered.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Concept 6 -->
+        <div class="concept concept6">
+            <div class="concept-header">
+                <div class="concept-title">Concept 6: Compact Inline Metadata</div>
+                <p class="concept-description">
+                    Integrates practice area and law firm as inline metadata directly beneath the settlement title, separated by bullet points. This creates a compact, text-based solution that maintains maximum information density without adding separate UI elements. Most conservative approach.
+                </p>
+            </div>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Most space-efficient solution - minimal vertical growth</li>
+                        <li>Natural reading flow from title to metadata</li>
+                        <li>Simple, professional appearance</li>
+                        <li>Easiest to implement - pure text solution</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>Less visually distinctive - harder to scan</li>
+                        <li>Practice area doesn't stand out for categorization</li>
+                        <li>Could get lost in the text hierarchy</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup-container">
+                <div class="mockup">
+                    <div class="compact-header">
+                        <div class="title-amount-row">
+                            <div class="title-section">
+                                <h3>Rear-end car accident</h3>
+                                <div class="meta-inline">
+                                    <span class="practice-inline">Motor Vehicle</span>
+                                    <span class="law-firm-inline">Smith & Associates</span>
+                                </div>
+                            </div>
+                            <span class="amount">$85,000</span>
+                        </div>
+                    </div>
+                    <div class="info-section">
+                        <div class="section-header">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span class="section-title">AI OVERVIEW</span>
+                        </div>
+                        <p class="section-content">Whiplash and back injury from highway collision. Medical bills and lost wages covered.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendation -->
+        <div class="recommendation">
+            <h2>Design Recommendation</h2>
+
+            <p><strong>Primary Recommendation: Concept 2 (Header Integration - Dual Meta Row)</strong></p>
+
+            <p>After analyzing all six concepts, Concept 2 provides the best balance of visibility, hierarchy, and usability for the following reasons:</p>
+
+            <ul>
+                <li><strong>Balanced visibility:</strong> Both practice area and law firm receive appropriate prominence without overwhelming the settlement amount</li>
+                <li><strong>Clear hierarchy:</strong> Three-tier structure (meta → primary → details) creates intuitive scanning pattern</li>
+                <li><strong>Space efficiency:</strong> Compact meta row adds minimal height while maintaining readability</li>
+                <li><strong>Scannability:</strong> Practice area positioned at top-left enables quick category recognition across the grid</li>
+                <li><strong>Professional appearance:</strong> Text-based solution maintains trustworthy, clean aesthetic</li>
+                <li><strong>Responsive friendly:</strong> Can gracefully stack or truncate on mobile with clear fallback patterns</li>
+            </ul>
+
+            <p><strong>Alternative for Consideration: Concept 1 (Top Badge + Subtle Attribution)</strong></p>
+
+            <p>If practice area categorization needs stronger visual emphasis (e.g., for filtering UI or color-coding), Concept 1 would be the stronger choice. The badge treatment makes categories immediately recognizable and creates better visual grouping in the grid.</p>
+
+            <p><strong>Implementation Notes:</strong></p>
+            <ul>
+                <li>Ensure practice area text truncates with ellipsis beyond ~20 characters</li>
+                <li>Law firm name should truncate at ~25 characters with full name in hover tooltip</li>
+                <li>On mobile (<640px), consider stacking the meta row or showing only practice area with law firm in collapsed state</li>
+                <li>Test color contrast for practice area text to ensure WCAG AA compliance (4.5:1 minimum)</li>
+                <li>Consider adding subtle hover effects that highlight the meta row for enhanced interactivity</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

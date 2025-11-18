@@ -1661,7 +1661,7 @@
 	.firm-card {
 		background: white;
 		border-radius: 16px;
-		padding: 24px 24px 16px 24px;
+		padding: 24px 24px 20px 24px;
 		box-shadow: 0 2px 8px rgba(0,0,0,0.18);
 		transition: all 0.3s;
 		position: relative;

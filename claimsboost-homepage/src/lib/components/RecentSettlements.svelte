@@ -10,7 +10,10 @@
 			location: 'Raleigh, NC',
 			year: 2023,
 			description: 'Whiplash and back injury from highway collision. Medical bills and lost wages covered.',
-			similarCases: 'Similar cases in your area: 23'
+			similarCases: 'Similar cases in your area: 23',
+			practiceArea: 'Vehicle Accidents',
+			lawFirm: 'Smith & Associates Law Firm',
+			firmUrl: '/injury-law-firms/nc/raleigh/smith-associates'
 		},
 		{
 			type: 'Slip & fall at store',
@@ -18,7 +21,10 @@
 			location: 'Raleigh, NC',
 			year: 2023,
 			description: 'Whiplash and back injury from highway collision. Medical bills and lost wages covered.',
-			similarCases: 'Similar cases in your area: 23'
+			similarCases: 'Similar cases in your area: 23',
+			practiceArea: 'Premises Liability',
+			lawFirm: 'Johnson Legal Group',
+			firmUrl: '/injury-law-firms/nc/raleigh/johnson-legal'
 		},
 		{
 			type: 'Workplace injury',
@@ -26,7 +32,10 @@
 			location: 'Raleigh, NC',
 			year: 2023,
 			description: 'Whiplash and back injury from highway collision. Medical bills and lost wages covered.',
-			similarCases: 'Similar cases in your area: 23'
+			similarCases: 'Similar cases in your area: 23',
+			practiceArea: 'Workplace Injuries',
+			lawFirm: 'Davis Injury Attorneys',
+			firmUrl: '/injury-law-firms/nc/raleigh/davis-injury'
 		},
 		{
 			type: 'Rear-end car accident',
@@ -34,7 +43,10 @@
 			location: 'Raleigh, NC',
 			year: 2023,
 			description: 'Whiplash and back injury from highway collision. Medical bills and lost wages covered.',
-			similarCases: 'Similar cases in your area: 23'
+			similarCases: 'Similar cases in your area: 23',
+			practiceArea: 'Vehicle Accidents',
+			lawFirm: 'Williams & Partners',
+			firmUrl: '/injury-law-firms/nc/raleigh/williams-partners'
 		},
 		{
 			type: 'Slip & fall at store',
@@ -42,7 +54,10 @@
 			location: 'Raleigh, NC',
 			year: 2023,
 			description: 'Whiplash and back injury from highway collision. Medical bills and lost wages covered.',
-			similarCases: 'Similar cases in your area: 23'
+			similarCases: 'Similar cases in your area: 23',
+			practiceArea: 'Premises Liability',
+			lawFirm: 'Miller Law Office',
+			firmUrl: '/injury-law-firms/nc/raleigh/miller-law'
 		},
 		{
 			type: 'Workplace injury',
@@ -50,7 +65,10 @@
 			location: 'Raleigh, NC',
 			year: 2023,
 			description: 'Whiplash and back injury from highway collision. Medical bills and lost wages covered.',
-			similarCases: 'Similar cases in your area: 23'
+			similarCases: 'Similar cases in your area: 23',
+			practiceArea: 'Workplace Injuries',
+			lawFirm: 'Anderson & Brown LLP',
+			firmUrl: '/injury-law-firms/nc/raleigh/anderson-brown'
 		}
 	];
 </script>

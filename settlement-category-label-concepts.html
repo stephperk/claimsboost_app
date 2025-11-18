@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settlement Category Label Design Concepts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+            line-height: 1.6;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 60px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #2563EB;
+        }
+
+        .section p, .section ul {
+            color: #444;
+            margin-bottom: 16px;
+        }
+
+        .section ul {
+            padding-left: 24px;
+        }
+
+        .section li {
+            margin-bottom: 8px;
+        }
+
+        .color-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .color-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .color-box {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        .color-info {
+            flex: 1;
+        }
+
+        .color-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #1a1a1a;
+        }
+
+        .color-code {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .concept {
+            margin-bottom: 80px;
+            padding-bottom: 60px;
+            border-bottom: 2px solid #e5e5e5;
+        }
+
+        .concept:last-of-type {
+            border-bottom: none;
+        }
+
+        .concept-header {
+            margin-bottom: 30px;
+        }
+
+        .concept-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .concept-description {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .pros, .cons {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .pros h4, .cons h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .pros h4 {
+            color: #16A34A;
+        }
+
+        .cons h4 {
+            color: #DC2626;
+        }
+
+        .pros ul, .cons ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .pros li::before {
+            content: "✓ ";
+            color: #16A34A;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .cons li::before {
+            content: "− ";
+            color: #DC2626;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .mockup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        /* Settlement Card Base Styles */
+        .settlement-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+            transition: box-shadow 0.2s;
+            position: relative;
+        }
+
+        .settlement-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.22);
+        }
+
+        .settlement-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .settlement-amount {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+
+        .ai-section {
+            margin-bottom: 16px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .section-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.6;
+        }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .ai-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Concept 1: Corner Badge */
+        .concept1 .settlement-card {
+            border-left: 4px solid #3B82F6;
+        }
+
+        .concept1 .category-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+            color: #1E40AF;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+        }
+
+        .concept1 .settlement-title {
+            padding-right: 140px;
+        }
+
+        /* Concept 2: Top Pill with Icon */
+        .concept2 .settlement-card {
+            border-left: 4px solid #F59E0B;
+        }
+
+        .concept2 .category-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #F59E0B;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+        }
+
+        .concept2 .pill-icon {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Concept 3: Inline Label with Border */
+        .concept3 .settlement-card {
+            border-left: 4px solid #10B981;
+        }
+
+        .concept3 .category-inline {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            color: #10B981;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #10B981;
+        }
+
+        /* Concept 4: Ribbon Corner */
+        .concept4 .settlement-card {
+            border-left: 4px solid #EF4444;
+            overflow: hidden;
+        }
+
+        .concept4 .category-ribbon {
+            position: absolute;
+            top: 12px;
+            right: -32px;
+            background: #EF4444;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 6px 40px;
+            transform: rotate(45deg);
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Concept 5: Header Integration */
+        .concept5 .settlement-card {
+            border-left: 4px solid #8B5CF6;
+        }
+
+        .concept5 .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .concept5 .category-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(139, 92, 246, 0.1);
+            color: #8B5CF6;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1.5px solid #8B5CF6;
+        }
+
+        .concept5 .category-icon {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Concept 6: Subtle Background Tint */
+        .concept6 .settlement-card {
+            border-left: 4px solid #6B7280;
+            background: linear-gradient(135deg,
+                rgba(107, 114, 128, 0.03) 0%,
+                rgba(107, 114, 128, 0.01) 100%);
+        }
+
+        .concept6 .category-watermark {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #6B7280;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            opacity: 0.3;
+            transform: rotate(-2deg);
+        }
+
+        .concept6 .category-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #6B7280;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .recommendation {
+            background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+            border: 2px solid #60A5FA;
+            border-radius: 12px;
+            padding: 32px;
+            margin-top: 60px;
+        }
+
+        .recommendation h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+
+        .recommendation p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 16px;
+        }
+
+        .recommendation ul {
+            padding-left: 24px;
+            margin-bottom: 16px;
+        }
+
+        .recommendation li {
+            margin-bottom: 12px;
+            color: #444;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+
+            .mockup-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .concept-title {
+                font-size: 22px;
+            }
+
+            .color-legend {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Settlement Category Label Design Concepts</h1>
+        <p class="subtitle">6 approaches to display practice area classifications on settlement cards</p>
+
+        <div class="section">
+            <h2>Design Challenge</h2>
+            <p>Settlement cards currently use a 4px colored left border to indicate practice area categories, but users cannot identify the category without seeing the color legend. The challenge is to add a visible text label that clearly communicates the category while maintaining the card's clean, professional aesthetic and visual hierarchy.</p>
+        </div>
+
+        <div class="section">
+            <h2>Current Card Structure</h2>
+            <ul>
+                <li>4px colored left border (category indicator)</li>
+                <li>Settlement type title (e.g., "Rear-end car accident")</li>
+                <li>Large settlement amount with gradient blue styling</li>
+                <li>AI OVERVIEW section with case description</li>
+                <li>Footer with law firm attribution and "View firm" link</li>
+                <li>White background, rounded corners (12px), 20px padding</li>
+                <li>Shadow on hover for interactive feedback</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Practice Area Categories & Colors</h2>
+            <div class="color-legend">
+                <div class="color-item">
+                    <div class="color-box" style="background: #3B82F6;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Vehicle Accidents</div>
+                        <div class="color-code">#3B82F6</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-box" style="background: #F59E0B;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Defective Products</div>
+                        <div class="color-code">#F59E0B</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-box" style="background: #10B981;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Malpractice</div>
+                        <div class="color-code">#10B981</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-box" style="background: #EF4444;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Workplace Injuries</div>
+                        <div class="color-code">#EF4444</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-box" style="background: #8B5CF6;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Premises Liability</div>
+                        <div class="color-code">#8B5CF6</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-box" style="background: #6B7280;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Wrongful Death</div>
+                        <div class="color-code">#6B7280</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Concept 1 -->
+        <div class="concept concept1">
+            <div class="concept-header">
+                <div class="concept-title">Concept 1: Corner Badge</div>
+                <p class="concept-description">
+                    Places a compact, rounded badge in the top-right corner of the card. The badge uses a light gradient background that matches the border color's theme, with dark text for accessibility. This approach keeps the category visible without interfering with the main content while leveraging the existing colored border system.
+                </p>
+            </div>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Immediately visible without cluttering main content area</li>
+                        <li>Badge position creates clear visual anchor for scanning</li>
+                        <li>Complementary gradient reinforces border color coding</li>
+                        <li>Clean separation from settlement title and amount</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>Settlement title needs padding to avoid text overlap</li>
+                        <li>Badge may feel disconnected from colored border</li>
+                        <li>Less prominent than top-placement options</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup-grid">
+                <div class="settlement-card">
+                    <span class="category-badge">Vehicle Accidents</span>
+                    <h3 class="settlement-title">Rear-end car accident</h3>
+                    <div class="settlement-amount">$85,000</div>
+                    <div class="ai-section">
+                        <div class="section-header">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span class="section-label">AI Overview</span>
+                        </div>
+                        <p class="ai-description">Whiplash and back injury from highway collision. Medical bills and lost wages covered.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span>via Smith & Associates</span>
+                        <a href="#" style="color: #2563EB; text-decoration: none; font-weight: 600;">View firm →</a>
+                    </div>
+                </div>
+
+                <div class="settlement-card">
+                    <span class="category-badge" style="background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%); color: #1E40AF;">Vehicle Accidents</span>
+                    <h3 class="settlement-title">Motorcycle accident with severe injuries</h3>
+                    <div class="settlement-amount">$425,000</div>
+                    <div class="ai-section">
+                        <div class="section-header">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span class="section-label">AI Overview</span>
+                        </div>
+                        <p class="ai-description">Multiple fractures and road rash. Long-term physical therapy required. Defendant insurance covered all damages.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span>via Johnson Law Group</span>
+                        <a href="#" style="color: #2563EB; text-decoration: none; font-weight: 600;">View firm →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Concept 2 -->
+        <div class="concept concept2">
+            <div class="concept-header">
+                <div class="concept-title">Concept 2: Top Pill with Icon</div>
+                <p class="concept-description">
+                    Features a rounded pill-style badge at the top of the card with an optional icon. The pill uses the full category color as background with white text, creating strong visual association with the border. This is the boldest and most visually prominent approach.
+                </p>
+            </div>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Strongest visual connection to colored border</li>
+                        <li>Most prominent category labeling approach</li>
+                        <li>Icon option adds visual interest and recognition</li>
+                        <li>Works naturally at top of card hierarchy</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>Bold styling may compete with settlement amount</li>
+                        <li>Adds vertical height to card</li>
+                        <li>Requires icon library for each category</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup-grid">
+                <div class="settlement-card">
+                    <div class="category-pill">
+                        <svg class="pill-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M23 12l-2.44-2.78.34-3.68-3.61-.82-1.89-3.18L12 3 8.6 1.54 6.71 4.72l-3.61.81.34 3.68L1 12l2.44 2.78-.34 3.69 3.61.82 1.89 3.18L12 21l3.4 1.46 1.89-3.18 3.61-.82-.34-3.68L23 12z"/>
+                        </svg>
+                        Defective Products
+                    </div>
+                    <h3 class="settlement-title">Faulty power tool injury</h3>
+                    <div class="settlement-amount">$150,000</div>
+                    <div class="ai-section">
+                        <div class="section-header">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span class="section-label">AI Overview</span>
+                        </div>
+                        <p class="ai-description">Defective safety mechanism caused hand injury. Manufacturer liability established.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span>via Martinez Legal Partners</span>
+                        <a href="#" style="color: #2563EB; text-decoration: none; font-weight: 600;">View firm →</a>
+                    </div>
+                </div>
+
+                <div class="settlement-card">
+                    <div class="category-pill">
+                        <svg class="pill-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+                        </svg>
+                        Defective Products
+                    </div>
+                    <h3 class="settlement-title">Recalled vehicle airbag failure</h3>
+                    <div class="settlement-amount">$275,000</div>
+                    <div class="ai-section">
+                        <div class="section-header">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span class="section-label">AI Overview</span>
+                        </div>
+                        <p class="ai-description">Airbag deployed improperly causing facial injuries. Part of national recall settlement.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span>via Chen & Associates</span>
+                        <a href="#" style="color: #2563EB; text-decoration: none; font-weight: 600;">View firm →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Concept 3 -->
+        <div class="concept concept3">
+            <div class="concept-header">
+                <div class="concept-title">Concept 3: Inline Label with Accent Border</div>
+                <p class="concept-description">
+                    Displays the category as an uppercase inline label with a bottom border accent that matches the card's left border color. This creates a subtle connection between the label and the existing color coding system without using background fills or badges.
+                </p>
+            </div>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Most conservative and professional appearance</li>
+                        <li>Bottom border creates elegant visual link to side border</li>
+                        <li>Minimal space usage and visual weight</li>
+                        <li>Easy to read and accessible</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>Less visually distinctive for quick scanning</li>
+                        <li>Category label may get overlooked</li>
+                        <li>Underline treatment is subtle compared to other options</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup-grid">
+                <div class="settlement-card">
+                    <span class="category-inline">Malpractice</span>
+                    <h3 class="settlement-title">Surgical error during routine procedure</h3>
+                    <div class="settlement-amount">$520,000</div>
+                    <div class="ai-section">
+                        <div class="section-header">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span class="section-label">AI Overview</span>
+                        </div>
+                        <p class="ai-description">Medical negligence resulted in complications requiring additional surgery. Hospital settled before trial.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span>via Williams Medical Malpractice</span>
+                        <a href="#" style="color: #2563EB; text-decoration: none; font-weight: 600;">View firm →</a>
+                    </div>
+                </div>
+
+                <div class="settlement-card">
+                    <span class="category-inline">Malpractice</span>
+                    <h3 class="settlement-title">Misdiagnosis leading to delayed treatment</h3>
+                    <div class="settlement-amount">$380,000</div>
+                    <div class="ai-section">
+                        <div class="section-header">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span class="section-label">AI Overview</span>
+                        </div>
+                        <p class="ai-description">Doctor failed to diagnose condition for 6 months. Patient suffered permanent damage as result.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span>via Thompson Health Law</span>
+                        <a href="#" style="color: #2563EB; text-decoration: none; font-weight: 600;">View firm →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Concept 4 -->
+        <div class="concept concept4">
+            <div class="concept-header">
+                <div class="concept-title">Concept 4: Diagonal Corner Ribbon</div>
+                <p class="concept-description">
+                    Features a bold diagonal ribbon in the top-right corner displaying the category name. This creative approach adds visual interest and makes the category highly noticeable while maintaining a distinctive, premium feel. Most unconventional option.
+                </p>
+            </div>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Highly distinctive and memorable design element</li>
+                        <li>Creates premium, badge-like appearance</li>
+                        <li>Draws immediate attention to category</li>
+                        <li>Strong visual connection to border color</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>May feel too decorative for professional legal context</li>
+                        <li>Requires overflow:hidden which affects hover shadows</li>
+                        <li>Text readability at angle can be challenging</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup-grid">
+                <div class="settlement-card">
+                    <span class="category-ribbon">Workplace Injuries</span>
+                    <h3 class="settlement-title">Construction site fall</h3>
+                    <div class="settlement-amount">$340,000</div>
+                    <div class="ai-section">
+                        <div class="section-header">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span class="section-label">AI Overview</span>
+                        </div>
+                        <p class="ai-description">Worker fell from scaffolding due to inadequate safety measures. Multiple bone fractures.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span>via Anderson Workers' Rights</span>
+                        <a href="#" style="color: #2563EB; text-decoration: none; font-weight: 600;">View firm →</a>
+                    </div>
+                </div>
+
+                <div class="settlement-card">
+                    <span class="category-ribbon">Workplace Injuries</span>
+                    <h3 class="settlement-title">Machinery accident at factory</h3>
+                    <div class="settlement-amount">$625,000</div>
+                    <div class="ai-section">
+                        <div class="section-header">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span class="section-label">AI Overview</span>
+                        </div>
+                        <p class="ai-description">Hand caught in equipment lacking proper safety guards. Resulted in permanent disability.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span>via Lopez Injury Law</span>
+                        <a href="#" style="color: #2563EB; text-decoration: none; font-weight: 600;">View firm →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Concept 5 -->
+        <div class="concept concept5">
+            <div class="concept-header">
+                <div class="concept-title">Concept 5: Header Tag with Icon and Border</div>
+                <p class="concept-description">
+                    Integrates a bordered tag with optional icon at the top of the card, positioned as a header element. Uses transparent background with colored border and text that matches the card's left border. Balances visibility with subtlety.
+                </p>
+            </div>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Clear visual hierarchy with tag as header element</li>
+                        <li>Border treatment echoes card's left border nicely</li>
+                        <li>Icon adds recognition without overwhelming</li>
+                        <li>Professional appearance suitable for legal context</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>Takes up horizontal space at top of card</li>
+                        <li>Border may create visual noise with card border</li>
+                        <li>Settlement amount may appear lower in hierarchy</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup-grid">
+                <div class="settlement-card">
+                    <div class="card-header">
+                        <div class="category-tag">
+                            <svg class="category-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                <polyline points="9 22 9 12 15 12 15 22"/>
+                            </svg>
+                            Premises Liability
+                        </div>
+                    </div>
+                    <h3 class="settlement-title">Slip and fall at retail store</h3>
+                    <div class="settlement-amount">$185,000</div>
+                    <div class="ai-section">
+                        <div class="section-header">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span class="section-label">AI Overview</span>
+                        </div>
+                        <p class="ai-description">Customer slipped on wet floor without warning signs. Hip fracture required surgery.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span>via Garcia Personal Injury</span>
+                        <a href="#" style="color: #2563EB; text-decoration: none; font-weight: 600;">View firm →</a>
+                    </div>
+                </div>
+
+                <div class="settlement-card">
+                    <div class="card-header">
+                        <div class="category-tag">
+                            <svg class="category-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            </svg>
+                            Premises Liability
+                        </div>
+                    </div>
+                    <h3 class="settlement-title">Dog bite at apartment complex</h3>
+                    <div class="settlement-amount">$95,000</div>
+                    <div class="ai-section">
+                        <div class="section-header">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span class="section-label">AI Overview</span>
+                        </div>
+                        <p class="ai-description">Landlord failed to enforce leash policy. Victim required reconstructive surgery.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span>via Davis & Partners</span>
+                        <a href="#" style="color: #2563EB; text-decoration: none; font-weight: 600;">View firm →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Concept 6 -->
+        <div class="concept concept6">
+            <div class="concept-header">
+                <div class="concept-title">Concept 6: Subtle Background Tint with Watermark</div>
+                <p class="concept-description">
+                    Applies a very subtle background gradient tint that matches the border color, with an optional watermark text in the corner and small label at top. This creates ambient category awareness without prominent UI elements, maintaining maximum focus on settlement details.
+                </p>
+            </div>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Most subtle approach maintains clean aesthetic</li>
+                        <li>Background tint provides ambient category awareness</li>
+                        <li>Doesn't add any vertical height to card</li>
+                        <li>Watermark adds sophisticated detail for attentive users</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>Category may be too subtle for quick recognition</li>
+                        <li>Watermark is decorative and may reduce readability</li>
+                        <li>Background tint could affect accessibility/contrast</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup-grid">
+                <div class="settlement-card">
+                    <span class="category-watermark">Wrongful Death</span>
+                    <span class="category-label">Wrongful Death</span>
+                    <h3 class="settlement-title">Medical negligence wrongful death</h3>
+                    <div class="settlement-amount">$1,250,000</div>
+                    <div class="ai-section">
+                        <div class="section-header">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span class="section-label">AI Overview</span>
+                        </div>
+                        <p class="ai-description">Family lost loved one due to hospital error. Comprehensive settlement for loss of life and companionship.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span>via Robinson Family Law</span>
+                        <a href="#" style="color: #2563EB; text-decoration: none; font-weight: 600;">View firm →</a>
+                    </div>
+                </div>
+
+                <div class="settlement-card">
+                    <span class="category-watermark">Wrongful Death</span>
+                    <span class="category-label">Wrongful Death</span>
+                    <h3 class="settlement-title">Fatal workplace accident</h3>
+                    <div class="settlement-amount">$890,000</div>
+                    <div class="ai-section">
+                        <div class="section-header">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span class="section-label">AI Overview</span>
+                        </div>
+                        <p class="ai-description">Worker killed in industrial accident due to OSHA violations. Settlement for surviving family.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span>via Miller Wrongful Death Attorneys</span>
+                        <a href="#" style="color: #2563EB; text-decoration: none; font-weight: 600;">View firm →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendation -->
+        <div class="recommendation">
+            <h2>Design Recommendation</h2>
+
+            <p><strong>Primary Recommendation: Concept 5 (Header Tag with Icon and Border)</strong></p>
+
+            <p>After analyzing all six concepts, Concept 5 provides the optimal balance of visibility, professionalism, and design coherence for the following reasons:</p>
+
+            <ul>
+                <li><strong>Clear visual hierarchy:</strong> Tag placement as a header element establishes category context before the settlement details, supporting natural top-to-bottom scanning</li>
+                <li><strong>Professional aesthetic:</strong> Bordered tag with transparent background maintains the clean, trustworthy appearance required for legal settlements</li>
+                <li><strong>Strong border connection:</strong> The tag's colored border directly echoes the card's left border, creating cohesive visual language that reinforces the color-coding system</li>
+                <li><strong>Scalable iconography:</strong> Optional icon support allows for future enhancement with category-specific symbols to aid quick recognition</li>
+                <li><strong>Accessibility friendly:</strong> Text remains on white background ensuring WCAG AA contrast compliance while the colored border provides sufficient visual distinction</li>
+                <li><strong>Mobile responsive:</strong> Tag can shrink gracefully or wrap on smaller screens without breaking layout</li>
+            </ul>
+
+            <p><strong>Alternative for Consideration: Concept 3 (Inline Label with Accent Border)</strong></p>
+
+            <p>If a more conservative, minimal approach is preferred, Concept 3 offers excellent readability and professional appearance while adding almost no visual weight to the card. The underline accent creates an elegant connection to the border color without badges or fills.</p>
+
+            <p><strong>Not Recommended: Concept 4 (Diagonal Corner Ribbon)</strong></p>
+
+            <p>While visually striking, the diagonal ribbon may appear too decorative for the serious nature of legal settlements and could undermine user trust. The angled text also presents accessibility challenges.</p>
+
+            <p><strong>Implementation Considerations:</strong></p>
+            <ul>
+                <li>Ensure category names truncate gracefully with ellipsis at ~18 characters</li>
+                <li>Maintain 1.5px-2px border width for tag outline to match card border weight</li>
+                <li>Consider 8-10px of margin-bottom for tag to create breathing room before settlement title</li>
+                <li>Test icon visibility at 12px-14px size to ensure clarity without overwhelming text</li>
+                <li>On mobile (<480px), consider removing icon to save horizontal space</li>
+                <li>Add hover state that slightly brightens border and text color for interactive feedback</li>
+                <li>Consider adding the category as a data attribute for filtering and analytics</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

@@ -10,13 +10,34 @@
 			maximumFractionDigits: 0
 		}).format(amount);
 	}
+
+	// Practice area color mapping
+	const practiceAreaColors = {
+		'Vehicle Accidents': '#3B82F6',        // Blue
+		'Defective Products': '#F59E0B',       // Orange
+		'Malpractice': '#10B981',              // Green
+		'Workplace Injuries': '#EF4444',       // Red
+		'Premises Liability': '#8B5CF6',       // Purple
+		'Wrongful Death': '#6B7280',           // Gray
+		'default': '#6B7280'
+	};
+
+	function getPracticeAreaColor(practiceArea) {
+		return practiceAreaColors[practiceArea] || practiceAreaColors['default'];
+	}
 </script>
 
-<div class="settlement-card">
-	<div class="settlement-header">
-		<h3>{settlement.type}</h3>
-		<span class="amount">{formatAmount(settlement.amount)}</span>
-	</div>
+<div class="settlement-card-wrapper">
+	<div class="settlement-card">
+		<div class="settlement-header">
+			<div class="header-left">
+				<div class="practice-area-label" style="color: {getPracticeAreaColor(settlement.practiceArea)}">
+					{settlement.practiceArea.toUpperCase()}
+				</div>
+				<h3>{settlement.type}</h3>
+			</div>
+			<span class="amount">{formatAmount(settlement.amount)}</span>
+		</div>
 
 	<div class="info-section">
 		<div class="section-header">
@@ -39,22 +60,48 @@
 			{/each}
 		</div>
 	{/if}
+
+	<div class="settlement-footer">
+		<span class="footer-text">via {settlement.lawFirm}</span>
+		<a href={settlement.firmUrl} class="view-profile-button">
+			View profile
+			<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<path d="M5 12h14M12 5l7 7-7 7"/>
+			</svg>
+		</a>
+	</div>
+	</div>
 </div>
 
 <style>
+	.settlement-card-wrapper {
+		position: relative;
+		transition: transform 0.2s;
+	}
+
+	.settlement-card-wrapper:hover {
+		transform: translateY(-2px);
+	}
+
 	.settlement-card {
 		background: white;
-		border: none;
+		border: 1px solid #e5e7eb;
 		border-radius: 16px;
 		padding: 20px;
-		box-shadow: 0 2px 8px rgba(0,0,0,0.18);
-		transition: transform 0.2s, box-shadow 0.2s;
+		box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+		transition: box-shadow 0.2s;
 		cursor: pointer;
 	}
 
-	.settlement-card:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 4px 16px rgba(0,0,0,0.22);
+	.settlement-card-wrapper:hover .settlement-card {
+		box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+	}
+
+	.practice-area-label {
+		font-size: 11px;
+		font-weight: 700;
+		letter-spacing: 1px;
+		margin-bottom: 8px;
 	}
 
 	.badges {
@@ -83,6 +130,15 @@
 		justify-content: space-between;
 		align-items: center;
 		margin-bottom: 20px;
+		gap: 16px;
+	}
+
+	.header-left {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		flex: 1;
+		min-width: 0;
 	}
 
 	.settlement-header h3 {
@@ -90,22 +146,23 @@
 		font-weight: 600;
 		color: #1a1a1a;
 		margin: 0;
-		line-height: 1.2;
+		line-height: 1.3;
 	}
 
 	.amount {
-		font-size: 24px;
+		font-size: 28px;
 		font-weight: 700;
 		background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 		background-clip: text;
-		line-height: 1.2;
+		line-height: 1;
+		flex-shrink: 0;
 	}
 
 	.info-section {
-		margin-bottom: 20px;
-		padding-top: 0;
+		margin-top: 24px;
+		margin-bottom: 28px;
 	}
 
 	.section-header {
@@ -135,6 +192,44 @@
 		font-weight: 500;
 		line-height: 1.5;
 		margin: 0;
-		padding-left: 28px;
+	}
+
+	.settlement-footer {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-top: 0;
+		padding-top: 12px;
+		border-top: 1px solid #e5e7eb;
+		background: #f9fafb;
+		padding: 12px 16px;
+		margin: 0 -20px -20px -20px;
+		border-radius: 0 0 16px 16px;
+	}
+
+	.footer-text {
+		font-size: 13px;
+		color: #6b7280;
+		font-weight: 400;
+	}
+
+	.view-profile-button {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		color: #1a1a1a;
+		text-decoration: none;
+		font-weight: 600;
+		font-size: 15px;
+		transition: color 0.2s;
+	}
+
+	.settlement-footer:hover .view-profile-button {
+		color: #FF6800;
+	}
+
+	.view-profile-button svg {
+		width: 16px;
+		height: 16px;
 	}
 </style>

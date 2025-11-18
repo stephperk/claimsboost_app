@@ -48,7 +48,7 @@
 						{#each suggestions as suggestion, i}
 							<button
 								class="suggestion-tag"
-								style="animation-delay: {i * 0.09}s"
+								style="animation-delay: {i * 0.15}s"
 								onclick={() => setSuggestion(suggestion)}
 							>
 								{suggestion}
@@ -70,13 +70,12 @@
 									<path d="M3 21l1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/>
 								</svg>
 							</div>
-							<span>Don't settle for less</span>
+							<span>Don't settle for less...</span>
 						</div>
 						<div class="chat-bubble bubble-2">
 							<div class="expert-avatar">
 								<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-									<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-									<path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+									<path d="M3 21l1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/>
 								</svg>
 							</div>
 							<span>You have a strong case...</span>
@@ -84,11 +83,7 @@
 						<div class="chat-bubble bubble-3">
 							<div class="expert-avatar">
 								<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-									<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-									<polyline points="14 2 14 8 20 8"/>
-									<line x1="16" y1="13" x2="8" y2="13"/>
-									<line x1="16" y1="17" x2="8" y2="17"/>
-									<polyline points="10 9 9 9 8 9"/>
+									<path d="M3 21l1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/>
 								</svg>
 							</div>
 							<span>We'll handle it from here...</span>
@@ -96,12 +91,10 @@
 						<div class="chat-bubble bubble-4">
 							<div class="expert-avatar">
 								<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-									<path d="M12 2L2 7l10 5 10-5-10-5z"/>
-									<path d="M2 17l10 5 10-5"/>
-									<path d="M2 12l10 5 10-5"/>
+									<path d="M3 21l1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/>
 								</svg>
 							</div>
-							<span>I've submitted your claim</span>
+							<span>I've submitted you claim!</span>
 						</div>
 					</div>
 				</div>
@@ -137,7 +130,7 @@
 		font-weight: 700;
 		line-height: 1.2;
 		color: #1a1a1a;
-		margin-bottom: 16px;
+		margin-bottom: 32px;
 	}
 
 	.highlight-free {
@@ -150,7 +143,7 @@
 	.subheadline {
 		font-size: 18px;
 		color: #000000;
-		margin-bottom: 32px;
+		margin-bottom: 40px;
 	}
 
 	.search-form {
@@ -283,7 +276,7 @@
 	}
 
 	.bubble-3 {
-		bottom: 80px;
+		bottom: 60px;
 		left: -80px;
 		animation-delay: 1s;
 	}
@@ -292,7 +285,7 @@
 		bottom: 20px;
 		right: -70px;
 		animation-delay: 1.5s;
-		max-width: 180px;
+		max-width: 220px;
 	}
 
 	@keyframes float {

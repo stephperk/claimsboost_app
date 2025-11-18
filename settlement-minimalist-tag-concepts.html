@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settlement Card - Minimalist Tag Concepts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        .intro {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 50px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .intro h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .intro ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .concept-section {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 60px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .concept-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e8ecf1;
+        }
+
+        .concept-header h2 {
+            color: #1a73e8;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .concept-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .pros-cons h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .pros-cons ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .pros-cons li {
+            margin-bottom: 8px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 30px;
+        }
+
+        /* Base Card Styles */
+        .settlement-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: visible;
+        }
+
+        .settlement-card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+
+        /* .settlement-card.million-plus {
+            
+            
+        }
+
+        .settlement-card.million-plus:hover {
+             */
+        }
+
+        .card-title {
+            font-size: 1.1em;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .settlement-amount {
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+
+        .ai-overview-label {
+            font-size: 0.75em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .card-description {
+            color: #555;
+            font-size: 0.95em;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .card-footer {
+            color: #888;
+            font-size: 0.85em;
+            padding-top: 16px;
+            border-top: 1px solid #e8ecf1;
+        }
+
+        .card-footer a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+
+        /* CONCEPT 1: File Folder Tabs (Offset) */
+        .concept-1 .settlement-card::before {
+            content: attr(data-category);
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #f8f9fa;
+            color: #5f6368;
+            padding: 4px 16px 6px;
+            border-radius: 8px 8px 0 0;
+            font-size: 0.75em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid #e8ecf1;
+            border-bottom: none;
+        }
+
+        .concept-1 .settlement-card[data-category="Vehicle Accidents"]::before {
+            background: #93C5FD;
+            color: #5f6368;
+        }
+
+        .concept-1 .settlement-card[data-category="Defective Products"]::before {
+            background: #FDE047;
+            color: #856404;
+        }
+
+        .concept-1 .settlement-card[data-category="Malpractice"]::before {
+            background: #86EFAC;
+            color: #0c5460;
+        }
+
+        .concept-1 .settlement-card[data-category="Workplace Injuries"]::before {
+            background: #FCA5A5;
+            color: #3c5233;
+        }
+
+        .concept-1 .settlement-card[data-category="Premises Liability"]::before {
+            background: #C4B5FD;
+            color: #7a4f4f;
+        }
+
+        .concept-1 .settlement-card[data-category="Wrongful Death"]::before {
+            background: #D1D5DB;
+            color: #424242;
+        }
+
+        /* CONCEPT 2: Hanging File Center Tab */
+        .concept-2 .settlement-card::before {
+            content: attr(data-category);
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            background: white;
+            color: #5f6368;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 0.7em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            border: 1px solid #e8ecf1;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+        }
+
+        .concept-2 .settlement-card[data-category="Vehicle Accidents"]::before {
+            border-color: #93C5FD;
+        }
+
+        .concept-2 .settlement-card[data-category="Defective Products"]::before {
+            border-color: #FDE047;
+        }
+
+        .concept-2 .settlement-card[data-category="Malpractice"]::before {
+            border-color: #93C5FD;
+        }
+
+        .concept-2 .settlement-card[data-category="Workplace Injuries"]::before {
+            border-color: #FCA5A5;
+        }
+
+        .concept-2 .settlement-card[data-category="Premises Liability"]::before {
+            border-color: #C4B5FD;
+        }
+
+        .concept-2 .settlement-card[data-category="Wrongful Death"]::before {
+            border-color: #D1D5DB;
+        }
+
+        /* CONCEPT 3: Corner Paper Tag */
+        .concept-3 .settlement-card {
+            margin-top: 16px;
+        }
+
+        .concept-3 .settlement-card::after {
+            content: attr(data-category);
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            background: #f8f9fa;
+            color: #5f6368;
+            padding: 4px 12px;
+            font-size: 0.7em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%);
+        }
+
+        .concept-3 .settlement-card[data-category="Vehicle Accidents"]::after {
+            background: #93C5FD;
+            color: #5f6368;
+        }
+
+        .concept-3 .settlement-card[data-category="Defective Products"]::after {
+            background: #FDE047;
+            color: #856404;
+        }
+
+        .concept-3 .settlement-card[data-category="Malpractice"]::after {
+            background: #86EFAC;
+            color: #0c5460;
+        }
+
+        .concept-3 .settlement-card[data-category="Workplace Injuries"]::after {
+            background: #FCA5A5;
+            color: #3c5233;
+        }
+
+        .concept-3 .settlement-card[data-category="Premises Liability"]::after {
+            background: #C4B5FD;
+            color: #7a4f4f;
+        }
+
+        .concept-3 .settlement-card[data-category="Wrongful Death"]::after {
+            background: #D1D5DB;
+            color: #424242;
+        }
+
+        /* CONCEPT 4: Subtle Full-Width Header */
+        .concept-4 .category-header {
+            background: #f8f9fa;
+            color: #5f6368;
+            font-size: 0.7em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 8px 20px;
+            margin: -20px -20px 16px -20px;
+            border-radius: 16px 16px 0 0;
+            border-bottom: 1px solid #e8ecf1;
+        }
+
+        .concept-4 .settlement-card[data-category="Vehicle Accidents"] .category-header {
+            background: #93C5FD;
+            color: #5f6368;
+        }
+
+        .concept-4 .settlement-card[data-category="Defective Products"] .category-header {
+            background: #FDE047;
+            color: #856404;
+        }
+
+        .concept-4 .settlement-card[data-category="Malpractice"] .category-header {
+            background: #86EFAC;
+            color: #0c5460;
+        }
+
+        .concept-4 .settlement-card[data-category="Workplace Injuries"] .category-header {
+            background: #FCA5A5;
+            color: #3c5233;
+        }
+
+        .concept-4 .settlement-card[data-category="Premises Liability"] .category-header {
+            background: #C4B5FD;
+            color: #7a4f4f;
+        }
+
+        .concept-4 .settlement-card[data-category="Wrongful Death"] .category-header {
+            background: #D1D5DB;
+            color: #424242;
+        }
+
+        /* CONCEPT 5: Floating Badge */
+        .concept-5 .settlement-card::before {
+            content: attr(data-category);
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: white;
+            color: #5f6368;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.65em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid #e8ecf1;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        .concept-5 .settlement-card[data-category="Vehicle Accidents"]::before {
+            border-color: #93C5FD;
+            background: #fafbfc;
+        }
+
+        .concept-5 .settlement-card[data-category="Defective Products"]::before {
+            border-color: #FDE047;
+            background: #FDE047;
+        }
+
+        .concept-5 .settlement-card[data-category="Malpractice"]::before {
+            border-color: #93C5FD;
+            background: #86EFAC;
+        }
+
+        .concept-5 .settlement-card[data-category="Workplace Injuries"]::before {
+            border-color: #FCA5A5;
+            background: #FCA5A5;
+        }
+
+        .concept-5 .settlement-card[data-category="Premises Liability"]::before {
+            border-color: #C4B5FD;
+            background: #C4B5FD;
+        }
+
+        .concept-5 .settlement-card[data-category="Wrongful Death"]::before {
+            border-color: #D1D5DB;
+            background: #D1D5DB;
+        }
+
+        /* CONCEPT 6: Minimalist Side Tab */
+        .concept-6 .settlement-card::after {
+            content: attr(data-category);
+            position: absolute;
+            top: 50%;
+            left: -8px;
+            transform: translateY(-50%) rotate(-90deg);
+            transform-origin: left center;
+            background: #f8f9fa;
+            color: #5f6368;
+            padding: 4px 12px;
+            font-size: 0.65em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            border-radius: 4px 4px 0 0;
+            white-space: nowrap;
+        }
+
+        .concept-6 .settlement-card[data-category="Vehicle Accidents"]::after {
+            background: #93C5FD;
+            color: #5f6368;
+        }
+
+        .concept-6 .settlement-card[data-category="Defective Products"]::after {
+            background: #FDE047;
+            color: #856404;
+        }
+
+        .concept-6 .settlement-card[data-category="Malpractice"]::after {
+            background: #86EFAC;
+            color: #0c5460;
+        }
+
+        .concept-6 .settlement-card[data-category="Workplace Injuries"]::after {
+            background: #FCA5A5;
+            color: #3c5233;
+        }
+
+        .concept-6 .settlement-card[data-category="Premises Liability"]::after {
+            background: #C4B5FD;
+            color: #7a4f4f;
+        }
+
+        .concept-6 .settlement-card[data-category="Wrongful Death"]::after {
+            background: #D1D5DB;
+            color: #424242;
+        }
+
+        .note {
+            background: #fff3cd;
+            border: 1px solid #FFA500;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+            color: #856404;
+        }
+
+        @media (max-width: 1200px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Settlement Card Category Labels - Minimalist Concepts</h1>
+
+        <div class="intro">
+            <h2>Design Brief</h2>
+            <p><strong>Goal:</strong> Create subtle, professional category indicators that don't compete with the settlement amount.</p>
+            <ul>
+                <li>Minimalistic color palette using muted tones</li>
+                <li>No bold colored borders (except $1M+ gold edge)</li>
+                <li>Must work in 3-column grid layout</li>
+                <li>Professional, clean aesthetic</li>
+            </ul>
+        </div>
+
+        <!-- CONCEPT 1 -->
+        <div class="concept-section concept-1">
+            <div class="concept-header">
+                <h2>Concept 1: File Folder Tabs (Offset)</h2>
+                <p>Classic file folder approach with tabs positioned at the top-left, creating a familiar organizational metaphor.</p>
+            </div>
+
+            <div class="pros-cons">
+                <div>
+                    <h3>Pros:</h3>
+                    <ul>
+                        <li>Immediately recognizable filing system metaphor</li>
+                        <li>Minimal visual interference with card content</li>
+                        <li>Each category has distinct subtle tint</li>
+                        <li>Easy to scan across multiple cards</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Cons:</h3>
+                    <ul>
+                        <li>Tab positioning may feel asymmetric</li>
+                        <li>Requires extra top margin spacing</li>
+                        <li>Category text needs to be quite small</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="cards-grid">
+                <div class="settlement-card" data-category="Vehicle Accidents">
+                    <div class="card-title">Rear-end car accident with whiplash injury</div>
+                    <div class="settlement-amount">$485,000</div>
+                    <div class="ai-overview-label">AI OVERVIEW</div>
+                    <div class="card-description">Client sustained cervical spine injuries requiring extensive physical therapy and ongoing medical care.</div>
+                    <div class="card-footer">via Morgan & Morgan | <a href="#">View firm</a></div>
+                </div>
+
+                <div class="settlement-card million-plus" data-category="Malpractice">
+                    <div class="card-title">Surgical error resulting in permanent disability</div>
+                    <div class="settlement-amount">$2,400,000</div>
+                    <div class="ai-overview-label">AI OVERVIEW</div>
+                    <div class="card-description">Medical malpractice case involving improper surgical procedure leading to lifelong complications.</div>
+                    <div class="card-footer">via Smith & Associates | <a href="#">View firm</a></div>
+                </div>
+
+                <div class="settlement-card" data-category="Defective Products">
+                    <div class="card-title">Defective airbag deployment failure</div>
+                    <div class="settlement-amount">$625,000</div>
+                    <div class="ai-overview-label">AI OVERVIEW</div>
+                    <div class="card-description">Product liability claim against manufacturer for faulty safety equipment causing severe injuries.</div>
+                    <div class="card-footer">via Davis Law Group | <a href="#">View firm</a></div>
+                </div>
+            </div>
+
+            <div class="note">
+                <strong>Gold Edge Note:</strong> The middle card demonstrates the $1M+ gold border treatment, providing a premium visual indicator without competing with the subtle category tab.
+            </div>
+        </div>
+
+        <!-- CONCEPT 2 -->
+        <div class="concept-section concept-2">
+            <div class="concept-header">
+                <h2>Concept 2: Hanging File Center Tab</h2>
+                <p>Centered pill-shaped tabs that appear to "hang" from the top of the card, inspired by hanging file folders.</p>
+            </div>
+
+            <div class="pros-cons">
+                <div>
+                    <h3>Pros:</h3>
+                    <ul>
+                        <li>Perfect symmetry creates visual balance</li>
+                        <li>Distinctive, elegant appearance</li>
+                        <li>Category immediately visible but not dominant</li>
+                        <li>Clean, modern interpretation of filing system</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Cons:</h3>
+                    <ul>
+                        <li>Center positioning may interfere with card title</li>
+                        <li>Requires careful spacing considerations</li>
+                        <li>May feel too decorative for some contexts</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="cards-grid">
+                <div class="settlement-card" data-category="Workplace Injuries">
+                    <div class="card-title">Construction site fall from scaffolding</div>
+                    <div class="settlement-amount">$875,000</div>
+                    <div class="ai-overview-label">AI OVERVIEW</div>
+                    <div class="card-description">Worker suffered multiple fractures and traumatic brain injury due to inadequate safety measures.</div>
+                    <div class="card-footer">via Johnson Law Firm | <a href="#">View firm</a></div>
+                </div>
+
+                <div class="settlement-card" data-category="Premises Liability">
+                    <div class="card-title">Slip and fall on commercial property</div>
+                    <div class="settlement-amount">$340,000</div>
+                    <div class="ai-overview-label">AI OVERVIEW</div>
+                    <div class="card-description">Property owner negligence resulted in serious back and hip injuries requiring surgical intervention.</div>
+                    <div class="card-footer">via Williams & Partners | <a href="#">View firm</a></div>
+                </div>
+
+                <div class="settlement-card million-plus" data-category="Wrongful Death">
+                    <div class="card-title">Wrongful death from truck accident</div>
+                    <div class="settlement-amount">$5,200,000</div>
+                    <div class="ai-overview-label">AI OVERVIEW</div>
+                    <div class="card-description">Commercial trucking company liability for fatal collision due to driver fatigue and improper maintenance.</div>
+                    <div class="card-footer">via Thompson Legal | <a href="#">View firm</a></div>
+                </div>
+            </div>
+
+            <div class="note">
+                <strong>Gold Edge Note:</strong> The rightmost card shows the $1M+ gold border with the centered tab design, demonstrating how both elements work harmoniously.
+            </div>
+        </div>
+
+        <!-- CONCEPT 3 -->
+        <div class="concept-section concept-3">
+            <div class="concept-header">
+                <h2>Concept 3: Corner Paper Tag</h2>
+                <p>Small tag in the top-right corner with a folded paper effect, like a price tag or product label.</p>
+            </div>
+
+            <div class="pros-cons">
+                <div>
+                    <h3>Pros:</h3>
+                    <ul>
+                        <li>Extremely subtle and non-intrusive</li>
+                        <li>Unique folded corner adds tactile quality</li>
+                        <li>Positioned away from main content</li>
+                        <li>Easy to implement with minimal space usage</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Cons:</h3>
+                    <ul>
+                        <li>May be too subtle for quick scanning</li>
+                        <li>Corner position feels secondary</li>
+                        <li>Small size limits text legibility</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="cards-grid">
+                <div class="settlement-card million-plus" data-category="Vehicle Accidents">
+                    <div class="card-title">Multi-vehicle highway collision</div>
+                    <div class="settlement-amount">$1,850,000</div>
+                    <div class="ai-overview-label">AI OVERVIEW</div>
+                    <div class="card-description">Complex accident involving multiple parties resulting in catastrophic injuries and extensive rehabilitation.</div>
+                    <div class="card-footer">via Anderson Law | <a href="#">View firm</a></div>
+                </div>
+
+                <div class="settlement-card" data-category="Defective Products">
+                    <div class="card-title">Defective medical device failure</div>
+                    <div class="settlement-amount">$795,000</div>
+                    <div class="ai-overview-label">AI OVERVIEW</div>
+                    <div class="card-description">Implanted medical device malfunction requiring multiple corrective surgeries and ongoing treatment.</div>
+                    <div class="card-footer">via Martinez & Associates | <a href="#">View firm</a></div>
+                </div>
+
+                <div class="settlement-card" data-category="Malpractice">
+                    <div class="card-title">Delayed cancer diagnosis</div>
+                    <div class="settlement-amount">$425,000</div>
+                    <div class="ai-overview-label">AI OVERVIEW</div>
+                    <div class="card-description">Medical negligence in failing to properly diagnose cancer, resulting in progression and reduced treatment options.</div>
+                    <div class="card-footer">via Roberts Legal Group | <a href="#">View firm</a></div>
+                </div>
+            </div>
+
+            <div class="note">
+                <strong>Gold Edge Note:</strong> The leftmost card demonstrates the $1M+ settlement with gold border alongside the corner tag design.
+            </div>
+        </div>
+
+        <!-- CONCEPT 4 -->
+        <div class="concept-section concept-4">
+            <div class="concept-header">
+                <h2>Concept 4: Subtle Full-Width Header Bar</h2>
+                <p>Full-width header strip with minimal tint that blends seamlessly with the card's top border radius.</p>
+            </div>
+
+            <div class="pros-cons">
+                <div>
+                    <h3>Pros:</h3>
+                    <ul>
+                        <li>Clear visual hierarchy from top to bottom</li>
+                        <li>Category is immediately visible</li>
+                        <li>Feels integrated with card structure</li>
+                        <li>Professional, polished appearance</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Cons:</h3>
+                    <ul>
+                        <li>Takes up more vertical space</li>
+                        <li>May compete slightly more with content</li>
+                        <li>Less unique compared to tab concepts</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="cards-grid">
+                <div class="settlement-card" data-category="Workplace Injuries">
+                    <div class="category-header">Workplace Injuries</div>
+                    <div class="card-title">Repetitive stress injury from warehouse work</div>
+                    <div class="settlement-amount">$265,000</div>
+                    <div class="ai-overview-label">AI OVERVIEW</div>
+                    <div class="card-description">Employer negligence in ergonomic standards led to chronic injury requiring surgery and career change.</div>
+                    <div class="card-footer">via Chen & Partners | <a href="#">View firm</a></div>
+                </div>
+
+                <div class="settlement-card million-plus" data-category="Premises Liability">
+                    <div class="category-header">Premises Liability</div>
+                    <div class="card-title">Apartment building fire due to negligence</div>
+                    <div class="settlement-amount">$3,100,000</div>
+                    <div class="ai-overview-label">AI OVERVIEW</div>
+                    <div class="card-description">Multiple tenants injured in fire caused by landlord's failure to maintain fire safety systems.</div>
+                    <div class="card-footer">via Garcia Law Firm | <a href="#">View firm</a></div>
+                </div>
+
+                <div class="settlement-card" data-category="Vehicle Accidents">
+                    <div class="category-header">Vehicle Accidents</div>
+                    <div class="card-title">Pedestrian struck by distracted driver</div>
+                    <div class="settlement-amount">$690,000</div>
+                    <div class="ai-overview-label">AI OVERVIEW</div>
+                    <div class="card-description">Severe injuries to pedestrian caused by driver texting while driving in crosswalk area.</div>
+                    <div class="card-footer">via Lee & Associates | <a href="#">View firm</a></div>
+                </div>
+            </div>
+
+            <div class="note">
+                <strong>Gold Edge Note:</strong> The center card shows the $1M+ gold border with the full-width header, demonstrating clean integration of both elements.
+            </div>
+        </div>
+
+        <!-- CONCEPT 5 -->
+        <div class="concept-section concept-5">
+            <div class="concept-header">
+                <h2>Concept 5: Floating Badge</h2>
+                <p>Small, pill-shaped badge floating in the top-right corner with subtle shadow for depth.</p>
+            </div>
+
+            <div class="pros-cons">
+                <div>
+                    <h3>Pros:</h3>
+                    <ul>
+                        <li>Ultra-minimal footprint</li>
+                        <li>Modern, clean aesthetic</li>
+                        <li>Doesn't interfere with any card content</li>
+                        <li>Subtle shadow adds professional polish</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Cons:</h3>
+                    <ul>
+                        <li>Very small and may be overlooked</li>
+                        <li>Limited space for category text</li>
+                        <li>Position might conflict with other UI elements</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="cards-grid">
+                <div class="settlement-card" data-category="Defective Products">
+                    <div class="card-title">Defective tire blowout causing rollover</div>
+                    <div class="settlement-amount">$1,580,000</div>
+                    <div class="ai-overview-label">AI OVERVIEW</div>
+                    <div class="card-description">Manufacturing defect in tire design led to highway accident with multiple severe injuries.</div>
+                    <div class="card-footer">via Wilson Legal | <a href="#">View firm</a></div>
+                </div>
+
+                <div class="settlement-card" data-category="Malpractice">
+                    <div class="card-title">Anesthesia error during surgery</div>
+                    <div class="settlement-amount">$525,000</div>
+                    <div class="ai-overview-label">AI OVERVIEW</div>
+                    <div class="card-description">Improper anesthesia administration resulted in oxygen deprivation and permanent neurological damage.</div>
+                    <div class="card-footer">via Brown & Associates | <a href="#">View firm</a></div>
+                </div>
+
+                <div class="settlement-card million-plus" data-category="Wrongful Death">
+                    <div class="card-title">Nursing home neglect leading to death</div>
+                    <div class="settlement-amount">$2,750,000</div>
+                    <div class="ai-overview-label">AI OVERVIEW</div>
+                    <div class="card-description">Systematic neglect and inadequate care in assisted living facility resulted in preventable death.</div>
+                    <div class="card-footer">via Taylor Law Group | <a href="#">View firm</a></div>
+                </div>
+            </div>
+
+            <div class="note">
+                <strong>Gold Edge Note:</strong> The rightmost card illustrates the $1M+ gold border with the floating badge, showing excellent separation of elements.
+            </div>
+        </div>
+
+        <!-- CONCEPT 6 -->
+        <div class="concept-section concept-6">
+            <div class="concept-header">
+                <h2>Concept 6: Minimalist Side Tab</h2>
+                <p>Vertical tab on the left edge, reading bottom-to-top, inspired by binder dividers and filing systems.</p>
+            </div>
+
+            <div class="pros-cons">
+                <div>
+                    <h3>Pros:</h3>
+                    <ul>
+                        <li>Unique approach that stands out</li>
+                        <li>Maximally non-intrusive to card content</li>
+                        <li>Reminiscent of professional binder systems</li>
+                        <li>Creates interesting visual rhythm in grid</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Cons:</h3>
+                    <ul>
+                        <li>Vertical text is less readable</li>
+                        <li>May feel unconventional for some users</li>
+                        <li>Harder to scan quickly across cards</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="cards-grid">
+                <div class="settlement-card million-plus" data-category="Vehicle Accidents">
+                    <div class="card-title">Motorcycle accident with traumatic injuries</div>
+                    <div class="settlement-amount">$1,925,000</div>
+                    <div class="ai-overview-label">AI OVERVIEW</div>
+                    <div class="card-description">Left-turn collision resulted in catastrophic injuries requiring multiple surgeries and long-term rehabilitation.</div>
+                    <div class="card-footer">via Parker & Associates | <a href="#">View firm</a></div>
+                </div>
+
+                <div class="settlement-card" data-category="Workplace Injuries">
+                    <div class="card-title">Industrial machine malfunction injury</div>
+                    <div class="settlement-amount">$735,000</div>
+                    <div class="ai-overview-label">AI OVERVIEW</div>
+                    <div class="card-description">Inadequate safety guards on factory equipment led to severe hand and arm injuries.</div>
+                    <div class="card-footer">via Miller Law Firm | <a href="#">View firm</a></div>
+                </div>
+
+                <div class="settlement-card" data-category="Premises Liability">
+                    <div class="card-title">Dog bite on rental property</div>
+                    <div class="settlement-amount">$185,000</div>
+                    <div class="ai-overview-label">AI OVERVIEW</div>
+                    <div class="card-description">Property owner liability for known aggressive dog resulting in significant facial and psychological trauma.</div>
+                    <div class="card-footer">via Clark Legal Group | <a href="#">View firm</a></div>
+                </div>
+            </div>
+
+            <div class="note">
+                <strong>Gold Edge Note:</strong> The leftmost card shows the $1M+ settlement with gold border and side tab, demonstrating how the vertical tab doesn't interfere with the premium border treatment.
+            </div>
+        </div>
+
+        <div class="intro">
+            <h2>Recommendation Summary</h2>
+            <p>All six concepts successfully achieve the minimalist, professional aesthetic while maintaining clear category distinction. Key considerations:</p>
+            <ul>
+                <li><strong>Most Traditional:</strong> Concepts 1 (File Folder) and 4 (Full-Width Header) offer familiar patterns</li>
+                <li><strong>Most Elegant:</strong> Concepts 2 (Hanging Tab) and 5 (Floating Badge) provide sophisticated, modern looks</li>
+                <li><strong>Most Unique:</strong> Concepts 3 (Corner Tag) and 6 (Side Tab) offer distinctive approaches</li>
+                <li><strong>Best Readability:</strong> Concepts 1, 2, and 4 with horizontal text orientation</li>
+                <li><strong>Least Intrusive:</strong> Concepts 5 and 3 with minimal visual weight</li>
+            </ul>
+            <p><strong>All concepts maintain:</strong> 3-column grid compatibility, gold edge for $1M+ settlements, and professional color palette.</p>
+        </div>
+    </div>
+</body>
+</html>

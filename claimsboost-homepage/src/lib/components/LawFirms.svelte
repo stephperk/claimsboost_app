@@ -206,8 +206,15 @@
 								</span>
 							</div>
 
-							<!-- Row 5: View Profile Button -->
-							<a href="/injury-law-firms/{firm.stateUrl}/{firm.cityUrl}/{firm.slug}" class="view-profile-btn">View firm profile</a>
+							<!-- Row 5: Footer with View Profile Link -->
+							<div class="firm-footer">
+								<a href="/injury-law-firms/{firm.stateUrl}/{firm.cityUrl}/{firm.slug}" class="view-profile-link">
+									View profile
+									<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<path d="M5 12h14M12 5l7 7-7 7"/>
+									</svg>
+								</a>
+							</div>
 						</div>
 					{/each}
 				</div>
@@ -290,7 +297,7 @@
 		background: white;
 		border: none;
 		border-radius: 16px;
-		padding: 20px;
+		padding: 20px 20px 24px 20px;
 		width: calc(100vw - 100px);
 		flex: 0 0 auto;
 		scroll-snap-align: center;
@@ -459,25 +466,36 @@
 		text-overflow: ellipsis;
 	}
 
-	/* Row 5: Button */
-	.view-profile-btn {
-		display: block;
-		width: 100%;
-		padding: 12px;
-		background: #1a1a1a;
-		color: #ffffff;
-		border: none;
-		border-radius: 8px;
-		font-size: 14px;
-		font-weight: 600;
-		cursor: pointer;
-		transition: all 0.3s ease;
-		text-decoration: none;
-		text-align: center;
+	/* Row 5: Footer */
+	.firm-footer {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 10px 16px;
+		margin: 0 -20px -20px -20px;
+		background: #f9fafb;
+		border-radius: 0 0 16px 16px;
+		border-top: 1px solid #e5e7eb;
 	}
 
-	.view-profile-btn:hover {
-		background: #333333;
+	.view-profile-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		color: #1a1a1a;
+		text-decoration: none;
+		font-weight: 600;
+		font-size: 15px;
+		transition: color 0.2s;
+	}
+
+	.firm-footer:hover .view-profile-link {
+		color: #FF6800;
+	}
+
+	.view-profile-link svg {
+		width: 16px;
+		height: 16px;
 	}
 
 	.carousel-button {
