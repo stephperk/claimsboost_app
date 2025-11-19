@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Law Firm Profile Page - Redesign Concepts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f9fafb;
+            padding: 40px 20px;
+        }
+
+        .page-header {
+            max-width: 1400px;
+            margin: 0 auto 60px;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: 44px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #FF6800 0%, #FFA500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header .subtitle {
+            font-size: 20px;
+            color: #666;
+            margin-bottom: 32px;
+        }
+
+        .problem-statement {
+            background: white;
+            border-left: 4px solid #FF6800;
+            padding: 24px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .problem-statement h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+        }
+
+        .problem-statement ul {
+            list-style-position: inside;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .concept-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            gap: 60px;
+        }
+
+        .concept {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        .concept-header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+            color: white;
+            padding: 32px;
+        }
+
+        .concept-header h2 {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .concept-header p {
+            font-size: 18px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .concept-analysis {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            padding: 32px;
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .pros, .cons {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .pros h3 {
+            color: #059669;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .cons h3 {
+            color: #dc2626;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .pros ul, .cons ul {
+            list-style-position: inside;
+            line-height: 1.8;
+            color: #666;
+        }
+
+        .mockup {
+            padding: 40px;
+            background: #f5f5f5;
+        }
+
+        .browser-mockup {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .browser-bar {
+            background: #e5e5e5;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        .mockup-content {
+            padding: 0;
+            min-height: 600px;
+        }
+
+        /* Variation 1: Hero Banner Design */
+        .v1-hero {
+            height: 320px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #333 50%, #FF6800 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .v1-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M0 50 Q25 25 50 50 T100 50" stroke="rgba(255,255,255,0.05)" fill="none" stroke-width="2"/></svg>');
+            opacity: 0.3;
+        }
+
+        .v1-profile-card {
+            max-width: 1200px;
+            margin: -100px auto 0;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            padding: 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .v1-header-row {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 32px;
+            padding-bottom: 32px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .v1-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #FF6800 0%, #FFA500 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            box-shadow: 0 8px 24px rgba(255, 104, 0, 0.3);
+        }
+
+        .v1-header-info {
+            flex: 1;
+        }
+
+        .v1-header-info h1 {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .v1-stats-row {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .v1-stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+        }
+
+        .v1-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stars {
+            color: #FFA500;
+            font-size: 20px;
+        }
+
+        .v1-content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+
+        .v1-practice-areas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .v1-practice-tag {
+            padding: 10px 20px;
+            background: linear-gradient(white, white), linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            border: 2px solid transparent;
+            border-radius: 24px;
+            font-weight: 600;
+            color: #2563EB;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+        }
+
+        .v1-highlights {
+            background: #f9fafb;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 32px;
+        }
+
+        .v1-highlight-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .v1-highlight-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .v1-check-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .v1-sidebar {
+            position: sticky;
+            top: 20px;
+        }
+
+        .v1-contact-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        .v1-stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .v1-stat-item {
+            text-align: center;
+        }
+
+        .v1-stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+
+        .v1-stat-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .v1-cta-button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #FF6800 0%, #FFA500 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 104, 0, 0.4);
+            margin-top: 24px;
+        }
+
+        /* Variation 2: Stats-Forward Design */
+        .v2-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .v2-hero-stats {
+            background: linear-gradient(135deg, #2563EB 0%, #1e40af 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 32px rgba(37, 99, 235, 0.3);
+        }
+
+        .v2-firm-header {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .v2-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: white;
+            color: #2563EB;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            font-weight: bold;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+
+        .v2-firm-info h1 {
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
+
+        .v2-large-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            padding-top: 32px;
+            border-top: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .v2-large-stat {
+            text-align: center;
+        }
+
+        .v2-large-stat-value {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .v2-large-stat-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+
+        .v2-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+
+        .v2-section {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+        }
+
+        .v2-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .v2-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #FF6800 0%, #FFA500 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* Variation 3: Modern Magazine Layout */
+        .v3-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .v3-hero-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 0;
+            margin-bottom: 40px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        }
+
+        .v3-hero-content {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            padding: 60px;
+        }
+
+        .v3-hero-content h1 {
+            font-size: 42px;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .v3-location-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-bottom: 32px;
+            backdrop-filter: blur(10px);
+        }
+
+        .v3-hero-stats {
+            background: linear-gradient(135deg, #FF6800 0%, #FFA500 100%);
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 32px;
+        }
+
+        .v3-stat-large {
+            text-align: center;
+            color: white;
+        }
+
+        .v3-stat-large-value {
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .v3-stat-large-label {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .v3-content-area {
+            padding: 0 40px 40px;
+        }
+
+        .v3-practice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .v3-practice-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #f0f0f0;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .v3-practice-card:hover {
+            border-color: #FF6800;
+            box-shadow: 0 4px 16px rgba(255, 104, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .v3-about-section {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .v3-about-section h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .v3-highlights-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .v3-highlight-card {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .v3-highlight-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        /* Variation 4: Minimalist Premium */
+        .v4-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        .v4-header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .v4-avatar-minimal {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .v4-header h1 {
+            font-size: 42px;
+            margin-bottom: 16px;
+            font-weight: 300;
+            letter-spacing: -1px;
+        }
+
+        .v4-header .rating {
+            margin-bottom: 12px;
+        }
+
+        .v4-stats-inline {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 32px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .v4-stat-inline {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .v4-stat-inline strong {
+            font-size: 24px;
+            color: #1a1a1a;
+        }
+
+        .v4-section-minimal {
+            margin-bottom: 48px;
+        }
+
+        .v4-section-minimal h2 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #999;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .v4-practice-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .v4-practice-minimal {
+            padding: 12px 24px;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 24px;
+            font-size: 15px;
+            color: #1a1a1a;
+        }
+
+        .v4-highlight-minimal {
+            padding: 20px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .v4-highlight-minimal:last-child {
+            border-bottom: none;
+        }
+
+        .v4-cta-minimal {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .v4-cta-button {
+            padding: 16px 48px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+
+        /* Variation 5: Card-Based Modular */
+        .v5-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .v5-header-card {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 32px;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .v5-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #FF6800 0%, #FFA500 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .v5-header-info h1 {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .v5-quick-stats {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            gap: 24px;
+        }
+
+        .v5-quick-stat {
+            text-align: center;
+        }
+
+        .v5-quick-stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2563EB;
+            margin-bottom: 4px;
+        }
+
+        .v5-quick-stat-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #666;
+            letter-spacing: 0.5px;
+        }
+
+        .v5-cta-card {
+            background: linear-gradient(135deg, #FF6800 0%, #FFA500 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .v5-cta-card h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .v5-cta-card button {
+            background: white;
+            color: #FF6800;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .v5-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .v5-info-card {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .v5-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .v5-card-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .v5-card-header h3 {
+            font-size: 20px;
+        }
+
+        /* Variation 6: Trust-Focused Design */
+        .v6-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        .v6-trust-bar {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            padding: 16px 40px;
+            text-align: center;
+            font-weight: 600;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .v6-trust-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+        }
+
+        .v6-hero {
+            background: white;
+            padding: 60px 40px;
+        }
+
+        .v6-hero-content {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 32px;
+            align-items: start;
+        }
+
+        .v6-avatar-trust {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 56px;
+            font-weight: bold;
+            border: 4px solid #10b981;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+        }
+
+        .v6-hero-info h1 {
+            font-size: 38px;
+            margin-bottom: 16px;
+        }
+
+        .v6-rating-large {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .v6-rating-large .stars {
+            font-size: 28px;
+        }
+
+        .v6-rating-large .rating-text {
+            font-size: 18px;
+            color: #666;
+        }
+
+        .v6-trust-metrics {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+        }
+
+        .v6-trust-metric {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f0fdf4;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid #10b981;
+        }
+
+        .v6-trust-icon {
+            width: 32px;
+            height: 32px;
+            background: #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .v6-social-proof {
+            background: #f9fafb;
+            padding: 40px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .v6-proof-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            text-align: center;
+        }
+
+        .v6-proof-item {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .v6-proof-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 8px;
+        }
+
+        .v6-proof-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .v6-content {
+            padding: 40px;
+        }
+
+        .recommendation {
+            max-width: 1400px;
+            margin: 60px auto 0;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(5, 150, 105, 0.3);
+        }
+
+        .recommendation h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .recommendation p {
+            font-size: 18px;
+            line-height: 1.8;
+            opacity: 0.95;
+            margin-bottom: 16px;
+        }
+
+        .recommendation ul {
+            list-style-position: inside;
+            line-height: 2;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .concept-analysis {
+                grid-template-columns: 1fr;
+            }
+
+            .v1-content-grid,
+            .v2-content,
+            .v3-hero-grid,
+            .v5-header-card,
+            .v6-hero-content {
+                grid-template-columns: 1fr;
+            }
+
+            .v2-large-stats,
+            .v3-practice-grid,
+            .v6-proof-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <h1>Law Firm Profile Page Redesign</h1>
+        <p class="subtitle">6 Distinct Design Variations to Improve Visual Appeal and User Experience</p>
+
+        <div class="problem-statement">
+            <h2>Current Design Problems</h2>
+            <ul>
+                <li>Large circular avatar with just first letter feels generic and lacks personality</li>
+                <li>Practice area pills are plain gray (#f0f0f0) with no visual interest</li>
+                <li>Multiple CTA buttons with different styles create confusion</li>
+                <li>Stats grid feels cramped in the sidebar</li>
+                <li>Overall layout is basic/generic with no differentiation between firms</li>
+                <li>Lack of visual hierarchy makes it hard to scan key information</li>
+                <li>No excitement or emotional connection to build trust</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="concept-container">
+        <!-- Variation 1: Hero Banner Design -->
+        <div class="concept">
+            <div class="concept-header">
+                <h2>Variation 1: Hero Banner Design</h2>
+                <p>Premium, high-impact design with a dramatic hero banner and elevated profile card that commands attention and establishes authority.</p>
+            </div>
+
+            <div class="concept-analysis">
+                <div class="pros">
+                    <h3>Pros</h3>
+                    <ul>
+                        <li>Dramatic visual impact immediately establishes premium positioning</li>
+                        <li>Elevated card design creates depth and modern sophistication</li>
+                        <li>Strong visual hierarchy guides user through key information</li>
+                        <li>Practice area pills with gradient borders are engaging and modern</li>
+                        <li>Stats prominently displayed in dark sidebar create contrast</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h3>Cons</h3>
+                    <ul>
+                        <li>Hero banner takes up significant screen space without conveying specific information</li>
+                        <li>May feel too corporate/generic for some law firms</li>
+                        <li>Dark sidebar could make contact info harder to scan</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup">
+                <div class="browser-mockup">
+                    <div class="browser-bar">
+                        <div class="browser-dot dot-red"></div>
+                        <div class="browser-dot dot-yellow"></div>
+                        <div class="browser-dot dot-green"></div>
+                    </div>
+                    <div class="mockup-content">
+                        <div class="v1-hero"></div>
+                        <div style="background: #f9fafb; padding: 0 40px 40px;">
+                            <div class="v1-profile-card">
+                                <div class="v1-header-row">
+                                    <div class="v1-avatar">S</div>
+                                    <div class="v1-header-info">
+                                        <h1>Smith & Associates Law Firm</h1>
+                                        <div class="v1-stats-row">
+                                            <div class="v1-rating">
+                                                <span class="stars">★★★★★</span>
+                                                <span style="color: #666; font-size: 16px;">4.9 (127 reviews)</span>
+                                            </div>
+                                            <div class="v1-stat">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                                    <circle cx="12" cy="10" r="3"/>
+                                                </svg>
+                                                San Francisco, CA
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="v1-content-grid">
+                                    <div>
+                                        <h2 style="font-size: 24px; margin-bottom: 20px;">Practice Areas</h2>
+                                        <div class="v1-practice-areas">
+                                            <div class="v1-practice-tag">Personal Injury</div>
+                                            <div class="v1-practice-tag">Auto Accidents</div>
+                                            <div class="v1-practice-tag">Medical Malpractice</div>
+                                            <div class="v1-practice-tag">Workplace Injuries</div>
+                                            <div class="v1-practice-tag">Wrongful Death</div>
+                                        </div>
+
+                                        <h2 style="font-size: 24px; margin-bottom: 20px;">Firm Highlights</h2>
+                                        <div class="v1-highlights">
+                                            <div class="v1-highlight-item">
+                                                <div class="v1-check-icon">✓</div>
+                                                <span>No fees unless we win your case - 100% contingency based</span>
+                                            </div>
+                                            <div class="v1-highlight-item">
+                                                <div class="v1-check-icon">✓</div>
+                                                <span>Free initial consultation with experienced attorneys</span>
+                                            </div>
+                                            <div class="v1-highlight-item">
+                                                <div class="v1-check-icon">✓</div>
+                                                <span>Bilingual staff fluent in English and Spanish</span>
+                                            </div>
+                                            <div class="v1-highlight-item">
+                                                <div class="v1-check-icon">✓</div>
+                                                <span>Over $500M recovered for our clients</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="v1-sidebar">
+                                        <div class="v1-contact-card">
+                                            <h2 style="color: white; font-size: 24px; margin-bottom: 24px;">Get Started</h2>
+                                            <div class="v1-stat-grid">
+                                                <div class="v1-stat-item">
+                                                    <div class="v1-stat-value">25+</div>
+                                                    <div class="v1-stat-label">Years Experience</div>
+                                                </div>
+                                                <div class="v1-stat-item">
+                                                    <div class="v1-stat-value">5,200+</div>
+                                                    <div class="v1-stat-label">Cases Won</div>
+                                                </div>
+                                            </div>
+                                            <div style="color: white; margin-bottom: 8px; display: flex; align-items: center; gap: 12px;">
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                                </svg>
+                                                (415) 555-0123
+                                            </div>
+                                            <div style="color: white; opacity: 0.8; font-size: 14px; margin-bottom: 16px;">
+                                                123 Market Street, San Francisco, CA 94103
+                                            </div>
+                                            <button class="v1-cta-button">Get Free Consultation</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Variation 2: Stats-Forward Design -->
+        <div class="concept">
+            <div class="concept-header">
+                <h2>Variation 2: Stats-Forward Design</h2>
+                <p>Lead with credibility by prominently showcasing impressive statistics in a bold hero section that builds immediate trust and authority.</p>
+            </div>
+
+            <div class="concept-analysis">
+                <div class="pros">
+                    <h3>Pros</h3>
+                    <ul>
+                        <li>Large statistics immediately establish credibility and authority</li>
+                        <li>Bold blue gradient creates strong visual identity and trust</li>
+                        <li>Clear information hierarchy makes scanning effortless</li>
+                        <li>Stats are the primary focus, perfect for high-performing firms</li>
+                        <li>Modular card system below hero is clean and organized</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h3>Cons</h3>
+                    <ul>
+                        <li>Less effective for newer firms with limited track records</li>
+                        <li>Blue gradient may not align with all brand identities</li>
+                        <li>Could feel too data-heavy and less emotionally engaging</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup">
+                <div class="browser-mockup">
+                    <div class="browser-bar">
+                        <div class="browser-dot dot-red"></div>
+                        <div class="browser-dot dot-yellow"></div>
+                        <div class="browser-dot dot-green"></div>
+                    </div>
+                    <div class="mockup-content">
+                        <div class="v2-container">
+                            <div class="v2-hero-stats">
+                                <div class="v2-firm-header">
+                                    <div class="v2-avatar">S</div>
+                                    <div class="v2-firm-info">
+                                        <h1>Smith & Associates Law Firm</h1>
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <span class="stars">★★★★★</span>
+                                            <span style="font-size: 18px;">4.9 out of 5 (127 reviews)</span>
+                                        </div>
+                                        <div style="margin-top: 12px; display: flex; align-items: center; gap: 8px; font-size: 16px;">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                                <circle cx="12" cy="10" r="3"/>
+                                            </svg>
+                                            San Francisco, CA
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="v2-large-stats">
+                                    <div class="v2-large-stat">
+                                        <div class="v2-large-stat-value">25+</div>
+                                        <div class="v2-large-stat-label">Years Experience</div>
+                                    </div>
+                                    <div class="v2-large-stat">
+                                        <div class="v2-large-stat-value">5,200+</div>
+                                        <div class="v2-large-stat-label">Cases Won</div>
+                                    </div>
+                                    <div class="v2-large-stat">
+                                        <div class="v2-large-stat-value">$500M+</div>
+                                        <div class="v2-large-stat-label">Recovered</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="v2-content">
+                                <div>
+                                    <div class="v2-section">
+                                        <h2>
+                                            <div class="v2-icon">
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                                    <polyline points="2 17 12 22 22 17"/>
+                                                    <polyline points="2 12 12 17 22 12"/>
+                                                </svg>
+                                            </div>
+                                            Practice Areas
+                                        </h2>
+                                        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                                            <span style="background: #f0f0f0; padding: 8px 16px; border-radius: 16px; font-size: 14px;">Personal Injury</span>
+                                            <span style="background: #f0f0f0; padding: 8px 16px; border-radius: 16px; font-size: 14px;">Auto Accidents</span>
+                                            <span style="background: #f0f0f0; padding: 8px 16px; border-radius: 16px; font-size: 14px;">Medical Malpractice</span>
+                                            <span style="background: #f0f0f0; padding: 8px 16px; border-radius: 16px; font-size: 14px;">Workplace Injuries</span>
+                                            <span style="background: #f0f0f0; padding: 8px 16px; border-radius: 16px; font-size: 14px;">Wrongful Death</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="v2-section">
+                                        <h2>
+                                            <div class="v2-icon">✓</div>
+                                            Why Choose Us
+                                        </h2>
+                                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                                            <div>• No fees unless we win your case</div>
+                                            <div>• Free initial consultation</div>
+                                            <div>• Bilingual staff (English & Spanish)</div>
+                                            <div>• Available 24/7 for emergencies</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="v2-section" style="background: linear-gradient(135deg, #FF6800 0%, #FFA500 100%); color: white;">
+                                        <h2 style="color: white;">Contact Us</h2>
+                                        <div style="margin-bottom: 16px;">
+                                            <div style="margin-bottom: 8px; font-weight: 600;">Phone</div>
+                                            <div>(415) 555-0123</div>
+                                        </div>
+                                        <div style="margin-bottom: 24px;">
+                                            <div style="margin-bottom: 8px; font-weight: 600;">Address</div>
+                                            <div>123 Market Street<br>San Francisco, CA 94103</div>
+                                        </div>
+                                        <button style="width: 100%; padding: 16px; background: white; color: #FF6800; border: none; border-radius: 8px; font-weight: 600; font-size: 16px; cursor: pointer;">
+                                            Get Free Consultation
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Variation 3: Modern Magazine Layout -->
+        <div class="concept">
+            <div class="concept-header">
+                <h2>Variation 3: Modern Magazine Layout</h2>
+                <p>Editorial-inspired design with bold typography, asymmetric grid layout, and dramatic color blocking that creates visual excitement and personality.</p>
+            </div>
+
+            <div class="concept-analysis">
+                <div class="pros">
+                    <h3>Pros</h3>
+                    <ul>
+                        <li>Split hero design creates instant visual interest and drama</li>
+                        <li>Orange gradient stats panel is bold and memorable</li>
+                        <li>Asymmetric layout feels modern and editorial</li>
+                        <li>Practice area cards with hover effects are interactive and engaging</li>
+                        <li>Strong personality differentiates firm from competitors</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h3>Cons</h3>
+                    <ul>
+                        <li>Bold design may not suit conservative law firm brands</li>
+                        <li>Asymmetric layout could confuse users expecting traditional structure</li>
+                        <li>Less mobile-friendly due to complex grid layouts</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup">
+                <div class="browser-mockup">
+                    <div class="browser-bar">
+                        <div class="browser-dot dot-red"></div>
+                        <div class="browser-dot dot-yellow"></div>
+                        <div class="browser-dot dot-green"></div>
+                    </div>
+                    <div class="mockup-content">
+                        <div class="v3-container">
+                            <div class="v3-hero-grid">
+                                <div class="v3-hero-content">
+                                    <h1>Smith & Associates Law Firm</h1>
+                                    <div class="v3-location-badge">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                            <circle cx="12" cy="10" r="3"/>
+                                        </svg>
+                                        San Francisco, CA
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 32px;">
+                                        <span class="stars">★★★★★</span>
+                                        <span style="font-size: 18px;">4.9 (127 reviews)</span>
+                                    </div>
+                                    <p style="font-size: 18px; line-height: 1.8; opacity: 0.9;">
+                                        Experienced personal injury attorneys fighting for maximum compensation for accident victims across San Francisco and the Bay Area.
+                                    </p>
+                                </div>
+                                <div class="v3-hero-stats">
+                                    <div class="v3-stat-large">
+                                        <div class="v3-stat-large-value">25+</div>
+                                        <div class="v3-stat-large-label">Years Experience</div>
+                                    </div>
+                                    <div class="v3-stat-large">
+                                        <div class="v3-stat-large-value">5,200+</div>
+                                        <div class="v3-stat-large-label">Cases Won</div>
+                                    </div>
+                                    <div class="v3-stat-large">
+                                        <div class="v3-stat-large-value">$500M+</div>
+                                        <div class="v3-stat-large-label">Recovered</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="v3-content-area">
+                                <h2 style="font-size: 28px; margin-bottom: 20px;">Practice Areas</h2>
+                                <div class="v3-practice-grid">
+                                    <div class="v3-practice-card">Personal Injury</div>
+                                    <div class="v3-practice-card">Auto Accidents</div>
+                                    <div class="v3-practice-card">Medical Malpractice</div>
+                                    <div class="v3-practice-card">Workplace Injuries</div>
+                                    <div class="v3-practice-card">Wrongful Death</div>
+                                    <div class="v3-practice-card">Product Liability</div>
+                                </div>
+
+                                <div class="v3-about-section">
+                                    <h2>Why Choose Our Firm</h2>
+                                    <div class="v3-highlights-grid">
+                                        <div class="v3-highlight-card">
+                                            <div class="v3-highlight-icon">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <div style="font-weight: 600; margin-bottom: 4px;">No Win, No Fee</div>
+                                                <div style="color: #666; font-size: 14px;">100% contingency based representation</div>
+                                            </div>
+                                        </div>
+                                        <div class="v3-highlight-card">
+                                            <div class="v3-highlight-icon">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <circle cx="12" cy="12" r="10"/>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <div style="font-weight: 600; margin-bottom: 4px;">Free Consultation</div>
+                                                <div style="color: #666; font-size: 14px;">Discuss your case at no cost</div>
+                                            </div>
+                                        </div>
+                                        <div class="v3-highlight-card">
+                                            <div class="v3-highlight-icon">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <div style="font-weight: 600; margin-bottom: 4px;">Bilingual Team</div>
+                                                <div style="color: #666; font-size: 14px;">English and Spanish speaking staff</div>
+                                            </div>
+                                        </div>
+                                        <div class="v3-highlight-card">
+                                            <div class="v3-highlight-icon">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <circle cx="12" cy="12" r="10"/>
+                                                    <polyline points="12 6 12 12 16 14"/>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <div style="font-weight: 600; margin-bottom: 4px;">24/7 Availability</div>
+                                                <div style="color: #666; font-size: 14px;">Emergency support anytime</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Variation 4: Minimalist Premium -->
+        <div class="concept">
+            <div class="concept-header">
+                <h2>Variation 4: Minimalist Premium</h2>
+                <p>Refined, understated elegance with generous whitespace, subtle typography, and clean lines that convey sophistication and professionalism.</p>
+            </div>
+
+            <div class="concept-analysis">
+                <div class="pros">
+                    <h3>Pros</h3>
+                    <ul>
+                        <li>Clean, elegant design conveys premium positioning</li>
+                        <li>Generous whitespace improves readability and focus</li>
+                        <li>Minimalist aesthetic appeals to sophisticated clients</li>
+                        <li>Centered layout creates balance and calm</li>
+                        <li>Typography-focused design is timeless and professional</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h3>Cons</h3>
+                    <ul>
+                        <li>May lack visual excitement for some users</li>
+                        <li>Less differentiation between firms using similar minimal styles</li>
+                        <li>Understated design might not grab attention as effectively</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup">
+                <div class="browser-mockup">
+                    <div class="browser-bar">
+                        <div class="browser-dot dot-red"></div>
+                        <div class="browser-dot dot-yellow"></div>
+                        <div class="browser-dot dot-green"></div>
+                    </div>
+                    <div class="mockup-content" style="background: white;">
+                        <div class="v4-container">
+                            <div class="v4-header">
+                                <div class="v4-avatar-minimal">S</div>
+                                <h1>Smith & Associates Law Firm</h1>
+                                <div class="rating">
+                                    <span class="stars">★★★★★</span>
+                                    <span style="color: #666; margin-left: 8px;">4.9 out of 5</span>
+                                </div>
+                                <div style="color: #666; margin-top: 8px;">San Francisco, California</div>
+                                <div class="v4-stats-inline">
+                                    <div class="v4-stat-inline">
+                                        <strong>25+</strong> years
+                                    </div>
+                                    <div class="v4-stat-inline">
+                                        <strong>5,200+</strong> cases
+                                    </div>
+                                    <div class="v4-stat-inline">
+                                        <strong>$500M+</strong> recovered
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="v4-section-minimal">
+                                <h2>Practice Areas</h2>
+                                <div class="v4-practice-list">
+                                    <div class="v4-practice-minimal">Personal Injury</div>
+                                    <div class="v4-practice-minimal">Auto Accidents</div>
+                                    <div class="v4-practice-minimal">Medical Malpractice</div>
+                                    <div class="v4-practice-minimal">Workplace Injuries</div>
+                                    <div class="v4-practice-minimal">Wrongful Death</div>
+                                </div>
+                            </div>
+
+                            <div class="v4-section-minimal">
+                                <h2>About Our Practice</h2>
+                                <p style="color: #1a1a1a; line-height: 1.8; margin-bottom: 32px; font-size: 16px;">
+                                    For over 25 years, Smith & Associates has been dedicated to representing personal injury victims across the San Francisco Bay Area. Our experienced team of attorneys combines legal expertise with genuine compassion to fight for the maximum compensation our clients deserve.
+                                </p>
+                            </div>
+
+                            <div class="v4-section-minimal">
+                                <h2>Why Clients Choose Us</h2>
+                                <div class="v4-highlight-minimal">
+                                    No fees unless we win your case — 100% contingency based representation
+                                </div>
+                                <div class="v4-highlight-minimal">
+                                    Free initial consultation with experienced attorneys
+                                </div>
+                                <div class="v4-highlight-minimal">
+                                    Bilingual staff fluent in English and Spanish
+                                </div>
+                                <div class="v4-highlight-minimal">
+                                    Over $500 million recovered for our clients
+                                </div>
+                            </div>
+
+                            <div class="v4-cta-minimal">
+                                <button class="v4-cta-button">SCHEDULE CONSULTATION</button>
+                                <div style="margin-top: 20px; color: #666; font-size: 14px;">
+                                    (415) 555-0123 • 123 Market Street, San Francisco, CA 94103
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Variation 5: Card-Based Modular -->
+        <div class="concept">
+            <div class="concept-header">
+                <h2>Variation 5: Card-Based Modular</h2>
+                <p>Flexible, component-driven design using distinct cards for each information type, creating clear separation and easy scanning.</p>
+            </div>
+
+            <div class="concept-analysis">
+                <div class="pros">
+                    <h3>Pros</h3>
+                    <ul>
+                        <li>Modular cards create clear visual separation between content types</li>
+                        <li>CTA card in header ensures visibility of primary action</li>
+                        <li>Easy to scan and digest information in chunks</li>
+                        <li>Flexible system adapts to different content amounts</li>
+                        <li>Works well on mobile with card stacking</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h3>Cons</h3>
+                    <ul>
+                        <li>May feel fragmented without strong visual cohesion</li>
+                        <li>Multiple shadows and cards could create visual clutter</li>
+                        <li>Less dramatic impact compared to hero banner designs</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup">
+                <div class="browser-mockup">
+                    <div class="browser-bar">
+                        <div class="browser-dot dot-red"></div>
+                        <div class="browser-dot dot-yellow"></div>
+                        <div class="browser-dot dot-green"></div>
+                    </div>
+                    <div class="mockup-content" style="background: #f5f5f5;">
+                        <div class="v5-container">
+                            <div class="v5-header-card">
+                                <div class="v5-avatar">S</div>
+                                <div class="v5-header-info">
+                                    <h1>Smith & Associates Law Firm</h1>
+                                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                                        <span class="stars">★★★★★</span>
+                                        <span style="color: #666;">4.9 (127 reviews)</span>
+                                    </div>
+                                    <div style="color: #666; display: flex; align-items: center; gap: 8px;">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                            <circle cx="12" cy="10" r="3"/>
+                                        </svg>
+                                        San Francisco, CA
+                                    </div>
+                                    <div class="v5-quick-stats" style="margin-top: 16px;">
+                                        <div class="v5-quick-stat">
+                                            <div class="v5-quick-stat-value">25+</div>
+                                            <div class="v5-quick-stat-label">Years Exp</div>
+                                        </div>
+                                        <div class="v5-quick-stat">
+                                            <div class="v5-quick-stat-value">5,200+</div>
+                                            <div class="v5-quick-stat-label">Cases Won</div>
+                                        </div>
+                                        <div class="v5-quick-stat">
+                                            <div class="v5-quick-stat-value">$500M+</div>
+                                            <div class="v5-quick-stat-label">Recovered</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="v5-cta-card">
+                                    <h3>Get Started Today</h3>
+                                    <p style="font-size: 14px; margin-bottom: 16px; opacity: 0.95;">Free consultation</p>
+                                    <button>Contact Us</button>
+                                </div>
+                            </div>
+
+                            <div class="v5-cards-grid">
+                                <div class="v5-info-card">
+                                    <div class="v5-card-header">
+                                        <div class="v5-card-icon">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                            </svg>
+                                        </div>
+                                        <h3>Practice Areas</h3>
+                                    </div>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                        <span style="background: #f0f0f0; padding: 6px 12px; border-radius: 12px; font-size: 13px;">Personal Injury</span>
+                                        <span style="background: #f0f0f0; padding: 6px 12px; border-radius: 12px; font-size: 13px;">Auto Accidents</span>
+                                        <span style="background: #f0f0f0; padding: 6px 12px; border-radius: 12px; font-size: 13px;">Medical Malpractice</span>
+                                        <span style="background: #f0f0f0; padding: 6px 12px; border-radius: 12px; font-size: 13px;">Workplace Injuries</span>
+                                        <span style="background: #f0f0f0; padding: 6px 12px; border-radius: 12px; font-size: 13px;">Wrongful Death</span>
+                                    </div>
+                                </div>
+
+                                <div class="v5-info-card">
+                                    <div class="v5-card-header">
+                                        <div class="v5-card-icon">✓</div>
+                                        <h3>Why Choose Us</h3>
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; gap: 12px; color: #666; line-height: 1.6;">
+                                        <div>• No fees unless we win</div>
+                                        <div>• Free consultation</div>
+                                        <div>• Bilingual staff</div>
+                                        <div>• 24/7 emergency support</div>
+                                    </div>
+                                </div>
+
+                                <div class="v5-info-card">
+                                    <div class="v5-card-header">
+                                        <div class="v5-card-icon">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2"/>
+                                            </svg>
+                                        </div>
+                                        <h3>Contact Info</h3>
+                                    </div>
+                                    <div style="color: #666; line-height: 1.8;">
+                                        <div style="margin-bottom: 12px;">
+                                            <div style="font-weight: 600; color: #1a1a1a;">Phone</div>
+                                            (415) 555-0123
+                                        </div>
+                                        <div>
+                                            <div style="font-weight: 600; color: #1a1a1a;">Address</div>
+                                            123 Market Street<br>San Francisco, CA 94103
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Variation 6: Trust-Focused Design -->
+        <div class="concept">
+            <div class="concept-header">
+                <h2>Variation 6: Trust-Focused Design</h2>
+                <p>Lead with trust signals and credibility indicators using green trust badges, prominent ratings, and social proof to build immediate confidence.</p>
+            </div>
+
+            <div class="concept-analysis">
+                <div class="pros">
+                    <h3>Pros</h3>
+                    <ul>
+                        <li>Green trust badges immediately establish credibility and safety</li>
+                        <li>Social proof elements front and center build confidence</li>
+                        <li>Large rating display emphasizes positive reviews</li>
+                        <li>Trust metrics grid provides quantified credibility</li>
+                        <li>Perfect for firms with strong reputations and high ratings</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h3>Cons</h3>
+                    <ul>
+                        <li>Green color scheme may not align with all brand identities</li>
+                        <li>Less effective for firms without strong review history</li>
+                        <li>Trust bar at top may feel overly promotional</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup">
+                <div class="browser-mockup">
+                    <div class="browser-bar">
+                        <div class="browser-dot dot-red"></div>
+                        <div class="browser-dot dot-yellow"></div>
+                        <div class="browser-dot dot-green"></div>
+                    </div>
+                    <div class="mockup-content">
+                        <div class="v6-container">
+                            <div class="v6-trust-bar">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                </svg>
+                                Verified & Trusted Law Firm
+                                <div class="v6-trust-badge">Top Rated 2024</div>
+                            </div>
+
+                            <div class="v6-hero">
+                                <div class="v6-hero-content">
+                                    <div class="v6-avatar-trust">S</div>
+                                    <div class="v6-hero-info">
+                                        <h1>Smith & Associates Law Firm</h1>
+                                        <div class="v6-rating-large">
+                                            <span class="stars">★★★★★</span>
+                                            <span class="rating-text">4.9 out of 5 (127 verified reviews)</span>
+                                        </div>
+                                        <div class="v6-trust-metrics">
+                                            <div class="v6-trust-metric">
+                                                <div class="v6-trust-icon">✓</div>
+                                                <div>
+                                                    <div style="font-weight: 600; font-size: 14px;">Verified License</div>
+                                                    <div style="font-size: 12px; color: #666;">CA State Bar #123456</div>
+                                                </div>
+                                            </div>
+                                            <div class="v6-trust-metric">
+                                                <div class="v6-trust-icon">✓</div>
+                                                <div>
+                                                    <div style="font-weight: 600; font-size: 14px;">BBB Accredited</div>
+                                                    <div style="font-size: 12px; color: #666;">A+ Rating</div>
+                                                </div>
+                                            </div>
+                                            <div class="v6-trust-metric">
+                                                <div class="v6-trust-icon">✓</div>
+                                                <div>
+                                                    <div style="font-weight: 600; font-size: 14px;">No Win, No Fee</div>
+                                                    <div style="font-size: 12px; color: #666;">100% Guarantee</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="color: #666; display: flex; align-items: center; gap: 8px;">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                                <circle cx="12" cy="10" r="3"/>
+                                            </svg>
+                                            San Francisco, CA
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="v6-social-proof">
+                                <div class="v6-proof-grid">
+                                    <div class="v6-proof-item">
+                                        <div class="v6-proof-value">25+</div>
+                                        <div class="v6-proof-label">Years Serving SF</div>
+                                    </div>
+                                    <div class="v6-proof-item">
+                                        <div class="v6-proof-value">5,200+</div>
+                                        <div class="v6-proof-label">Cases Won</div>
+                                    </div>
+                                    <div class="v6-proof-item">
+                                        <div class="v6-proof-value">98%</div>
+                                        <div class="v6-proof-label">Success Rate</div>
+                                    </div>
+                                    <div class="v6-proof-item">
+                                        <div class="v6-proof-value">$500M+</div>
+                                        <div class="v6-proof-label">Recovered</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="v6-content">
+                                <h2 style="font-size: 24px; margin-bottom: 20px;">Practice Areas</h2>
+                                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 32px;">
+                                    <span style="background: #f0fdf4; border: 1px solid #10b981; padding: 8px 16px; border-radius: 16px; font-size: 14px; color: #059669;">Personal Injury</span>
+                                    <span style="background: #f0fdf4; border: 1px solid #10b981; padding: 8px 16px; border-radius: 16px; font-size: 14px; color: #059669;">Auto Accidents</span>
+                                    <span style="background: #f0fdf4; border: 1px solid #10b981; padding: 8px 16px; border-radius: 16px; font-size: 14px; color: #059669;">Medical Malpractice</span>
+                                    <span style="background: #f0fdf4; border: 1px solid #10b981; padding: 8px 16px; border-radius: 16px; font-size: 14px; color: #059669;">Workplace Injuries</span>
+                                </div>
+
+                                <div style="background: white; padding: 32px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                    <h2 style="font-size: 24px; margin-bottom: 20px;">Why Our Clients Trust Us</h2>
+                                    <div style="display: flex; flex-direction: column; gap: 16px; color: #666; line-height: 1.8;">
+                                        <div style="display: flex; gap: 12px;">
+                                            <div style="color: #10b981; font-weight: bold;">✓</div>
+                                            <span>No fees unless we win your case — 100% contingency based</span>
+                                        </div>
+                                        <div style="display: flex; gap: 12px;">
+                                            <div style="color: #10b981; font-weight: bold;">✓</div>
+                                            <span>Free initial consultation with experienced attorneys</span>
+                                        </div>
+                                        <div style="display: flex; gap: 12px;">
+                                            <div style="color: #10b981; font-weight: bold;">✓</div>
+                                            <span>Bilingual staff fluent in English and Spanish</span>
+                                        </div>
+                                        <div style="display: flex; gap: 12px;">
+                                            <div style="color: #10b981; font-weight: bold;">✓</div>
+                                            <span>Over $500 million recovered for our clients</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="recommendation">
+        <h2>Recommended Design: Variation 1 - Hero Banner Design</h2>
+        <p>
+            After analyzing all six variations, I recommend <strong>Variation 1: Hero Banner Design</strong> as the primary redesign approach for the law firm profile pages. Here's why:
+        </p>
+        <ul>
+            <li><strong>Premium Positioning:</strong> The dramatic hero banner with elevated profile card immediately establishes authority and professionalism, addressing the "hideous" generic feel of the current design.</li>
+            <li><strong>Strong Visual Hierarchy:</strong> The design naturally guides users from hero → profile overview → practice areas → highlights → contact, making it easy to scan and digest information.</li>
+            <li><strong>Modern & Memorable:</strong> The dark hero banner, elevated white card with drop shadow, and gradient-bordered practice area pills create visual excitement while maintaining professionalism.</li>
+            <li><strong>Stats Visibility:</strong> Moving stats to a dark sidebar with gradient accent colors makes them stand out without feeling cramped, solving the current sidebar issue.</li>
+            <li><strong>Clear CTAs:</strong> Single, prominent CTA in the sticky sidebar eliminates confusion from multiple competing buttons.</li>
+            <li><strong>Brand Consistency:</strong> Uses the existing ClaimsBoost color palette (orange gradient for avatar/CTA, blue gradient for checkmarks) while elevating the design significantly.</li>
+            <li><strong>Scalability:</strong> This design works well across different firm sizes — new firms and established firms alike can use this template effectively.</li>
+        </ul>
+        <p>
+            <strong>Alternative Recommendation:</strong> For firms with exceptional track records, consider <strong>Variation 2: Stats-Forward Design</strong> to lead with credibility metrics.
+        </p>
+        <p>
+            <strong>Implementation Note:</strong> Consider A/B testing Variation 1 against Variation 3 (Modern Magazine Layout) for firms targeting younger demographics who may prefer the bolder, editorial aesthetic.
+        </p>
+    </div>
+</body>
+</html>

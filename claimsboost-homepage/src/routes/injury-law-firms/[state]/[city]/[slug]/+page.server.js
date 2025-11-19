@@ -77,6 +77,8 @@ function transformFirmData(dbFirm) {
 	return {
 		id: dbFirm.google_place_id || dbFirm.place_id,
 		name: dbFirm.name || dbFirm.firm_name,
+		displayName: dbFirm.display_name,
+		fullName: dbFirm.full_name,
 		slug: dbFirm.slug,
 		address: dbFirm.formatted_address || dbFirm.street_address,
 		city: dbFirm.city,

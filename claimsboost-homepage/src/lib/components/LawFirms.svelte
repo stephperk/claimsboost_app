@@ -485,11 +485,12 @@
 		color: #1a1a1a;
 		text-decoration: none;
 		font-weight: 600;
-		font-size: 15px;
+		font-size: 16px;
 		transition: color 0.2s;
 	}
 
-	.firm-footer:hover .view-profile-link {
+	.firm-footer:hover .view-profile-link,
+	.firm-card:hover .view-profile-link {
 		color: #FF6800;
 	}
 

@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settlement Range Card - Layout Variations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f9fafb;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+        }
+
+        .context {
+            font-size: 16px;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto 8px;
+        }
+
+        .note {
+            font-size: 14px;
+            color: #999;
+            font-style: italic;
+        }
+
+        .option-section {
+            margin-bottom: 80px;
+        }
+
+        .option-header {
+            margin-bottom: 24px;
+        }
+
+        .option-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .option-description {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        /* Category label - consistent across ALL options */
+        .category-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Practice area colors */
+        .vehicle { color: #3B82F6; }
+        .premises { color: #8B5CF6; }
+        .workplace { color: #EF4444; }
+        .malpractice { color: #10B981; }
+
+        /* Base card styles */
+        .card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #666;
+            stroke-width: 1.5;
+            fill: none;
+        }
+
+        .category-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .range {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stats-text {
+            font-size: 14px;
+            color: #999;
+            font-weight: 400;
+        }
+
+        .local-count {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* OPTION 1: Vertical Centered (Current Design + Category Label) */
+        .option1 .card {
+            text-align: center;
+        }
+
+        .option1 .category-label {
+            margin-bottom: 16px;
+        }
+
+        .option1 .icon {
+            margin: 0 auto 16px;
+        }
+
+        .option1 .category-name {
+            margin-bottom: 16px;
+        }
+
+        .option1 .range {
+            margin-bottom: 12px;
+        }
+
+        .option1 .stats-text {
+            margin-bottom: 12px;
+        }
+
+        .option1 .local-count {
+            justify-content: center;
+        }
+
+        /* OPTION 2: Left-Aligned Vertical */
+        .option2 .card {
+            text-align: left;
+        }
+
+        .option2 .category-label {
+            margin-bottom: 12px;
+        }
+
+        .option2 .icon {
+            margin-bottom: 16px;
+        }
+
+        .option2 .category-name {
+            margin-bottom: 12px;
+        }
+
+        .option2 .range {
+            margin-bottom: 16px;
+        }
+
+        .option2 .stats-text {
+            margin-bottom: 8px;
+        }
+
+        /* OPTION 3: Horizontal Layout - Icon Left */
+        .option3 .card {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .option3 .icon {
+            flex-shrink: 0;
+        }
+
+        .option3 .content {
+            flex: 1;
+        }
+
+        .option3 .category-label {
+            margin-bottom: 8px;
+        }
+
+        .option3 .category-name {
+            margin-bottom: 8px;
+        }
+
+        .option3 .range {
+            margin-bottom: 12px;
+        }
+
+        .option3 .stats-text {
+            margin-bottom: 8px;
+        }
+
+        /* OPTION 4: Split Layout - Stats on Right */
+        .option4 .card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .option4 .left-content {
+            flex: 1;
+        }
+
+        .option4 .right-content {
+            text-align: right;
+        }
+
+        .option4 .category-label {
+            margin-bottom: 8px;
+        }
+
+        .option4 .header-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .option4 .category-name {
+            margin-bottom: 8px;
+        }
+
+        .option4 .stats-text {
+            margin-bottom: 8px;
+        }
+
+        /* OPTION 5: Compact Two-Column */
+        .option5 .card {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .option5 .left-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .option5 .icon {
+            margin-bottom: 8px;
+        }
+
+        .option5 .category-label {
+            margin-bottom: 4px;
+        }
+
+        .option5 .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option5 .stats-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* OPTION 6: Top Header Strip */
+        .option6 .card {
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .option6 .header-strip {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .option6 .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .option6 .icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        .option6 .header-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .option6 .body {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .option6 .range {
+            margin-bottom: 16px;
+        }
+
+        .option6 .stats-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Pros and Cons */
+        .analysis {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 32px;
+        }
+
+        .analysis-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .pros h4, .cons h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .pros h4 {
+            color: #10B981;
+        }
+
+        .cons h4 {
+            color: #EF4444;
+        }
+
+        .pros ul, .cons ul {
+            list-style: none;
+        }
+
+        .pros li, .cons li {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .pros li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10B981;
+            font-weight: bold;
+        }
+
+        .cons li:before {
+            content: "×";
+            position: absolute;
+            left: 0;
+            color: #EF4444;
+            font-weight: bold;
+            font-size: 18px;
+            line-height: 14px;
+        }
+
+        .recommendation {
+            background: linear-gradient(135deg, #60A5FA15 0%, #2563EB15 100%);
+            border: 2px solid #3B82F6;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 40px;
+        }
+
+        .recommendation h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .recommendation p {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Settlement Range Card - Layout Variations</h1>
+            <p class="context">Exploring different orientations and layouts for the settlement range cards while maintaining the exact category label style from the settlement cards.</p>
+            <p class="note">All options use the same category label styling: 11px, 700 weight, uppercase, colored text</p>
+        </header>
+
+        <!-- Option 1: Vertical Centered -->
+        <div class="option-section option1">
+            <div class="option-header">
+                <h2 class="option-title">Option 1: Vertical Centered</h2>
+                <p class="option-description">Traditional card layout with category label at top, all elements centered</p>
+            </div>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="category-label vehicle">VEHICLE ACCIDENTS</div>
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24"><path d="M5 11l1.5-4.5h11L19 11m-1.5 5a1.5 1.5 0 01-3 0 1.5 1.5 0 013 0zm-9 0a1.5 1.5 0 01-3 0 1.5 1.5 0 013 0z"/><path d="M5 11h14v5H5z"/></svg>
+                    </div>
+                    <div class="category-name">Car accidents</div>
+                    <div class="range">$15K - $350K</div>
+                    <div class="stats-text">Based on 542 settlements</div>
+                    <div class="local-count">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        542 settlements in your area
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="category-label premises">PREMISES LIABILITY</div>
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2l-2 7h4l-2 7"/><path d="M5 19h14"/></svg>
+                    </div>
+                    <div class="category-name">Slip & fall</div>
+                    <div class="range">$15K - $350K</div>
+                    <div class="stats-text">Based on 245 settlements</div>
+                    <div class="local-count">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        245 settlements in your area
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="category-label workplace">WORKPLACE INJURIES</div>
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M16 14v7H8v-7"/><path d="M12 11v3"/></svg>
+                    </div>
+                    <div class="category-name">Workplace injury</div>
+                    <div class="range">$15K - $350K</div>
+                    <div class="stats-text">Based on 89 settlements</div>
+                    <div class="local-count">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        89 settlements in your area
+                    </div>
+                </div>
+            </div>
+            <div class="analysis">
+                <h3 class="analysis-title">Analysis</h3>
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>Pros</h4>
+                        <ul>
+                            <li>Clean, traditional hierarchy</li>
+                            <li>Category label gets top priority</li>
+                            <li>Easy to scan vertically</li>
+                            <li>Works well in grid layouts</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>Cons</h4>
+                        <ul>
+                            <li>Takes more vertical space</li>
+                            <li>May feel repetitive in a grid</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Option 2: Left-Aligned Vertical -->
+        <div class="option-section option2">
+            <div class="option-header">
+                <h2 class="option-title">Option 2: Left-Aligned Vertical</h2>
+                <p class="option-description">All elements left-aligned for faster scanning, category label leads</p>
+            </div>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="category-label vehicle">VEHICLE ACCIDENTS</div>
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24"><path d="M5 11l1.5-4.5h11L19 11m-1.5 5a1.5 1.5 0 01-3 0 1.5 1.5 0 013 0zm-9 0a1.5 1.5 0 01-3 0 1.5 1.5 0 013 0z"/><path d="M5 11h14v5H5z"/></svg>
+                    </div>
+                    <div class="category-name">Car accidents</div>
+                    <div class="range">$15K - $350K</div>
+                    <div class="stats-text">Based on 542 settlements</div>
+                    <div class="local-count">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        542 settlements in your area
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="category-label premises">PREMISES LIABILITY</div>
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2l-2 7h4l-2 7"/><path d="M5 19h14"/></svg>
+                    </div>
+                    <div class="category-name">Slip & fall</div>
+                    <div class="range">$15K - $350K</div>
+                    <div class="stats-text">Based on 245 settlements</div>
+                    <div class="local-count">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        245 settlements in your area
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="category-label workplace">WORKPLACE INJURIES</div>
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M16 14v7H8v-7"/><path d="M12 11v3"/></svg>
+                    </div>
+                    <div class="category-name">Workplace injury</div>
+                    <div class="range">$15K - $350K</div>
+                    <div class="stats-text">Based on 89 settlements</div>
+                    <div class="local-count">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        89 settlements in your area
+                    </div>
+                </div>
+            </div>
+            <div class="analysis">
+                <h3 class="analysis-title">Analysis</h3>
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>Pros</h4>
+                        <ul>
+                            <li>Faster left-to-right scanning</li>
+                            <li>More natural reading pattern</li>
+                            <li>Better for data comparison</li>
+                            <li>Consistent with settlement cards</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>Cons</h4>
+                        <ul>
+                            <li>Less visual balance</li>
+                            <li>Icon placement might feel awkward</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Option 3: Horizontal Layout - Icon Left -->
+        <div class="option-section option3">
+            <div class="option-header">
+                <h2 class="option-title">Option 3: Horizontal Layout - Icon Left</h2>
+                <p class="option-description">Icon as visual anchor on left, content flows horizontally</p>
+            </div>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24"><path d="M5 11l1.5-4.5h11L19 11m-1.5 5a1.5 1.5 0 01-3 0 1.5 1.5 0 013 0zm-9 0a1.5 1.5 0 01-3 0 1.5 1.5 0 013 0z"/><path d="M5 11h14v5H5z"/></svg>
+                    </div>
+                    <div class="content">
+                        <div class="category-label vehicle">VEHICLE ACCIDENTS</div>
+                        <div class="category-name">Car accidents</div>
+                        <div class="range">$15K - $350K</div>
+                        <div class="stats-text">Based on 542 settlements</div>
+                        <div class="local-count">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            542 settlements in your area
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2l-2 7h4l-2 7"/><path d="M5 19h14"/></svg>
+                    </div>
+                    <div class="content">
+                        <div class="category-label premises">PREMISES LIABILITY</div>
+                        <div class="category-name">Slip & fall</div>
+                        <div class="range">$15K - $350K</div>
+                        <div class="stats-text">Based on 245 settlements</div>
+                        <div class="local-count">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            245 settlements in your area
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M16 14v7H8v-7"/><path d="M12 11v3"/></svg>
+                    </div>
+                    <div class="content">
+                        <div class="category-label workplace">WORKPLACE INJURIES</div>
+                        <div class="category-name">Workplace injury</div>
+                        <div class="range">$15K - $350K</div>
+                        <div class="stats-text">Based on 89 settlements</div>
+                        <div class="local-count">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            89 settlements in your area
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="analysis">
+                <h3 class="analysis-title">Analysis</h3>
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>Pros</h4>
+                        <ul>
+                            <li>Efficient use of horizontal space</li>
+                            <li>Icon provides visual anchor</li>
+                            <li>Good information density</li>
+                            <li>Clear left-to-right flow</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>Cons</h4>
+                        <ul>
+                            <li>Less suitable for narrow screens</li>
+                            <li>Icon might feel disconnected</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Option 4: Split Layout - Stats on Right -->
+        <div class="option-section option4">
+            <div class="option-header">
+                <h2 class="option-title">Option 4: Split Layout - Stats on Right</h2>
+                <p class="option-description">Main info on left, settlement counts on right for easy comparison</p>
+            </div>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="left-content">
+                        <div class="category-label vehicle">VEHICLE ACCIDENTS</div>
+                        <div class="header-row">
+                            <div class="icon">
+                                <svg viewBox="0 0 24 24"><path d="M5 11l1.5-4.5h11L19 11m-1.5 5a1.5 1.5 0 01-3 0 1.5 1.5 0 013 0zm-9 0a1.5 1.5 0 01-3 0 1.5 1.5 0 013 0z"/><path d="M5 11h14v5H5z"/></svg>
+                            </div>
+                            <div class="category-name">Car accidents</div>
+                        </div>
+                        <div class="range">$15K - $350K</div>
+                    </div>
+                    <div class="right-content">
+                        <div class="stats-text">Based on<br><strong>542</strong> settlements</div>
+                        <div class="local-count">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            542 in area
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="left-content">
+                        <div class="category-label premises">PREMISES LIABILITY</div>
+                        <div class="header-row">
+                            <div class="icon">
+                                <svg viewBox="0 0 24 24"><path d="M12 2l-2 7h4l-2 7"/><path d="M5 19h14"/></svg>
+                            </div>
+                            <div class="category-name">Slip & fall</div>
+                        </div>
+                        <div class="range">$15K - $350K</div>
+                    </div>
+                    <div class="right-content">
+                        <div class="stats-text">Based on<br><strong>245</strong> settlements</div>
+                        <div class="local-count">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            245 in area
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="left-content">
+                        <div class="category-label workplace">WORKPLACE INJURIES</div>
+                        <div class="header-row">
+                            <div class="icon">
+                                <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M16 14v7H8v-7"/><path d="M12 11v3"/></svg>
+                            </div>
+                            <div class="category-name">Workplace injury</div>
+                        </div>
+                        <div class="range">$15K - $350K</div>
+                    </div>
+                    <div class="right-content">
+                        <div class="stats-text">Based on<br><strong>89</strong> settlements</div>
+                        <div class="local-count">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            89 in area
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="analysis">
+                <h3 class="analysis-title">Analysis</h3>
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>Pros</h4>
+                        <ul>
+                            <li>Clear separation of primary and secondary info</li>
+                            <li>Easy to compare settlement counts</li>
+                            <li>Efficient space usage</li>
+                            <li>Good visual hierarchy</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>Cons</h4>
+                        <ul>
+                            <li>May feel unbalanced</li>
+                            <li>Complex layout for mobile</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Option 5: Compact Two-Column -->
+        <div class="option-section option5">
+            <div class="option-header">
+                <h2 class="option-title">Option 5: Compact Two-Column</h2>
+                <p class="option-description">Icon and category grouped left, details on right</p>
+            </div>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="left-column">
+                        <div class="icon">
+                            <svg viewBox="0 0 24 24"><path d="M5 11l1.5-4.5h11L19 11m-1.5 5a1.5 1.5 0 01-3 0 1.5 1.5 0 013 0zm-9 0a1.5 1.5 0 01-3 0 1.5 1.5 0 013 0z"/><path d="M5 11h14v5H5z"/></svg>
+                        </div>
+                        <div class="category-label vehicle">VEHICLE ACCIDENTS</div>
+                    </div>
+                    <div class="right-column">
+                        <div class="category-name">Car accidents</div>
+                        <div class="range">$15K - $350K</div>
+                        <div class="stats-group">
+                            <div class="stats-text">Based on 542 settlements</div>
+                            <div class="local-count">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                542 settlements in your area
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="left-column">
+                        <div class="icon">
+                            <svg viewBox="0 0 24 24"><path d="M12 2l-2 7h4l-2 7"/><path d="M5 19h14"/></svg>
+                        </div>
+                        <div class="category-label premises">PREMISES LIABILITY</div>
+                    </div>
+                    <div class="right-column">
+                        <div class="category-name">Slip & fall</div>
+                        <div class="range">$15K - $350K</div>
+                        <div class="stats-group">
+                            <div class="stats-text">Based on 245 settlements</div>
+                            <div class="local-count">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                245 settlements in your area
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="left-column">
+                        <div class="icon">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M16 14v7H8v-7"/><path d="M12 11v3"/></svg>
+                        </div>
+                        <div class="category-label workplace">WORKPLACE INJURIES</div>
+                    </div>
+                    <div class="right-column">
+                        <div class="category-name">Workplace injury</div>
+                        <div class="range">$15K - $350K</div>
+                        <div class="stats-group">
+                            <div class="stats-text">Based on 89 settlements</div>
+                            <div class="local-count">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                89 settlements in your area
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="analysis">
+                <h3 class="analysis-title">Analysis</h3>
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>Pros</h4>
+                        <ul>
+                            <li>Visual grouping of icon and category</li>
+                            <li>Compact and efficient</li>
+                            <li>Clear two-part structure</li>
+                            <li>Good for scanning</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>Cons</h4>
+                        <ul>
+                            <li>Category label under icon might be missed</li>
+                            <li>Requires grid layout knowledge</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Option 6: Header Strip Design -->
+        <div class="option-section option6">
+            <div class="option-header">
+                <h2 class="option-title">Option 6: Header Strip Design</h2>
+                <p class="option-description">Category info in header strip, range and stats in body</p>
+            </div>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="header-strip">
+                        <div class="header-left">
+                            <div class="icon">
+                                <svg viewBox="0 0 24 24"><path d="M5 11l1.5-4.5h11L19 11m-1.5 5a1.5 1.5 0 01-3 0 1.5 1.5 0 013 0zm-9 0a1.5 1.5 0 01-3 0 1.5 1.5 0 013 0z"/><path d="M5 11h14v5H5z"/></svg>
+                            </div>
+                            <div class="header-text">
+                                <div class="category-label vehicle">VEHICLE ACCIDENTS</div>
+                                <div class="category-name">Car accidents</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="body">
+                        <div class="range">$15K - $350K</div>
+                        <div class="stats-group">
+                            <div class="stats-text">Based on 542 settlements</div>
+                            <div class="local-count">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                542 settlements in your area
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="header-strip">
+                        <div class="header-left">
+                            <div class="icon">
+                                <svg viewBox="0 0 24 24"><path d="M12 2l-2 7h4l-2 7"/><path d="M5 19h14"/></svg>
+                            </div>
+                            <div class="header-text">
+                                <div class="category-label premises">PREMISES LIABILITY</div>
+                                <div class="category-name">Slip & fall</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="body">
+                        <div class="range">$15K - $350K</div>
+                        <div class="stats-group">
+                            <div class="stats-text">Based on 245 settlements</div>
+                            <div class="local-count">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                245 settlements in your area
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="header-strip">
+                        <div class="header-left">
+                            <div class="icon">
+                                <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M16 14v7H8v-7"/><path d="M12 11v3"/></svg>
+                            </div>
+                            <div class="header-text">
+                                <div class="category-label workplace">WORKPLACE INJURIES</div>
+                                <div class="category-name">Workplace injury</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="body">
+                        <div class="range">$15K - $350K</div>
+                        <div class="stats-group">
+                            <div class="stats-text">Based on 89 settlements</div>
+                            <div class="local-count">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                89 settlements in your area
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="analysis">
+                <h3 class="analysis-title">Analysis</h3>
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>Pros</h4>
+                        <ul>
+                            <li>Clear visual separation of sections</li>
+                            <li>Range gets prominent placement</li>
+                            <li>Professional, structured look</li>
+                            <li>Good for data-heavy interfaces</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>Cons</h4>
+                        <ul>
+                            <li>More complex structure</li>
+                            <li>Takes more vertical space</li>
+                            <li>May feel over-designed</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendation -->
+        <div class="recommendation">
+            <h2>Recommendation: Option 2 or Option 3</h2>
+            <p><strong>Option 2 (Left-Aligned Vertical)</strong> provides the best balance if you want consistency with your existing settlement cards. The left-aligned category label at the top matches the settlement card pattern exactly, and the vertical flow is familiar to users.</p>
+            <p style="margin-top: 12px;"><strong>Option 3 (Horizontal Layout)</strong> is recommended if you want better space efficiency and clearer visual distinction from settlement cards. The horizontal layout with icon on the left creates a nice visual anchor and allows for more compact cards that still display all information clearly.</p>
+            <p style="margin-top: 12px;">Both options maintain the exact category label styling from your settlement cards while providing clear information hierarchy and good responsive behavior.</p>
+        </div>
+    </div>
+</body>
+</html>

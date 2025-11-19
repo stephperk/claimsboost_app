@@ -2,75 +2,63 @@
 	import { goto } from '$app/navigation';
 	import { location } from '$lib/stores/locationStore.js';
 	import SettlementCard from '$lib/components/SettlementCard.svelte';
+	import { onMount } from 'svelte';
 
-	const settlements = [
-		{
-			type: 'Rear-end car accident',
-			amount: 85000,
-			location: 'Raleigh, NC',
-			year: 2023,
-			description: 'Whiplash and back injury from highway collision. Medical bills and lost wages covered.',
-			similarCases: 'Similar cases in your area: 23',
-			practiceArea: 'Vehicle Accidents',
-			lawFirm: 'Smith & Associates Law Firm',
-			firmUrl: '/injury-law-firms/nc/raleigh/smith-associates'
-		},
-		{
-			type: 'Slip & fall at store',
-			amount: 125000,
-			location: 'Raleigh, NC',
-			year: 2023,
-			description: 'Whiplash and back injury from highway collision. Medical bills and lost wages covered.',
-			similarCases: 'Similar cases in your area: 23',
-			practiceArea: 'Premises Liability',
-			lawFirm: 'Johnson Legal Group',
-			firmUrl: '/injury-law-firms/nc/raleigh/johnson-legal'
-		},
-		{
-			type: 'Workplace injury',
-			amount: 240000,
-			location: 'Raleigh, NC',
-			year: 2023,
-			description: 'Whiplash and back injury from highway collision. Medical bills and lost wages covered.',
-			similarCases: 'Similar cases in your area: 23',
-			practiceArea: 'Workplace Injuries',
-			lawFirm: 'Davis Injury Attorneys',
-			firmUrl: '/injury-law-firms/nc/raleigh/davis-injury'
-		},
-		{
-			type: 'Rear-end car accident',
-			amount: 85000,
-			location: 'Raleigh, NC',
-			year: 2023,
-			description: 'Whiplash and back injury from highway collision. Medical bills and lost wages covered.',
-			similarCases: 'Similar cases in your area: 23',
-			practiceArea: 'Vehicle Accidents',
-			lawFirm: 'Williams & Partners',
-			firmUrl: '/injury-law-firms/nc/raleigh/williams-partners'
-		},
-		{
-			type: 'Slip & fall at store',
-			amount: 125000,
-			location: 'Raleigh, NC',
-			year: 2023,
-			description: 'Whiplash and back injury from highway collision. Medical bills and lost wages covered.',
-			similarCases: 'Similar cases in your area: 23',
-			practiceArea: 'Premises Liability',
-			lawFirm: 'Miller Law Office',
-			firmUrl: '/injury-law-firms/nc/raleigh/miller-law'
-		},
-		{
-			type: 'Workplace injury',
-			amount: 240000,
-			location: 'Raleigh, NC',
-			year: 2023,
-			description: 'Whiplash and back injury from highway collision. Medical bills and lost wages covered.',
-			similarCases: 'Similar cases in your area: 23',
-			practiceArea: 'Workplace Injuries',
-			lawFirm: 'Anderson & Brown LLP',
-			firmUrl: '/injury-law-firms/nc/raleigh/anderson-brown'
+	let settlements = [];
+	let loading = true;
+	let error = null;
+
+	onMount(async () => {
+		try {
+			const response = await fetch('/api/settlements/recent?limit=6');
+			const data = await response.json();
+
+			if (data.error) {
+				throw new Error(data.error);
+			}
+
+			// Transform API data to component format
+			settlements = data.settlements.map(s => {
+				// Convert state to lowercase and city to URL-friendly format
+				const stateUrl = s.firm_state?.toLowerCase() || '';
+				const cityUrl = s.firm_city?.toLowerCase().replace(/\s+/g, '-') || '';
+
+				return {
+					type: s.display_title || s.injury_cause || 'Personal Injury',
+					amount: s.amount,
+					location: s.firm_city && s.firm_state ? `${s.firm_city}, ${s.firm_state}` : 'Location not specified',
+					year: new Date().getFullYear(), // Default to current year
+					description: s.summary || 'Settlement details available.',
+					similarCases: 'Similar cases in your area: 23', // Placeholder for now
+					practiceArea: s.primary_practice_area || 'Personal Injury',
+					lawFirm: s.firm_display_name || s.firm_name || 'Law Firm',
+					firmUrl: s.firm_slug && stateUrl && cityUrl
+						? `/injury-law-firms/${stateUrl}/${cityUrl}/${s.firm_slug}`
+						: '#',
+					websiteUrl: s.firm_website
+				};
+			});
+		} catch (err) {
+			console.error('Failed to fetch settlements:', err);
+			error = err.message;
+			// Fallback to some default data if needed
+			settlements = [
+				{
+					type: 'Car Accident',
+					amount: 150000,
+					location: 'United States',
+					year: new Date().getFullYear(),
+					description: 'Significant settlement for car accident injuries including medical expenses and lost wages.',
+					similarCases: 'Similar cases available',
+					practiceArea: 'Vehicle Accidents',
+					lawFirm: 'Personal Injury Law Firm',
+					firmUrl: '#'
+				}
+			];
+		} finally {
+			loading = false;
 		}
-	];
+	});
 </script>
 
 <section class="settlements">
@@ -85,9 +73,27 @@
 		<p class="subtitle">Real settlement amounts from personal injury cases in your area.</p>
 
 		<div class="settlements-grid">
-			{#each settlements as settlement}
-				<SettlementCard {settlement} matchingCriteria={[]} />
-			{/each}
+			{#if loading}
+				<!-- Show skeleton cards while loading -->
+				{#each Array(6) as _, i}
+					<div class="skeleton-card">
+						<div class="skeleton skeleton-title"></div>
+						<div class="skeleton skeleton-amount"></div>
+						<div class="skeleton skeleton-text"></div>
+						<div class="skeleton skeleton-text"></div>
+					</div>
+				{/each}
+			{:else if error}
+				<!-- Show error message -->
+				<div class="error-message">
+					<p>Unable to load settlements at this time. Please try again later.</p>
+				</div>
+			{:else}
+				<!-- Show settlements -->
+				{#each settlements as settlement}
+					<SettlementCard {settlement} matchingCriteria={[]} />
+				{/each}
+			{/if}
 		</div>
 
 		<div class="cta-section">
@@ -190,6 +196,7 @@
 	@media (min-width: 1024px) {
 		.settlements-grid {
 			grid-template-columns: repeat(3, 1fr);
+			gap: 24px;
 		}
 
 		.settlements {
@@ -199,5 +206,59 @@
 		h2 {
 			font-size: 30px;
 		}
+	}
+
+	/* Skeleton loading styles */
+	.skeleton-card {
+		background: white;
+		border-radius: 12px;
+		padding: 20px;
+		border: 1px solid #e5e5e5;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	}
+
+	.skeleton {
+		background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+		background-size: 200% 100%;
+		animation: loading 1.5s infinite;
+		border-radius: 4px;
+	}
+
+	.skeleton-title {
+		height: 24px;
+		width: 70%;
+		margin-bottom: 12px;
+	}
+
+	.skeleton-amount {
+		height: 32px;
+		width: 50%;
+		margin-bottom: 16px;
+	}
+
+	.skeleton-text {
+		height: 16px;
+		width: 100%;
+		margin-bottom: 8px;
+	}
+
+	.skeleton-text:last-child {
+		width: 85%;
+	}
+
+	@keyframes loading {
+		0% {
+			background-position: 200% 0;
+		}
+		100% {
+			background-position: -200% 0;
+		}
+	}
+
+	.error-message {
+		grid-column: 1 / -1;
+		text-align: center;
+		padding: 40px;
+		color: #666;
 	}
 </style>

@@ -2024,13 +2024,8 @@
 		transition: color 0.2s;
 	}
 
-	.firm-footer:hover .view-profile-link,
-	.firm-card:hover .view-profile-link {
+	.firm-footer:hover .view-profile-link {
 		color: #FF6800;
-	}
-
-	.firm-card:has(.practice-tag:hover) .view-profile-link {
-		color: #1a1a1a;
 	}
 
 	.view-profile-link svg {

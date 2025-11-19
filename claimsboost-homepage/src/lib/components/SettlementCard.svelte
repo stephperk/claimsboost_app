@@ -1,6 +1,7 @@
 <script>
 	export let settlement;
 	export let matchingCriteria = [];
+	export let isProfilePage = false;
 
 	function formatAmount(amount) {
 		return new Intl.NumberFormat('en-US', {
@@ -30,14 +31,13 @@
 <div class="settlement-card-wrapper">
 	<div class="settlement-card">
 		<div class="settlement-header">
-			<div class="header-left">
-				<div class="practice-area-label" style="color: {getPracticeAreaColor(settlement.practiceArea)}">
-					{settlement.practiceArea.toUpperCase()}
-				</div>
-				<h3>{settlement.type}</h3>
+			<div class="practice-area-label" style="color: {getPracticeAreaColor(settlement.practiceArea)}">
+				{settlement.practiceArea.toUpperCase()}
 			</div>
 			<span class="amount">{formatAmount(settlement.amount)}</span>
 		</div>
+
+		<h3 class="settlement-title">{settlement.type}</h3>
 
 	<div class="info-section">
 		<div class="section-header">
@@ -63,12 +63,21 @@
 
 	<div class="settlement-footer">
 		<span class="footer-text">via {settlement.lawFirm}</span>
-		<a href={settlement.firmUrl} class="view-profile-button">
-			View profile
-			<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-				<path d="M5 12h14M12 5l7 7-7 7"/>
-			</svg>
-		</a>
+		{#if isProfilePage}
+			<a href="{settlement.websiteUrl || '#'}" target="_blank" rel="noopener noreferrer" class="view-profile-button">
+				Visit website
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M5 12h14M12 5l7 7-7 7"/>
+				</svg>
+			</a>
+		{:else}
+			<a href={settlement.firmUrl} class="view-profile-button">
+				View profile
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M5 12h14M12 5l7 7-7 7"/>
+				</svg>
+			</a>
+		{/if}
 	</div>
 	</div>
 </div>
@@ -91,6 +100,9 @@
 		box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 		transition: box-shadow 0.2s;
 		cursor: pointer;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.settlement-card-wrapper:hover .settlement-card {
@@ -101,7 +113,6 @@
 		font-size: 11px;
 		font-weight: 700;
 		letter-spacing: 1px;
-		margin-bottom: 8px;
 	}
 
 	.badges {
@@ -129,23 +140,15 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-bottom: 20px;
+		margin-bottom: 12px;
 		gap: 16px;
 	}
 
-	.header-left {
-		display: flex;
-		flex-direction: column;
-		gap: 2px;
-		flex: 1;
-		min-width: 0;
-	}
-
-	.settlement-header h3 {
+	.settlement-title {
 		font-size: 18px;
 		font-weight: 600;
 		color: #1a1a1a;
-		margin: 0;
+		margin: 0 0 20px 0;
 		line-height: 1.3;
 	}
 
@@ -161,8 +164,8 @@
 	}
 
 	.info-section {
-		margin-top: 24px;
 		margin-bottom: 28px;
+		flex: 1;
 	}
 
 	.section-header {
@@ -198,12 +201,12 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-top: 0;
+		margin-top: auto;
 		padding-top: 12px;
 		border-top: 1px solid #e5e7eb;
 		background: #f9fafb;
 		padding: 12px 16px;
-		margin: 0 -20px -20px -20px;
+		margin: auto -20px -20px -20px;
 		border-radius: 0 0 16px 16px;
 	}
 
@@ -224,7 +227,8 @@
 		transition: color 0.2s;
 	}
 
-	.settlement-footer:hover .view-profile-button {
+	.settlement-footer:hover .view-profile-button,
+	.settlement-card-wrapper:hover .view-profile-button {
 		color: #FF6800;
 	}
 

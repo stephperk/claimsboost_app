@@ -271,6 +271,26 @@
 		background: transparent;
 	}
 
+	.nav-dropdown {
+		position: relative;
+	}
+
+	/* Extend hover area downward to bridge gap */
+	.nav-dropdown::after {
+		content: '';
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		height: 20px;
+		background: transparent;
+		display: none;
+	}
+
+	.nav-dropdown:hover::after {
+		display: block;
+	}
+
 	.desktop-nav a,
 	.desktop-nav .nav-link {
 		color: #1a1a1a;
@@ -287,7 +307,7 @@
 
 	.dropdown-menu {
 		position: fixed;
-		top: 70px;
+		top: 65px;
 		left: 50%;
 		transform: translateX(-50%);
 		background: white;
@@ -297,6 +317,17 @@
 		padding: 20px;
 		min-width: 900px;
 		z-index: 1000;
+	}
+
+	/* Invisible bridge to maintain hover when moving to dropdown */
+	.dropdown-menu::before {
+		content: '';
+		position: absolute;
+		top: -5px;
+		left: 0;
+		right: 0;
+		height: 10px;
+		background: transparent;
 	}
 
 	.dropdown-header {

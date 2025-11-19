@@ -10,6 +10,7 @@
 	const ranges = [
 		{
 			type: 'Car accidents',
+			practiceArea: 'Vehicle Accidents',
 			icon: '🚗',
 			isLottie: true,
 			lottiePath: '/wired-outline-868-car-crash-hover-pinch.json',
@@ -19,6 +20,7 @@
 		},
 		{
 			type: 'Slip & fall',
+			practiceArea: 'Premises Liability',
 			icon: '⚠️',
 			isLottie: true,
 			lottiePath: '/wired-outline-1140-error-hover-enlarge.json',
@@ -28,6 +30,7 @@
 		},
 		{
 			type: 'Workplace injury',
+			practiceArea: 'Workplace Injuries',
 			icon: '👷',
 			isLottie: true,
 			lottiePath: '/wired-outline-408-worker-helmet-hover-pinch.json',
@@ -37,6 +40,7 @@
 		},
 		{
 			type: 'Medical malpractice',
+			practiceArea: 'Malpractice',
 			icon: '🏥',
 			isLottie: true,
 			lottiePath: '/wired-outline-671-male-doctor-care-hover-pinch.json',
@@ -46,6 +50,7 @@
 		},
 		{
 			type: 'Dog bites',
+			practiceArea: 'Premises Liability',
 			icon: '🐕',
 			isLottie: true,
 			lottiePath: '/wired-outline-1161-angry-dog-hover-pinch.json',
@@ -55,6 +60,7 @@
 		},
 		{
 			type: 'Motorcycle accidents',
+			practiceArea: 'Vehicle Accidents',
 			icon: '🏍️',
 			isLottie: true,
 			lottiePath: '/wired-outline-843-bike-hover-pinch.json',
@@ -63,6 +69,21 @@
 			count: 89
 		}
 	];
+
+	// Practice area color mapping
+	const practiceAreaColors = {
+		'Vehicle Accidents': '#3B82F6',        // Blue
+		'Defective Products': '#F59E0B',       // Orange
+		'Malpractice': '#10B981',              // Green
+		'Workplace Injuries': '#EF4444',       // Red
+		'Premises Liability': '#8B5CF6',       // Purple
+		'Wrongful Death': '#6B7280',           // Gray
+		'default': '#6B7280'
+	};
+
+	function getPracticeAreaColor(practiceArea) {
+		return practiceAreaColors[practiceArea] || practiceAreaColors['default'];
+	}
 
 	function formatRange(min, max) {
 		const formatNumber = (num) => {
@@ -129,15 +150,20 @@
 					{:else}
 						<div class="range-icon">{range.icon}</div>
 					{/if}
-					<h3>{range.type}</h3>
-					<div class="range-amount">{formatRange(range.min, range.max)}</div>
-					<div class="range-count">Based on {range.count} settlements</div>
-					<div class="range-location">
-						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-							<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-							<circle cx="12" cy="10" r="3"/>
-						</svg>
-						<span>{range.count} settlements in your area</span>
+					<div class="range-content">
+						<div class="practice-area-label" style="color: {getPracticeAreaColor(range.practiceArea)}">
+							{range.practiceArea.toUpperCase()}
+						</div>
+						<h3>{range.type}</h3>
+						<div class="range-amount">{formatRange(range.min, range.max)}</div>
+						<div class="range-count">
+							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<rect x="3" y="13" width="4" height="8"/>
+								<rect x="10" y="9" width="4" height="12"/>
+								<rect x="17" y="5" width="4" height="16"/>
+							</svg>
+							Based on {range.count} settlements
+						</div>
 					</div>
 				</div>
 			{/each}
@@ -197,64 +223,76 @@
 
 	.range-card {
 		background: white;
-		border: none;
+		border: 1px solid #e5e7eb;
 		border-radius: 16px;
-		padding: 20px;
-		text-align: center;
-		box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+		padding: 24px;
+		box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 		transition: transform 0.2s, box-shadow 0.2s;
 		cursor: pointer;
+		display: flex;
+		gap: 20px;
+		align-items: flex-start;
 	}
 
 	.range-card:hover {
 		transform: translateY(-2px);
-		box-shadow: 0 4px 16px rgba(0,0,0,0.22);
+		box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 	}
 
 	.range-icon {
 		font-size: 32px;
-		margin-bottom: 8px;
+		flex-shrink: 0;
 	}
 
 	.lottie-icon {
-		width: 60px;
-		height: 60px;
-		margin: 0 auto 8px;
+		width: 48px;
+		height: 48px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		flex-shrink: 0;
+	}
+
+	.range-content {
+		flex: 1;
+	}
+
+	.practice-area-label {
+		font-size: 11px;
+		font-weight: 700;
+		letter-spacing: 1px;
+		margin-bottom: 8px;
 	}
 
 	.range-card h3 {
-		font-size: 18px;
+		font-size: 20px;
 		font-weight: 600;
 		color: #1a1a1a;
 		margin: 0 0 8px;
 	}
 
 	.range-amount {
-		font-size: 24px;
+		font-size: 28px;
 		font-weight: 700;
 		background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 		background-clip: text;
-		margin-bottom: 6px;
+		margin-bottom: 12px;
 	}
 
 	.range-count {
-		font-size: 13px;
-		color: #999;
-		margin-bottom: 8px;
-	}
-
-	.range-location {
 		display: flex;
 		align-items: center;
-		justify-content: center;
 		gap: 6px;
-		font-size: 13px;
-		color: #666;
+		font-size: 14px;
+		color: #999;
+		font-weight: 400;
+	}
+
+	.range-count svg {
+		flex-shrink: 0;
+		stroke: #999;
 	}
 
 	.cta-section {

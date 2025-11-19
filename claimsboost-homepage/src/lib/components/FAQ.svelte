@@ -9,8 +9,8 @@
 		},
 		{
 			id: 2,
-			question: 'Is my information secure?',
-			answer: 'Yes, your data is protected with bank-level encryption and we never sell your information to third parties. We only share your details with lawyers you explicitly choose to connect with.'
+			question: 'How accurate are the settlement estimates?',
+			answer: 'Our estimates are based on thousands of real settlement cases with similar circumstances to yours. While every case is unique, our AI analyzes factors like injury type, severity, location, and liability to provide a realistic range based on actual historical outcomes.'
 		},
 		{
 			id: 3,
@@ -19,8 +19,8 @@
 		},
 		{
 			id: 4,
-			question: 'What kind of lawyers are on ClaimsBoost?',
-			answer: 'We partner with top-rated, licensed personal injury attorneys who specialize in your type of case. All lawyers are vetted for their track record, client reviews, and professional standing.'
+			question: 'What type of law firms are on claimsboost.com?',
+			answer: 'We feature top-rated personal injury law firms that specialize in cases like yours. All firms are vetted for their track record, client reviews, and professional standing. From boutique practices to established firms, each one has proven experience winning settlements for their clients.'
 		}
 	];
 

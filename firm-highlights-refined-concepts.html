@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firm Highlights - Refined Design Concepts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #f9fafb;
+            padding: 40px 20px;
+            line-height: 1.6;
+            color: #1a1a1a;
+        }
+
+        .header {
+            max-width: 1200px;
+            margin: 0 auto 60px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #10B981 0%, #3B82F6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 18px;
+            color: #6b7280;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .concept {
+            margin-bottom: 120px;
+        }
+
+        .concept-header {
+            margin-bottom: 40px;
+        }
+
+        .concept-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+        }
+
+        .concept-description {
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .concept-meta {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .pros, .cons {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .pros h3, .cons h3 {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .pros h3 {
+            color: #10B981;
+        }
+
+        .cons h3 {
+            color: #EF4444;
+        }
+
+        .pros ul, .cons ul {
+            list-style: none;
+        }
+
+        .pros li, .cons li {
+            padding-left: 24px;
+            position: relative;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #4b5563;
+        }
+
+        .pros li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10B981;
+            font-weight: bold;
+        }
+
+        .cons li:before {
+            content: "×";
+            position: absolute;
+            left: 0;
+            color: #EF4444;
+            font-weight: bold;
+            font-size: 18px;
+            line-height: 14px;
+        }
+
+        .mockup {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+            overflow: hidden;
+        }
+
+        /* Concept 1: Minimal Cards with Light Blue Accent */
+        .concept1-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .concept1-card {
+            background: #F0F9FF;
+            border-radius: 12px;
+            padding: 24px;
+            border-left: 4px solid #60A5FA;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .concept1-card:hover {
+            background: #E0F2FE;
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(96, 165, 250, 0.15);
+        }
+
+        .concept1-metric {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2563EB;
+            margin-bottom: 4px;
+            line-height: 1;
+        }
+
+        .concept1-label {
+            font-size: 14px;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .concept1-description {
+            font-size: 15px;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        /* Concept 2: Clean List with Green Progress Bars */
+        .concept2-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .concept2-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #86EFAC 0%, #10B981 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .concept2-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .concept2-list {
+            list-style: none;
+        }
+
+        .concept2-item {
+            margin-bottom: 24px;
+            padding: 20px;
+            background: #F0FDF4;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .concept2-item:hover {
+            background: #E6F7ED;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.1);
+        }
+
+        .concept2-item::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #10B981;
+        }
+
+        .concept2-item-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .concept2-number {
+            width: 36px;
+            height: 36px;
+            background: white;
+            border: 2px solid #10B981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #10B981;
+            flex-shrink: 0;
+        }
+
+        .concept2-text {
+            flex: 1;
+            font-size: 16px;
+            color: #1a1a1a;
+            font-weight: 500;
+        }
+
+        /* Concept 3: Floating Bubbles with Blue Gradient */
+        .concept3-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 20px;
+            background: linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 100%);
+            border-radius: 16px;
+        }
+
+        .concept3-bubble {
+            background: white;
+            padding: 16px 24px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .concept3-bubble:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
+            border-color: #60A5FA;
+        }
+
+        .concept3-bubble.highlight {
+            background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
+            color: white;
+        }
+
+        .concept3-bubble.highlight:hover {
+            transform: translateY(-4px) scale(1.05);
+        }
+
+        .concept3-icon {
+            width: 32px;
+            height: 32px;
+            background: #EFF6FF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .concept3-bubble.highlight .concept3-icon {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .concept3-value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .concept3-label {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* Concept 4: Timeline with Green Milestones */
+        .concept4-timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .concept4-line {
+            position: absolute;
+            left: 19px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #86EFAC 0%, #10B981 100%);
+        }
+
+        .concept4-item {
+            position: relative;
+            margin-bottom: 32px;
+            opacity: 0;
+            animation: fadeInRight 0.6s ease forwards;
+        }
+
+        .concept4-item:nth-child(1) { animation-delay: 0.1s; }
+        .concept4-item:nth-child(2) { animation-delay: 0.2s; }
+        .concept4-item:nth-child(3) { animation-delay: 0.3s; }
+        .concept4-item:nth-child(4) { animation-delay: 0.4s; }
+        .concept4-item:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes fadeInRight {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+        }
+
+        .concept4-dot {
+            position: absolute;
+            left: -30px;
+            top: 8px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 3px solid #10B981;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .concept4-content {
+            background: white;
+            padding: 20px 24px;
+            border-radius: 12px;
+            border: 1px solid #E5E7EB;
+            transition: all 0.3s ease;
+        }
+
+        .concept4-content:hover {
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.1);
+            border-color: #86EFAC;
+        }
+
+        .concept4-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .concept4-description {
+            font-size: 15px;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        /* Concept 5: Minimalist Stats Row */
+        .concept5-container {
+            background: linear-gradient(135deg, #F0F9FF 0%, #F0FDF4 100%);
+            border-radius: 16px;
+            padding: 32px;
+        }
+
+        .concept5-stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        .concept5-stat {
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .concept5-number {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3B82F6 0%, #10B981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .concept5-label {
+            font-size: 14px;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .concept5-highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .concept5-highlight {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .concept5-highlight:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .concept5-check {
+            width: 24px;
+            height: 24px;
+            background: #10B981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .concept5-text {
+            font-size: 15px;
+            color: #475569;
+            line-height: 1.4;
+        }
+
+        /* Concept 6: Interactive Accordion with Blue Theme */
+        .concept6-container {
+            border: 1px solid #E0E7FF;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .concept6-item {
+            border-bottom: 1px solid #E0E7FF;
+            transition: all 0.3s ease;
+        }
+
+        .concept6-item:last-child {
+            border-bottom: none;
+        }
+
+        .concept6-item:hover {
+            background: #F5F8FF;
+        }
+
+        .concept6-header {
+            padding: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .concept6-header-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex: 1;
+        }
+
+        .concept6-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #93C5FD 0%, #3B82F6 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .concept6-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .concept6-arrow {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #3B82F6;
+            transition: transform 0.3s ease;
+        }
+
+        .concept6-item.expanded .concept6-arrow {
+            transform: rotate(180deg);
+        }
+
+        .concept6-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .concept6-item.expanded .concept6-content {
+            max-height: 200px;
+        }
+
+        .concept6-content-inner {
+            padding: 0 24px 24px 88px;
+            color: #6b7280;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .concept1-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .concept5-stats {
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .concept5-highlights {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Firm Highlights Design Concepts</h1>
+        <p>Clean, modern designs featuring light blue and green accents for professional law firm profiles</p>
+    </div>
+
+    <div class="container">
+        <!-- Concept 1: Minimal Cards with Light Blue -->
+        <div class="concept">
+            <div class="concept-header">
+                <h2 class="concept-title">Concept 1: Minimal Metric Cards</h2>
+                <p class="concept-description">
+                    Clean card-based layout with light blue accents. Each highlight gets its own card with a subtle left border.
+                    Numbers are prominently displayed with supporting descriptive text below.
+                </p>
+            </div>
+
+            <div class="concept-meta">
+                <div class="pros">
+                    <h3>Advantages</h3>
+                    <ul>
+                        <li>Very clean and modern aesthetic</li>
+                        <li>Excellent visual hierarchy</li>
+                        <li>Works great for numeric highlights</li>
+                        <li>Soft blue creates trust and calm</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h3>Limitations</h3>
+                    <ul>
+                        <li>Requires restructuring text-heavy content</li>
+                        <li>May need more vertical space</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup">
+                <div class="concept1-grid">
+                    <div class="concept1-card">
+                        <div class="concept1-metric">$250M+</div>
+                        <div class="concept1-label">Total Recovered</div>
+                        <div class="concept1-description">Successfully recovered for clients across Pennsylvania and New Jersey</div>
+                    </div>
+                    <div class="concept1-card">
+                        <div class="concept1-metric">40,000+</div>
+                        <div class="concept1-label">Workers Helped</div>
+                        <div class="concept1-description">Dedicated to protecting workers' rights and securing fair compensation</div>
+                    </div>
+                    <div class="concept1-card">
+                        <div class="concept1-metric">100+</div>
+                        <div class="concept1-label">Years Combined Experience</div>
+                        <div class="concept1-description">Our team brings over a century of collective legal expertise</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Concept 2: Clean List with Green Progress -->
+        <div class="concept">
+            <div class="concept-header">
+                <h2 class="concept-title">Concept 2: Numbered List with Green Accents</h2>
+                <p class="concept-description">
+                    Organized list with subtle green backgrounds and numbered items. Each highlight gets proper space
+                    with a clean left border accent. Perfect balance between information density and readability.
+                </p>
+            </div>
+
+            <div class="concept-meta">
+                <div class="pros">
+                    <h3>Advantages</h3>
+                    <ul>
+                        <li>Extremely clean and organized</li>
+                        <li>Green suggests growth and success</li>
+                        <li>Numbers create clear hierarchy</li>
+                        <li>Accommodates longer text well</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h3>Limitations</h3>
+                    <ul>
+                        <li>Less emphasis on metrics</li>
+                        <li>More traditional layout approach</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup">
+                <div class="concept2-header">
+                    <div class="concept2-icon">✨</div>
+                    <h3 class="concept2-title">Firm Highlights</h3>
+                </div>
+                <ul class="concept2-list">
+                    <li class="concept2-item">
+                        <div class="concept2-item-content">
+                            <span class="concept2-number">1</span>
+                            <span class="concept2-text">Combined legal experience of over 100 years among team members</span>
+                        </div>
+                    </li>
+                    <li class="concept2-item">
+                        <div class="concept2-item-content">
+                            <span class="concept2-number">2</span>
+                            <span class="concept2-text">Contingency fee basis - clients only pay if they win their case</span>
+                        </div>
+                    </li>
+                    <li class="concept2-item">
+                        <div class="concept2-item-content">
+                            <span class="concept2-number">3</span>
+                            <span class="concept2-text">Serving clients in both Pennsylvania and New Jersey</span>
+                        </div>
+                    </li>
+                    <li class="concept2-item">
+                        <div class="concept2-item-content">
+                            <span class="concept2-number">4</span>
+                            <span class="concept2-text">Over 40,000 workers helped with $250+ million recovered</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Concept 3: Floating Bubbles -->
+        <div class="concept">
+            <div class="concept-header">
+                <h2 class="concept-title">Concept 3: Floating Metric Bubbles</h2>
+                <p class="concept-description">
+                    Modern bubble design with key metrics highlighted. Combines numeric stats in prominent bubbles
+                    with supporting information in smaller pills. Light blue gradient background adds depth.
+                </p>
+            </div>
+
+            <div class="concept-meta">
+                <div class="pros">
+                    <h3>Advantages</h3>
+                    <ul>
+                        <li>Very modern and unique</li>
+                        <li>Great visual interest</li>
+                        <li>Metrics stand out prominently</li>
+                        <li>Playful yet professional</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h3>Limitations</h3>
+                    <ul>
+                        <li>May be too casual for some firms</li>
+                        <li>Requires careful content curation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup">
+                <div class="concept3-container">
+                    <div class="concept3-bubble highlight">
+                        <div class="concept3-icon">💼</div>
+                        <div>
+                            <div class="concept3-value">$250M+</div>
+                            <div class="concept3-label">Recovered</div>
+                        </div>
+                    </div>
+                    <div class="concept3-bubble highlight">
+                        <div class="concept3-icon">👥</div>
+                        <div>
+                            <div class="concept3-value">40,000+</div>
+                            <div class="concept3-label">Workers Helped</div>
+                        </div>
+                    </div>
+                    <div class="concept3-bubble">
+                        <div class="concept3-icon">⏰</div>
+                        <div>100+ Years Experience</div>
+                    </div>
+                    <div class="concept3-bubble">
+                        <div class="concept3-icon">🏛️</div>
+                        <div>PA & NJ Licensed</div>
+                    </div>
+                    <div class="concept3-bubble">
+                        <div class="concept3-icon">✓</div>
+                        <div>No Win, No Fee</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Concept 4: Timeline with Green -->
+        <div class="concept">
+            <div class="concept-header">
+                <h2 class="concept-title">Concept 4: Achievement Timeline</h2>
+                <p class="concept-description">
+                    Vertical timeline with green gradient accent line. Each highlight appears as a milestone
+                    with animated entrance. Creates a sense of progression and accomplishment.
+                </p>
+            </div>
+
+            <div class="concept-meta">
+                <div class="pros">
+                    <h3>Advantages</h3>
+                    <ul>
+                        <li>Unique and memorable layout</li>
+                        <li>Great for storytelling</li>
+                        <li>Animation adds engagement</li>
+                        <li>Professional appearance</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h3>Limitations</h3>
+                    <ul>
+                        <li>Takes more vertical space</li>
+                        <li>May imply chronological order</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup">
+                <div class="concept4-timeline">
+                    <div class="concept4-line"></div>
+                    <div class="concept4-item">
+                        <div class="concept4-dot"></div>
+                        <div class="concept4-content">
+                            <div class="concept4-title">100+ Years Combined Experience</div>
+                            <div class="concept4-description">Our legal team brings over a century of collective expertise</div>
+                        </div>
+                    </div>
+                    <div class="concept4-item">
+                        <div class="concept4-dot"></div>
+                        <div class="concept4-content">
+                            <div class="concept4-title">$250 Million Recovered</div>
+                            <div class="concept4-description">Successfully secured substantial compensation for our clients</div>
+                        </div>
+                    </div>
+                    <div class="concept4-item">
+                        <div class="concept4-dot"></div>
+                        <div class="concept4-content">
+                            <div class="concept4-title">40,000+ Workers Helped</div>
+                            <div class="concept4-description">Dedicated to protecting workers' rights across PA and NJ</div>
+                        </div>
+                    </div>
+                    <div class="concept4-item">
+                        <div class="concept4-dot"></div>
+                        <div class="concept4-content">
+                            <div class="concept4-title">Contingency Fee Basis</div>
+                            <div class="concept4-description">No upfront costs - you only pay if we win your case</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Concept 5: Minimalist Stats Row -->
+        <div class="concept">
+            <div class="concept-header">
+                <h2 class="concept-title">Concept 5: Stats Dashboard</h2>
+                <p class="concept-description">
+                    Ultra-clean dashboard layout with prominent statistics at the top and supporting highlights below.
+                    Uses gradient text for numbers and combines blue-green color scheme throughout.
+                </p>
+            </div>
+
+            <div class="concept-meta">
+                <div class="pros">
+                    <h3>Advantages</h3>
+                    <ul>
+                        <li>Maximum impact for key metrics</li>
+                        <li>Very clean and professional</li>
+                        <li>Excellent use of whitespace</li>
+                        <li>Scalable to any screen size</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h3>Limitations</h3>
+                    <ul>
+                        <li>Requires strong numeric data</li>
+                        <li>May overshadow other content</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup">
+                <div class="concept5-container">
+                    <div class="concept5-stats">
+                        <div class="concept5-stat">
+                            <div class="concept5-number">$250M+</div>
+                            <div class="concept5-label">Recovered</div>
+                        </div>
+                        <div class="concept5-stat">
+                            <div class="concept5-number">40K+</div>
+                            <div class="concept5-label">Workers Helped</div>
+                        </div>
+                        <div class="concept5-stat">
+                            <div class="concept5-number">100+</div>
+                            <div class="concept5-label">Years Experience</div>
+                        </div>
+                    </div>
+                    <div class="concept5-highlights">
+                        <div class="concept5-highlight">
+                            <span class="concept5-check">✓</span>
+                            <span class="concept5-text">No win, no fee guarantee</span>
+                        </div>
+                        <div class="concept5-highlight">
+                            <span class="concept5-check">✓</span>
+                            <span class="concept5-text">Licensed in PA and NJ</span>
+                        </div>
+                        <div class="concept5-highlight">
+                            <span class="concept5-check">✓</span>
+                            <span class="concept5-text">Personal injury specialists</span>
+                        </div>
+                        <div class="concept5-highlight">
+                            <span class="concept5-check">✓</span>
+                            <span class="concept5-text">24/7 client support</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Concept 6: Interactive Accordion -->
+        <div class="concept">
+            <div class="concept-header">
+                <h2 class="concept-title">Concept 6: Expandable Highlights</h2>
+                <p class="concept-description">
+                    Interactive accordion design with blue gradient icons. Each highlight can be expanded to reveal
+                    more details. Clean borders and subtle hover effects create a premium feel.
+                </p>
+            </div>
+
+            <div class="concept-meta">
+                <div class="pros">
+                    <h3>Advantages</h3>
+                    <ul>
+                        <li>Space-efficient design</li>
+                        <li>Progressive disclosure of info</li>
+                        <li>Interactive and engaging</li>
+                        <li>Works well on mobile</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h3>Limitations</h3>
+                    <ul>
+                        <li>Requires user interaction</li>
+                        <li>May hide important details</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup">
+                <div class="concept6-container">
+                    <div class="concept6-item expanded">
+                        <div class="concept6-header" onclick="this.parentElement.classList.toggle('expanded')">
+                            <div class="concept6-header-content">
+                                <div class="concept6-icon">💰</div>
+                                <div class="concept6-title">$250+ Million Recovered</div>
+                            </div>
+                            <div class="concept6-arrow">▼</div>
+                        </div>
+                        <div class="concept6-content">
+                            <div class="concept6-content-inner">
+                                Our track record speaks for itself. We've successfully recovered over $250 million
+                                for our clients, ensuring they receive the compensation they deserve for their injuries and losses.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="concept6-item">
+                        <div class="concept6-header" onclick="this.parentElement.classList.toggle('expanded')">
+                            <div class="concept6-header-content">
+                                <div class="concept6-icon">⚖️</div>
+                                <div class="concept6-title">100+ Years Combined Experience</div>
+                            </div>
+                            <div class="concept6-arrow">▼</div>
+                        </div>
+                        <div class="concept6-content">
+                            <div class="concept6-content-inner">
+                                Our legal team brings together over a century of collective experience,
+                                providing deep expertise across personal injury, workers' compensation, and disability law.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="concept6-item">
+                        <div class="concept6-header" onclick="this.parentElement.classList.toggle('expanded')">
+                            <div class="concept6-header-content">
+                                <div class="concept6-icon">🤝</div>
+                                <div class="concept6-title">No Win, No Fee Promise</div>
+                            </div>
+                            <div class="concept6-arrow">▼</div>
+                        </div>
+                        <div class="concept6-content">
+                            <div class="concept6-content-inner">
+                                We operate on a contingency fee basis, meaning you pay nothing unless we win your case.
+                                This ensures everyone has access to quality legal representation regardless of financial situation.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
