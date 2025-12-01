@@ -100,7 +100,7 @@
 		// Clear search location so the search page uses IP location
 		searchLocation.clearSearchLocation();
 		// Navigate to search page
-		goto('/injury-law-firms/search');
+		goto('/injury-law-firms');
 	}
 
 	// Star rating rendering is now handled by the StarRating component
