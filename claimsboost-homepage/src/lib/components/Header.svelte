@@ -1,6 +1,7 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { searchLocation } from '$lib/stores/searchLocationStore.js';
+	import { location } from '$lib/stores/locationStore.js';
 
 	let menuOpen = $state(false);
 	let locationDropdownOpen = $state(false);
@@ -74,6 +75,33 @@
 
 		// Navigate to search page with location in URL and coordinates ready
 		goto(`/injury-law-firms/search?location=${encodeURIComponent(`${city.name}, ${city.state}`)}`);
+	}
+
+	function navigateToPracticeArea(practiceArea) {
+		// Close dropdown
+		practiceAreaDropdownOpen = false;
+
+		// Build URL with practice area
+		const params = new URLSearchParams();
+		params.set('practice_area', practiceArea);
+
+		// Include user's location if available
+		if ($searchLocation.hasLocation) {
+			params.set('location', `${$searchLocation.city}, ${$searchLocation.state}`);
+		} else if ($location.hasLocation) {
+			// Use IP-based location as fallback
+			searchLocation.setSearchLocation({
+				city: $location.city,
+				state: $location.state,
+				latitude: $location.latitude,
+				longitude: $location.longitude,
+				zipCode: null,
+				formatted: `${$location.city}, ${$location.state}`
+			});
+			params.set('location', `${$location.city}, ${$location.state}`);
+		}
+
+		goto(`/injury-law-firms/search?${params.toString()}`);
 	}
 
 	const practiceAreas = [
@@ -150,9 +178,9 @@
 							<div class="dropdown-header">Search Law Firms by Practice Area</div>
 							<div class="practice-areas-grid">
 								{#each practiceAreas as area}
-									<a href="/law-firms/{area.toLowerCase().replace(/ /g, '-')}" class="state-link">
+									<button type="button" class="practice-area-link" onclick={() => navigateToPracticeArea(area)}>
 										{area}
-									</a>
+									</button>
 								{/each}
 							</div>
 						</div>
@@ -371,6 +399,29 @@
 	}
 
 	.city-link:hover {
+		background: #f8f9fa;
+		color: #FF7B00;
+	}
+
+	.practice-area-link {
+		color: #666;
+		text-decoration: none;
+		font-size: 16px;
+		font-weight: 500;
+		padding: 6px 10px;
+		border-radius: 6px;
+		transition: all 0.2s;
+		display: block;
+		white-space: nowrap;
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		text-align: left;
+		width: 100%;
+		font-family: inherit;
+	}
+
+	.practice-area-link:hover {
 		background: #f8f9fa;
 		color: #FF7B00;
 	}

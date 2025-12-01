@@ -24,6 +24,7 @@
 	// Track if user has manually cleared the location
 	let hasManuallyCleared = $state(false);
 	let isUserEditing = $state(false);
+	let isPracticeAreaEditing = $state(false);
 	let initialLoadComplete = $state(false);
 
 	// Only set location on initial page load
@@ -37,6 +38,16 @@
 				// Fallback to user location
 				locationValue = `${$location.city}, ${$location.state}`;
 				initialLoadComplete = true;
+			}
+		}
+	});
+
+	// Sync locationValue with searchLocation store changes (for header navigation while on page)
+	$effect(() => {
+		if (initialLoadComplete && !isUserEditing && $searchLocation.city && $searchLocation.state) {
+			const newLocation = $searchLocation.zipCode || `${$searchLocation.city}, ${$searchLocation.state}`;
+			if (newLocation !== locationValue) {
+				locationValue = newLocation;
 			}
 		}
 	});
@@ -76,6 +87,12 @@
 		if (!browser) return;
 
 		const urlLocation = $page.url.searchParams.get('location');
+		const urlPracticeArea = $page.url.searchParams.get('practice_area');
+
+		// Handle practice_area param - set search query if different (but not while user is editing)
+		if (urlPracticeArea && urlPracticeArea !== searchQuery && !isPracticeAreaEditing) {
+			searchQuery = urlPracticeArea;
+		}
 
 		// Check if URL has location parameter and it's different from current search location
 		if (urlLocation) {
@@ -85,6 +102,9 @@
 
 			// Only process if the location is different
 			if (urlLocation !== currentLocation) {
+				// Sync the location input field with the new URL location
+				locationValue = urlLocation;
+
 				// If we already have coordinates in searchLocation, don't geocode again
 				if ($searchLocation.latitude && $searchLocation.longitude) {
 					// Coordinates already set (e.g., from header navigation with pre-geocoded data)
@@ -717,6 +737,9 @@
 						isUserEditing = true;
 						hasManuallyCleared = false;
 					}}
+				on:practiceAreaFocus={() => isPracticeAreaEditing = true}
+				on:practiceAreaBlur={() => isPracticeAreaEditing = false}
+				on:practiceAreaInput={() => isPracticeAreaEditing = true}
 				/>
 			</div>
 

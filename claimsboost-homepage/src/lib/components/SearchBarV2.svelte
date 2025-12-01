@@ -46,6 +46,19 @@
 		dispatch('locationBlur');
 	}
 
+	// Handle practice area input events
+	function handlePracticeAreaInput() {
+		dispatch('practiceAreaInput', { value: practiceAreaValue });
+	}
+
+	function handlePracticeAreaFocus() {
+		dispatch('practiceAreaFocus');
+	}
+
+	function handlePracticeAreaBlur() {
+		dispatch('practiceAreaBlur');
+	}
+
 	// Handle search submission
 	function handleSearch(e) {
 		e.preventDefault();
@@ -77,6 +90,9 @@
 					class:no-icon={!showLocationField}
 					bind:value={practiceAreaValue}
 					placeholder={practiceAreaPlaceholder}
+					on:input={handlePracticeAreaInput}
+					on:focus={handlePracticeAreaFocus}
+					on:blur={handlePracticeAreaBlur}
 				/>
 			</div>
 		</div>
