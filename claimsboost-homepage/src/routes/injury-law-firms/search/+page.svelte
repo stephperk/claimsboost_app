@@ -1094,7 +1094,7 @@
 									<!-- Expanded state: show all -->
 									{#each firm.practiceAreas as area, i}
 										{@const score = firm.practiceAreaScores?.[area] || 0}
-										{@const isTopMatch = score >= 0.85}
+										{@const isTopMatch = score >= 0.8}
 										<span class="practice-tag no-animation" class:top-match={isTopMatch}>
 											{#if isTopMatch}
 												<span class="check">✓</span>
@@ -1116,7 +1116,7 @@
 									{@const pillBaseDelay = cardDelay + cardAnimDuration}
 									{#each firm.practiceAreas.slice(0, pillCount) as area, i}
 										{@const score = firm.practiceAreaScores?.[area] || 0}
-										{@const isTopMatch = score >= 0.85}
+										{@const isTopMatch = score >= 0.8}
 										<span class="practice-tag" class:no-animation={!isInitialRender} class:top-match={isTopMatch} style="animation-delay: {pillBaseDelay + (i * 100)}ms">
 											{#if isTopMatch}
 												<span class="check">✓</span>
@@ -1134,7 +1134,7 @@
 									<!-- Loading state: measure all pills invisibly to calculate -->
 									{#each firm.practiceAreas as area}
 										{@const score = firm.practiceAreaScores?.[area] || 0}
-										{@const isTopMatch = score >= 0.85}
+										{@const isTopMatch = score >= 0.8}
 										<span class="practice-tag measuring" class:top-match={isTopMatch} style="opacity: 0; pointer-events: none;">
 											{#if isTopMatch}
 												<span class="check">✓</span>

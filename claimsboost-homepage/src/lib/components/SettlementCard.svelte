@@ -12,6 +12,20 @@
 		}).format(amount);
 	}
 
+	// Map database keys to display labels
+	const categoryDisplayLabels = {
+		'vehicle_accidents': 'Vehicle Accidents',
+		'malpractice': 'Malpractice',
+		'defective_product': 'Defective Products',
+		'workplace_injury': 'Workplace Injuries',
+		'premises_liability': 'Premises Liability',
+		'abuse_and_assault': 'Abuse & Assault',
+		'insurance_bad_faith': 'Insurance Bad Faith',
+		'mass_tort': 'Mass Torts',
+		'disaster_claims': 'Disaster Claims',
+		'wrongful_death': 'Wrongful Death'
+	};
+
 	// Practice area color mapping
 	const practiceAreaColors = {
 		'Vehicle Accidents': '#3B82F6',        // Blue
@@ -19,12 +33,26 @@
 		'Malpractice': '#10B981',              // Green
 		'Workplace Injuries': '#EF4444',       // Red
 		'Premises Liability': '#8B5CF6',       // Purple
+		'Abuse & Assault': '#DC2626',          // Red
+		'Insurance Bad Faith': '#0891B2',      // Cyan
+		'Mass Torts': '#7C3AED',               // Violet
+		'Disaster Claims': '#EA580C',          // Orange-Red
 		'Wrongful Death': '#6B7280',           // Gray
 		'default': '#6B7280'
 	};
 
+	function getCategoryDisplayLabel(practiceArea) {
+		// If it's already a display label, return it
+		if (Object.values(categoryDisplayLabels).includes(practiceArea)) {
+			return practiceArea;
+		}
+		// Otherwise map from database key
+		return categoryDisplayLabels[practiceArea] || practiceArea;
+	}
+
 	function getPracticeAreaColor(practiceArea) {
-		return practiceAreaColors[practiceArea] || practiceAreaColors['default'];
+		const displayLabel = getCategoryDisplayLabel(practiceArea);
+		return practiceAreaColors[displayLabel] || practiceAreaColors['default'];
 	}
 </script>
 
@@ -32,7 +60,7 @@
 	<div class="settlement-card">
 		<div class="settlement-header">
 			<div class="practice-area-label" style="color: {getPracticeAreaColor(settlement.practiceArea)}">
-				{settlement.practiceArea.toUpperCase()}
+				{getCategoryDisplayLabel(settlement.practiceArea).toUpperCase()}
 			</div>
 			<span class="amount">{formatAmount(settlement.amount)}</span>
 		</div>
@@ -41,8 +69,8 @@
 
 	<div class="info-section">
 		<div class="section-header">
-			<img src="/stars-gradient-black.svg" alt="AI" class="section-icon" />
-			<span class="section-title">AI OVERVIEW</span>
+			<img src="/stars-gradient-black.svg" alt="Summary" class="section-icon" />
+			<span class="section-title">SUMMARY</span>
 		</div>
 		<p class="section-content">{settlement.description}</p>
 	</div>
@@ -150,10 +178,14 @@
 		color: #1a1a1a;
 		margin: 0 0 20px 0;
 		line-height: 1.3;
+		min-height: calc(1.3em * 2); /* Fixed height for 2 lines */
+		display: flex;
+		align-items: center; /* Vertically centers single-line text */
+		overflow: hidden;
 	}
 
 	.amount {
-		font-size: 28px;
+		font-size: 26px;
 		font-weight: 700;
 		background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
 		-webkit-background-clip: text;
@@ -214,9 +246,16 @@
 		font-size: 13px;
 		color: #6b7280;
 		font-weight: 400;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		min-width: 0;
+		flex: 1;
+		margin-right: 12px;
 	}
 
 	.view-profile-button {
+		flex-shrink: 0;
 		display: inline-flex;
 		align-items: center;
 		gap: 4px;

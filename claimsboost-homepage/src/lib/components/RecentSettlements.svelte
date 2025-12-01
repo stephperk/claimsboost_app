@@ -8,8 +8,11 @@
 	let loading = true;
 	let error = null;
 
-	onMount(async () => {
+	async function fetchSettlements() {
 		try {
+			loading = true;
+			error = null;
+
 			const response = await fetch('/api/settlements/recent?limit=6');
 			const data = await response.json();
 
@@ -28,7 +31,7 @@
 					amount: s.amount,
 					location: s.firm_city && s.firm_state ? `${s.firm_city}, ${s.firm_state}` : 'Location not specified',
 					year: new Date().getFullYear(), // Default to current year
-					description: s.summary || 'Settlement details available.',
+					description: s.display_summary || 'Settlement details available.',
 					similarCases: 'Similar cases in your area: 23', // Placeholder for now
 					practiceArea: s.primary_practice_area || 'Personal Injury',
 					lawFirm: s.firm_display_name || s.firm_name || 'Law Firm',
@@ -41,23 +44,18 @@
 		} catch (err) {
 			console.error('Failed to fetch settlements:', err);
 			error = err.message;
-			// Fallback to some default data if needed
-			settlements = [
-				{
-					type: 'Car Accident',
-					amount: 150000,
-					location: 'United States',
-					year: new Date().getFullYear(),
-					description: 'Significant settlement for car accident injuries including medical expenses and lost wages.',
-					similarCases: 'Similar cases available',
-					practiceArea: 'Vehicle Accidents',
-					lawFirm: 'Personal Injury Law Firm',
-					firmUrl: '#'
-				}
-			];
+			settlements = [];
 		} finally {
 			loading = false;
 		}
+	}
+
+	function browseSettlements() {
+		goto('/injury-settlements');
+	}
+
+	onMount(() => {
+		fetchSettlements();
 	});
 </script>
 
@@ -84,9 +82,23 @@
 					</div>
 				{/each}
 			{:else if error}
-				<!-- Show error message -->
+				<!-- Error state with retry CTA -->
 				<div class="error-message">
-					<p>Unable to load settlements at this time. Please try again later.</p>
+					<p>Unable to load settlements at this time.</p>
+					<button onclick={fetchSettlements} class="retry-btn">
+						Try again
+					</button>
+				</div>
+			{:else if settlements.length === 0}
+				<!-- No results state -->
+				<div class="no-results">
+					<p>No settlements found. Browse settlements by practice area.</p>
+					<button onclick={browseSettlements} class="browse-btn">
+						Browse settlements
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M5 12h14M12 5l7 7-7 7"/>
+						</svg>
+					</button>
 				</div>
 			{:else}
 				<!-- Show settlements -->
@@ -255,10 +267,61 @@
 		}
 	}
 
-	.error-message {
+	/* Error and no results styles */
+	.error-message,
+	.no-results {
 		grid-column: 1 / -1;
 		text-align: center;
-		padding: 40px;
+		padding: 60px 20px;
 		color: #666;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 20px;
+	}
+
+	.error-message p,
+	.no-results p {
+		font-size: 16px;
+		margin: 0;
+	}
+
+	.retry-btn {
+		padding: 12px 24px;
+		background: white;
+		color: #1a1a1a;
+		border: 1px solid #e5e5e5;
+		border-radius: 8px;
+		font-size: 14px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+
+	.retry-btn:hover {
+		background: #f8f9fa;
+		border-color: #FF7B00;
+		color: #FF7B00;
+	}
+
+	.browse-btn {
+		padding: 14px 28px;
+		background: linear-gradient(135deg, #FF6800 0%, #FFA500 100%);
+		color: white;
+		border: none;
+		border-radius: 8px;
+		font-size: 16px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		box-shadow: 0 4px 15px rgba(255, 104, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	.browse-btn:hover {
+		background: linear-gradient(135deg, #FF8000 0%, #FFB733 100%);
+		box-shadow: 0 6px 25px rgba(255, 104, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.15);
 	}
 </style>

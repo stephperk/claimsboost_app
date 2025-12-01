@@ -37,8 +37,42 @@ export async function load({ params, fetch }) {
 		// Add the full state name for display
 		firm.stateName = getStateName(data.firm.state);
 
+		// Fetch settlements for this firm
+		let settlements = [];
+		try {
+			const settlementsResponse = await fetch(`/api/settlements/by-firm?firm_slug=${encodeURIComponent(slug)}`);
+			if (settlementsResponse.ok) {
+				const settlementsData = await settlementsResponse.json();
+				// Transform settlements data to match component format
+				settlements = settlementsData.settlements.map(s => {
+					// Convert state to lowercase and city to URL-friendly format
+					const stateUrl = s.firm_state?.toLowerCase() || '';
+					const cityUrl = s.firm_city?.toLowerCase().replace(/\s+/g, '-') || '';
+
+					return {
+						type: s.display_title || s.injury_cause || 'Personal Injury',
+						amount: s.amount,
+						location: s.firm_city && s.firm_state ? `${s.firm_city}, ${s.firm_state}` : 'Location not specified',
+						year: new Date().getFullYear(), // Default to current year
+						description: s.display_summary || 'Settlement details available.',
+						similarCases: 'Similar cases in your area: 23', // Placeholder for now
+						practiceArea: s.primary_practice_area || 'Personal Injury',
+						lawFirm: s.firm_display_name || s.firm_name || 'Law Firm',
+						firmUrl: s.firm_slug && stateUrl && cityUrl
+							? `/injury-law-firms/${stateUrl}/${cityUrl}/${s.firm_slug}`
+							: '#',
+						websiteUrl: s.firm_website || firm.website
+					};
+				});
+			}
+		} catch (err) {
+			console.error('Failed to fetch settlements for firm:', err);
+			// Continue with empty settlements array
+		}
+
 		return {
-			firm
+			firm,
+			settlements
 		};
 	} catch (err) {
 		if (err.status) {

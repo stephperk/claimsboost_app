@@ -12,14 +12,19 @@
 	let isLoading = $state(true);
 	let error = $state(null);
 	let radiusUsed = $state(50);
+	let locationUnavailable = $state(false);
 
 	// Fetch law firms based on user location
 	async function fetchNearbyFirms() {
 		// Wait for location to be available with valid coordinates
 		if (!$location.hasLocation || !$location.latitude || !$location.longitude) {
+			locationUnavailable = true;
 			isLoading = false;
 			return;
 		}
+
+		// Reset locationUnavailable if we have valid coordinates
+		locationUnavailable = false;
 
 		try {
 			isLoading = true;
@@ -155,12 +160,32 @@
 		{:else if error}
 			<!-- Error state -->
 			<div class="error-message">
-				<p>Unable to load law firms at this time. Please try again later.</p>
+				<p>Unable to load law firms at this time.</p>
+				<button onclick={fetchNearbyFirms} class="retry-btn">
+					Try again
+				</button>
+			</div>
+		{:else if locationUnavailable}
+			<!-- No location detected -->
+			<div class="no-location">
+				<p>We couldn't detect your location. Search for law firms in your area.</p>
+				<button onclick={seeMoreInMyArea} class="search-btn">
+					Search for law firms
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path d="M5 12h14M12 5l7 7-7 7"/>
+					</svg>
+				</button>
 			</div>
 		{:else if firms.length === 0}
 			<!-- No results -->
 			<div class="no-results">
-				<p>No law firms found in your area. Try searching for a specific location.</p>
+				<p>No law firms found nearby. Try searching a different location.</p>
+				<button onclick={seeMoreInMyArea} class="search-btn">
+					Search for law firms
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path d="M5 12h14M12 5l7 7-7 7"/>
+					</svg>
+				</button>
 			</div>
 		{:else}
 			<!-- Firms loaded successfully -->
@@ -626,17 +651,62 @@
 		}
 	}
 
-	/* Error and no results styles */
+	/* Error, no location, and no results styles */
 	.error-message,
+	.no-location,
 	.no-results {
 		text-align: center;
 		padding: 60px 20px;
 		color: #666;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 20px;
 	}
 
 	.error-message p,
+	.no-location p,
 	.no-results p {
 		font-size: 16px;
 		margin: 0;
+	}
+
+	.search-btn {
+		padding: 14px 28px;
+		background: linear-gradient(135deg, #FF6800 0%, #FFA500 100%);
+		color: white;
+		border: none;
+		border-radius: 8px;
+		font-size: 16px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		box-shadow: 0 4px 15px rgba(255, 104, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	.search-btn:hover {
+		background: linear-gradient(135deg, #FF8000 0%, #FFB733 100%);
+		box-shadow: 0 6px 25px rgba(255, 104, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.15);
+	}
+
+	.retry-btn {
+		padding: 12px 24px;
+		background: white;
+		color: #1a1a1a;
+		border: 1px solid #e5e5e5;
+		border-radius: 8px;
+		font-size: 14px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+
+	.retry-btn:hover {
+		background: #f8f9fa;
+		border-color: #FF7B00;
+		color: #FF7B00;
 	}
 </style>

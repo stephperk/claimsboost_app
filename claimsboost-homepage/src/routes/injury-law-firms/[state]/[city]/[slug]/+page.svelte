@@ -6,7 +6,7 @@
 	import { stateNameToUrl } from '$lib/utils/stateMapping.js';
 
 	export let data;
-	const { firm } = data;
+	const { firm, settlements } = data;
 
 	// State for expand/collapse
 	let isExpanded = false;
@@ -17,40 +17,6 @@
 	$: displayText = needsTruncation && !isExpanded
 		? firm.longDescription.slice(0, maxLength)
 		: firm.longDescription;
-
-	// Sample settlements for this firm (TODO: fetch from database)
-	const sampleSettlements = [
-		{
-			type: 'Rear-end collision on Highway 101',
-			amount: 385000,
-			year: 2024,
-			description: 'Client suffered severe whiplash and herniated disc requiring surgery. Secured settlement covering all medical expenses, lost wages, and pain and suffering.',
-			practiceArea: 'Vehicle Accidents',
-			lawFirm: firm.displayName || firm.name,
-			firmUrl: `/injury-law-firms/${stateNameToUrl(firm.state)}/${firm.city.toLowerCase()}/${firm.slug}`,
-			websiteUrl: firm.website
-		},
-		{
-			type: 'Slip and fall at grocery store',
-			amount: 215000,
-			year: 2023,
-			description: 'Client sustained hip fracture from unmarked wet floor. Negotiated comprehensive settlement including ongoing physical therapy costs and home care assistance.',
-			practiceArea: 'Premises Liability',
-			lawFirm: firm.displayName || firm.name,
-			firmUrl: `/injury-law-firms/${stateNameToUrl(firm.state)}/${firm.city.toLowerCase()}/${firm.slug}`,
-			websiteUrl: firm.website
-		},
-		{
-			type: 'Construction site accident',
-			amount: 520000,
-			year: 2024,
-			description: 'Worker injured due to faulty scaffolding resulting in permanent disability. Settlement covers lifetime medical care, lost earning capacity, and vocational rehabilitation.',
-			practiceArea: 'Workplace Injuries',
-			lawFirm: firm.displayName || firm.name,
-			firmUrl: `/injury-law-firms/${stateNameToUrl(firm.state)}/${firm.city.toLowerCase()}/${firm.slug}`,
-			websiteUrl: firm.website
-		}
-	];
 
 	// Star rating rendering is now handled by the StarRating component
 	// Old renderStars function removed - see StarRating.svelte for implementation
@@ -245,14 +211,16 @@
 			</div>
 
 			<!-- Recent Settlements Section -->
-			<div class="settlements-section">
-				<h2>Recent Settlements</h2>
-				<div class="settlements-grid">
-					{#each sampleSettlements as settlement}
-						<SettlementCard {settlement} matchingCriteria={[]} isProfilePage={true} />
-					{/each}
+			{#if settlements && settlements.length > 0}
+				<div class="settlements-section">
+					<h2>Recent Settlements</h2>
+					<div class="settlements-grid">
+						{#each settlements as settlement}
+							<SettlementCard {settlement} matchingCriteria={[]} isProfilePage={true} />
+						{/each}
+					</div>
 				</div>
-			</div>
+			{/if}
 			</div><!-- close profile-card -->
 		</div><!-- close container -->
 	</main>

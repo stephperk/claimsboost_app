@@ -77,15 +77,21 @@ export async function GET({ url }) {
 
 				if (embeddingResponse && embeddingResponse.embedding) {
 					// Get firm IDs from nearby results
-					const firmIds = results.map(f => f.place_id || f.google_place_id).filter(id => id);
+					const firmIds = results.map(f => f.place_id).filter(id => id);
 
 					if (firmIds.length > 0) {
-						// Call Supabase function to get ALL similarity scores (not just top-1)
+						console.log(`📊 Calling similarity function with ${firmIds.length} firm IDs`);
+						console.log(`📊 First 3 firm IDs: ${firmIds.slice(0, 3).join(', ')}`);
+						console.log(`📊 Embedding dimensions: ${embeddingResponse.embedding.length}`);
+
+						// Call Supabase function - pass embedding as array (no JSON.stringify!)
 						const { data: allSimilarities, error: simError } = await supabaseServer.rpc('get_firm_all_practice_area_similarities', {
 							query_embedding: embeddingResponse.embedding,
 							firm_ids: firmIds,
 							embedding_model_name: 'BAAI/bge-small-en-v1.5'
 						});
+
+						console.log(`📊 RPC returned ${allSimilarities?.length || 0} results, error: ${JSON.stringify(simError)}`);
 
 						if (!simError && allSimilarities) {
 							// Build nested map: firmId -> { practiceArea -> similarity }
@@ -132,7 +138,7 @@ export async function GET({ url }) {
 
 		// Step 4: Calculate hybrid scores and enhance results
 		results = results.map(firm => {
-			const firmId = firm.place_id || firm.google_place_id;
+			const firmId = firm.place_id;
 			const distanceScore = 1 - Math.min(firm.distance_miles / radius, 1); // Normalize to 0-1
 			const qualityScore = (firm.quality_score || 0) / 3; // Normalize to 0-1 (quality is 0-3)
 			const ratingScore = (firm.rating || 0) / 5; // Normalize to 0-1

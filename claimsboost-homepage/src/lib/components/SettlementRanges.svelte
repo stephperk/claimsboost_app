@@ -14,8 +14,8 @@
 			icon: '🚗',
 			isLottie: true,
 			lottiePath: '/wired-outline-868-car-crash-hover-pinch.json',
-			min: 15000,
-			max: 350000,
+			min: 25000,
+			max: 500000,
 			count: 542
 		},
 		{
@@ -24,8 +24,8 @@
 			icon: '⚠️',
 			isLottie: true,
 			lottiePath: '/wired-outline-1140-error-hover-enlarge.json',
-			min: 15000,
-			max: 350000,
+			min: 20000,
+			max: 300000,
 			count: 245
 		},
 		{
@@ -34,8 +34,8 @@
 			icon: '👷',
 			isLottie: true,
 			lottiePath: '/wired-outline-408-worker-helmet-hover-pinch.json',
-			min: 15000,
-			max: 350000,
+			min: 30000,
+			max: 600000,
 			count: 89
 		},
 		{
@@ -44,8 +44,8 @@
 			icon: '🏥',
 			isLottie: true,
 			lottiePath: '/wired-outline-671-male-doctor-care-hover-pinch.json',
-			min: 15000,
-			max: 350000,
+			min: 100000,
+			max: 2000000,
 			count: 67
 		},
 		{
@@ -55,7 +55,7 @@
 			isLottie: true,
 			lottiePath: '/wired-outline-1161-angry-dog-hover-pinch.json',
 			min: 15000,
-			max: 350000,
+			max: 200000,
 			count: 134
 		},
 		{
@@ -64,8 +64,8 @@
 			icon: '🏍️',
 			isLottie: true,
 			lottiePath: '/wired-outline-843-bike-hover-pinch.json',
-			min: 15000,
-			max: 350000,
+			min: 50000,
+			max: 750000,
 			count: 89
 		}
 	];
@@ -87,7 +87,9 @@
 
 	function formatRange(min, max) {
 		const formatNumber = (num) => {
-			if (num >= 1000) {
+			if (num >= 1000000) {
+				return `$${num / 1000000}M`;
+			} else if (num >= 1000) {
 				return `$${num / 1000}K`;
 			}
 			return `$${num}`;
@@ -130,9 +132,9 @@
 	<div class="container">
 		<h2>
 			{#if $location.hasLocation}
-				Settlement ranges near <span class="location-highlight">{$location.city}, {$location.state}</span>
+				Popular categories near <span class="location-highlight">{$location.city}, {$location.state}</span>
 			{:else}
-				Settlement ranges
+				Popular categories
 			{/if}
 		</h2>
 		<p class="subtitle">Explore typical settlement amounts by injury type based on local case data.</p>
