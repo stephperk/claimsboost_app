@@ -46,9 +46,9 @@
 			<nav class="breadcrumbs">
 				<a href="/" class="breadcrumb-link">Home</a>
 				<span class="breadcrumb-separator">›</span>
-				<a href="/injury-law-firms?state={firm.state}" class="breadcrumb-link">{firm.stateName}</a>
+				<a href="/injury-law-firms/search?state={firm.state}" class="breadcrumb-link">{firm.stateName}</a>
 				<span class="breadcrumb-separator">›</span>
-				<a href="/injury-law-firms?location={firm.city}, {firm.state}" class="breadcrumb-link">{firm.city}</a>
+				<a href="/injury-law-firms/search?location={firm.city}, {firm.state}" class="breadcrumb-link">{firm.city}</a>
 				<span class="breadcrumb-separator">›</span>
 				<span class="breadcrumb-current">{firm.displayName || firm.name}</span>
 			</nav>
