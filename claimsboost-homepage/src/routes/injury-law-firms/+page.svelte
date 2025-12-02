@@ -47,7 +47,9 @@
 
 	// Sync locationValue with searchLocation store changes (for header navigation while on page)
 	$effect(() => {
+		// isSearching prevents this effect from interfering during search operations
 		// isClearing prevents this effect from repopulating during clear operations
+		if (isSearching) return;
 		if (initialLoadComplete && !isUserEditing && !hasManuallyCleared && !isClearing && $searchLocation.city && $searchLocation.state) {
 			const newLocation = $searchLocation.zipCode || `${$searchLocation.city}, ${$searchLocation.state}`;
 			if (newLocation !== locationValue) {
@@ -179,6 +181,23 @@
 		};
 	});
 
+	// Update URL query params to reflect current search
+	function updateUrlParams() {
+		if (!browser) return;
+		const url = new URL(window.location.href);
+		if (locationValue && locationValue.trim()) {
+			url.searchParams.set('location', locationValue.trim());
+		} else {
+			url.searchParams.delete('location');
+		}
+		if (searchQuery && searchQuery.trim()) {
+			url.searchParams.set('practice_area', searchQuery.trim());
+		} else {
+			url.searchParams.delete('practice_area');
+		}
+		window.history.replaceState({}, '', url);
+	}
+
 	async function handleSearch(event) {
 		const { practiceArea, location: searchLocationText } = event.detail;
 		console.log('Searching for:', practiceArea, 'in', searchLocationText);
@@ -205,6 +224,7 @@
 		// The empty check prevents resetting hasManuallyCleared when user cleared the input
 		if (($searchLocation.latitude || $location.latitude) && !locationChanged && locationValue && locationValue.trim()) {
 			hasManuallyCleared = false;
+			updateUrlParams();
 			performSearch();
 			// Reset isSearching after store updates propagate
 			queueMicrotask(() => { isSearching = false; });
@@ -217,17 +237,29 @@
 			const geocodedLocation = await geocodeLocation(locationValue);
 
 			if (geocodedLocation) {
+				// Check if geocoding returned valid location name data
+				if (!geocodedLocation.city && !geocodedLocation.state) {
+					// Geocoding returned coordinates but no valid location name
+					// Treat as "no results" with a helpful message
+					lawFirms = [];
+					error = `We couldn't find a valid location for "${locationValue}". Please enter a valid US city or ZIP code.`;
+					pageState = SearchState.NO_RESULTS;
+					queueMicrotask(() => { isSearching = false; });
+					return;
+				}
 				// Successfully geocoded - update search location store
 				console.log('Geocoding successful:', geocodedLocation);
 				searchLocation.setSearchLocation(geocodedLocation);
 				// Now safe to reset hasManuallyCleared since store has the new location
 				hasManuallyCleared = false;
-				// Trigger search with the new coordinates
+				// Update URL params and trigger search with the new coordinates
+				updateUrlParams();
 				performSearch();
 			} else {
-				// Geocoding failed - show error
-				error = 'Unable to find that location. Please select a city from the dropdown menu.';
-				pageState = SearchState.ERROR;
+				// Geocoding failed completely - treat as "no results" with helpful message
+				lawFirms = [];
+				error = 'Unable to find that location. Please enter a valid US city or ZIP code.';
+				pageState = SearchState.NO_RESULTS;
 			}
 			// Reset isSearching after store updates propagate
 			queueMicrotask(() => { isSearching = false; });
@@ -782,8 +814,9 @@
 					on:locationBlur={() => isUserEditing = false}
 					on:locationInput={(e) => {
 						isUserEditing = true;
-						// Use event detail value since binding may not have updated yet
+						// Update locationValue from event detail to ensure it's in sync
 						const inputValue = e.detail?.value ?? '';
+						locationValue = inputValue;
 						// If user clears input via backspace, treat it like a manual clear
 						if (!inputValue.trim()) {
 							hasManuallyCleared = true;
@@ -1066,8 +1099,12 @@
 			{:else if pageState === SearchState.NO_RESULTS}
 				<!-- Empty State -->
 				<div class="empty-state">
-					<p>No law firms found in your area.</p>
-					<p class="hint">Try expanding your search radius or adjusting filters.</p>
+					{#if error}
+						<p>{error}</p>
+					{:else}
+						<p>No law firms found in your area.</p>
+						<p class="hint">Try expanding your search radius or adjusting filters.</p>
+					{/if}
 				</div>
 			{/if}
 

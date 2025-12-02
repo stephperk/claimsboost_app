@@ -59,9 +59,18 @@ export async function geocodeLocation(locationText) {
 		// Extract address components
 		const components = result.address_components || [];
 
+		// Try to find city name - Google returns different components for different locations
+		// Priority: locality (city) > county > postal_town (prefer broader areas over neighborhoods)
 		const city = components.find(c =>
-			c.types.includes('locality') ||
-			c.types.includes('sublocality') ||
+			c.types.includes('locality')
+		)?.long_name ||
+		components.find(c =>
+			c.types.includes('administrative_area_level_2')
+		)?.long_name ||
+		components.find(c =>
+			c.types.includes('postal_town')
+		)?.long_name ||
+		components.find(c =>
 			c.types.includes('administrative_area_level_3')
 		)?.long_name;
 
