@@ -167,9 +167,16 @@
 
 	// Handle input change
 	function handleInput(event) {
-		value = event.target.value;
-		fetchSuggestions(value);
-		dispatch('input', { value: value });
+		const newValue = event.target.value;
+		value = newValue;
+
+		// If user clears input via typing/backspace, treat it like a clear action
+		if (!newValue.trim()) {
+			dispatch('clear');
+		}
+
+		fetchSuggestions(newValue);
+		dispatch('input', { value: newValue });
 	}
 
 	// Handle suggestion selection
@@ -272,12 +279,14 @@
 
 	// Handle clear
 	function handleClear() {
+		// Dispatch clear FIRST so parent can set hasManuallyCleared before value change propagates
+		dispatch('clear');
+
 		value = '';
 		error = null;
 		suggestions = [];
 		showDropdown = false;
 		selectedIndex = -1;
-		dispatch('clear');
 
 		// Focus the input
 		if (inputElement) {
@@ -340,7 +349,7 @@
 		<input
 			type="text"
 			class="autocomplete-input"
-			bind:value={value}
+			value={value}
 			on:input={handleInput}
 			on:focus={() => dispatch('focus')}
 			on:blur={() => dispatch('blur')}

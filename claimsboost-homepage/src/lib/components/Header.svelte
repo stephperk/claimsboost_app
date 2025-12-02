@@ -74,7 +74,7 @@
 		locationDropdownOpen = false;
 
 		// Navigate to search page with location in URL and coordinates ready
-		goto(`/injury-law-firms/search?location=${encodeURIComponent(`${city.name}, ${city.state}`)}`);
+		goto(`/injury-law-firms?location=${encodeURIComponent(`${city.name}, ${city.state}`)}`);
 	}
 
 	function navigateToPracticeArea(practiceArea) {
@@ -101,7 +101,7 @@
 			params.set('location', `${$location.city}, ${$location.state}`);
 		}
 
-		goto(`/injury-law-firms/search?${params.toString()}`);
+		goto(`/injury-law-firms?${params.toString()}`);
 	}
 
 	const practiceAreas = [
@@ -142,7 +142,7 @@
 					onmouseenter={() => locationDropdownOpen = true}
 					onmouseleave={() => locationDropdownOpen = false}
 				>
-					<a href="/injury-law-firms" class="nav-link">
+					<a href="/injury-law-firms/locations" class="nav-link">
 						Law Firms by Location
 						<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline; margin-left: 4px;">
 							<path d="M6 9l6 6 6-6"/>
@@ -167,7 +167,7 @@
 					onmouseenter={() => practiceAreaDropdownOpen = true}
 					onmouseleave={() => practiceAreaDropdownOpen = false}
 				>
-					<a href="/injury-settlements" class="nav-link">
+					<a href="/injury-law-firms/practice-areas" class="nav-link">
 						Law Firms by Practice Area
 						<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline; margin-left: 4px;">
 							<path d="M6 9l6 6 6-6"/>
@@ -217,13 +217,13 @@
 	{#if menuOpen}
 		<div class="mobile-menu">
 			<nav>
-				<a href="/injury-law-firms">
+				<a href="/injury-law-firms/locations">
 					Law Firms by Location
 					<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline; margin-left: 4px;">
 						<path d="M6 9l6 6 6-6"/>
 					</svg>
 				</a>
-				<a href="/injury-settlements">
+				<a href="/injury-law-firms/practice-areas">
 					Law Firms by Practice Area
 					<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline; margin-left: 4px;">
 						<path d="M6 9l6 6 6-6"/>

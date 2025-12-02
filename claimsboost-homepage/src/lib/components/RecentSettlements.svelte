@@ -51,7 +51,7 @@
 	}
 
 	function browseSettlements() {
-		goto('/injury-settlements');
+		goto('/injury-law-firms/practice-areas');
 	}
 
 	onMount(() => {

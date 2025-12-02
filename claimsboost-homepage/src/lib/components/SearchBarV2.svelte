@@ -28,9 +28,11 @@
 
 	// Handle location clear
 	function handleLocationClear() {
-		searchLocation.clearSearchLocation();
-		locationValue = '';
+		// Dispatch clear FIRST so parent can set hasManuallyCleared before value change propagates
 		dispatch('clear');
+		// Don't clear the store here - let the parent component handle it
+		// after setting hasManuallyCleared to prevent race conditions
+		locationValue = '';
 	}
 
 	// Handle location input events
