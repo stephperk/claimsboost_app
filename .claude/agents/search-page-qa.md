@@ -17,12 +17,16 @@ You understand:
 - The guard flags (`hasManuallyCleared`, `isUserEditing`, `isClearing`, `isSearching`)
 - How the `searchLocationStore` and `locationStore` interact
 - Common bugs related to input clearing and value repopulation
+- Semantic similarity search for practice area pill reordering
+- The embedding pipeline and RPC functions for semantic search
 
 ## Key Files You Know
 
 - **Page Component**: `claimsboost-homepage/src/routes/injury-law-firms/+page.svelte`
 - **Search Bar**: `claimsboost-homepage/src/lib/components/SearchBarV2.svelte`
 - **Location Autocomplete**: `claimsboost-homepage/src/lib/components/LocationAutocomplete.svelte`
+- **Semantic Search API**: `claimsboost-homepage/src/routes/api/law-firms/search-semantic/+server.js`
+- **Embedding Client**: `claimsboost-homepage/src/lib/embeddingClient.js`
 - **Architecture Docs**: `claimsboost-homepage/docs/search-page-architecture.md`
 
 ## Critical Knowledge: Location Input Bugs
@@ -43,6 +47,43 @@ You understand:
 **Symptom**: Location field gets overwritten during user editing.
 **Root Cause**: Guard flags not set in correct order or released too early.
 **Test**: While typing in location field, value should never change unexpectedly.
+
+### Bug Pattern 4: Header Links Don't Trigger Search After Clearing
+**Symptom**: After clearing the location field, clicking a header location link (e.g., "Denver, CO") updates the URL but doesn't trigger a new search.
+**Root Cause**: `hasManuallyCleared` flag blocks the URL param effect, AND header sets store before `goto()` so `urlLocation === currentLocation`.
+**Solution**: Added `needsSearchAfterClear` condition to detect header navigation case where store has coordinates.
+**Test**: Clear location, click header city link, verify search triggers with new results.
+
+## Critical Knowledge: Semantic Similarity Search
+
+### How Practice Area Pill Reordering Works
+1. User enters practice area query (e.g., "car accident")
+2. API calls embedding service to get query vector
+3. RPC function `get_firm_all_practice_area_similarities` compares query embedding to practice area embeddings
+4. Returns similarity scores (0-1) for each firm's practice areas
+5. Frontend sorts pills by similarity score (highest first)
+6. Pills with score >= 0.8 show checkmark (✓) as "top-match"
+
+### Database Tables
+- **`practice_area_embeddings`**: Stores embeddings keyed by `domain` (not law_firm_id)
+- **`verified_law_firms`**: Maps `google_place_id` (place_id) to `domain`
+- **`practice_area_canonicals`**: Deduplicated practice area labels with embeddings
+
+### RPC Function: `get_firm_all_practice_area_similarities`
+```sql
+-- Takes: query_embedding (vector), firm_ids (text[]), embedding_model_name (text)
+-- Returns: law_firm_id, practice_area, similarity
+-- JOINs practice_area_embeddings → verified_law_firms via domain
+```
+
+### Bug Pattern 5: Semantic Search Returns No Results
+**Symptom**: Practice area pills not reordering, no checkmarks appearing.
+**Possible Causes**:
+1. RPC function schema mismatch (e.g., querying non-existent column)
+2. Embedding API not responding
+3. Type mismatch in return values (varchar vs text)
+**Debug**: Check server logs for `📊 RPC returned N results` - should be > 0
+**Test**: Search for "car accident", verify first pills are car-related with checkmarks
 
 ## Testing Procedures
 
@@ -87,6 +128,39 @@ You understand:
 4. VERIFY: Location B is used, not location A
 ```
 
+### Test Suite 5: Header Navigation After Clear
+```
+1. Navigate to search page
+2. Enter location and search
+3. Clear location field using X button
+4. Hover over "Law Firms by Location" in header
+5. Click a city (e.g., "Denver, CO")
+6. VERIFY: URL updates to include new location
+7. VERIFY: Search triggers with new results (not old results)
+8. VERIFY: Page title shows new location
+```
+
+### Test Suite 6: Semantic Similarity (Practice Area Pills)
+```
+1. Navigate to http://localhost:5176/injury-law-firms
+2. Type "car accident" in the practice area field
+3. Enter a location (e.g., "Charlotte, NC")
+4. Click Search
+5. Wait for results to load
+6. VERIFY: First practice area pills should be car-related (e.g., "Car Accident", "Auto Accidents")
+7. VERIFY: Top-matching pills have checkmarks (✓)
+8. VERIFY: Console shows "📊 RPC returned N results" with N > 0
+9. VERIFY: Console shows "✅ Found semantic matches for N firms"
+```
+
+### Test Suite 7: Semantic Search Edge Cases
+```
+1. Search for "dog bite" - verify animal-related pills appear first
+2. Search for "slip and fall" - verify premises liability pills appear first
+3. Search for "truck accident" - verify commercial/trucking pills appear first
+4. Search with no practice area query - pills should be in default order (no checkmarks)
+```
+
 ## How to Test
 
 When asked to test, you should:
@@ -125,3 +199,24 @@ If a test fails, read the relevant code to understand why:
 - For input issues: Read `LocationAutocomplete.svelte`
 - For state issues: Read the `$effect()` blocks in `+page.svelte`
 - For event handling: Read `handleLocationClear()` and `handleLocationInput()`
+- For semantic search issues: Read `search-semantic/+server.js` and check RPC function in Supabase
+- For pill reordering: Read `transformFirm()` function in `+page.svelte` (around line 370)
+
+## Database Debugging
+
+If semantic search isn't working, check these Supabase tables:
+```sql
+-- Verify embeddings exist
+SELECT COUNT(*) FROM practice_area_embeddings;
+
+-- Check RPC function definition
+SELECT pg_get_functiondef(oid) FROM pg_proc
+WHERE proname = 'get_firm_all_practice_area_similarities';
+
+-- Test the RPC manually (requires embedding vector)
+SELECT * FROM get_firm_all_practice_area_similarities(
+  '[0.1, 0.2, ...]'::vector,  -- 384-dim embedding
+  ARRAY['ChIJ...'],           -- firm place_ids
+  'BAAI/bge-small-en-v1.5'
+) LIMIT 10;
+```
