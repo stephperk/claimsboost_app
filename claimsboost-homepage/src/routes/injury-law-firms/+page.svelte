@@ -103,18 +103,27 @@
 		}
 
 		// Check if URL has location parameter and it's different from current search location
-		// Skip if user has manually cleared the location field
-		if (urlLocation && !hasManuallyCleared) {
+		// Skip if user has manually cleared the location field, UNLESS the store already has
+		// coordinates (e.g., from header navigation which pre-populates the store)
+		if (urlLocation && (!hasManuallyCleared || ($searchLocation.latitude && $searchLocation.longitude))) {
 			const currentLocation = $searchLocation.city && $searchLocation.state
 				? `${$searchLocation.city}, ${$searchLocation.state}`
 				: null;
 
-			// Only process if the location is different
-			if (urlLocation !== currentLocation) {
+			// Process if:
+			// 1. Location is different from current (normal case), OR
+			// 2. hasManuallyCleared is true AND store has coordinates AND urlLocation matches currentLocation
+			//    This is the header navigation case: header set store before goto(), so they match
+			const needsSearchAfterClear = hasManuallyCleared &&
+				$searchLocation.latitude &&
+				$searchLocation.longitude &&
+				urlLocation === currentLocation;
+			if (urlLocation !== currentLocation || needsSearchAfterClear) {
 				// Use queueMicrotask to let any pending clear events propagate first
 				queueMicrotask(() => {
 					// Re-check hasManuallyCleared after microtask - user may have clicked clear
-					if (hasManuallyCleared) {
+					// BUT allow if store has coordinates (header navigation pre-populates the store)
+					if (hasManuallyCleared && !($searchLocation.latitude && $searchLocation.longitude)) {
 						return;
 					}
 
@@ -124,6 +133,8 @@
 					// If we already have coordinates in searchLocation, don't geocode again
 					if ($searchLocation.latitude && $searchLocation.longitude) {
 						// Coordinates already set (e.g., from header navigation with pre-geocoded data)
+						// Reset hasManuallyCleared since user has now selected a new location
+						hasManuallyCleared = false;
 						hasPerformedInitialSearch = true;
 						performSearch();
 					} else {
@@ -154,6 +165,8 @@
 
 								if (geocoded) {
 									searchLocation.setSearchLocation(geocoded);
+									// Reset hasManuallyCleared since user has now navigated to a new location
+									hasManuallyCleared = false;
 									// Trigger a new search with the geocoded location
 									hasPerformedInitialSearch = true;
 									performSearch();
