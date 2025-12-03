@@ -193,6 +193,7 @@
 		border-radius: 16px;
 		padding: 32px;
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+		scroll-margin-top: 100px;
 	}
 
 	.state-header {

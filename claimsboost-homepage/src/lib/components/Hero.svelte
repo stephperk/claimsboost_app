@@ -5,12 +5,12 @@
 	let searchQuery = $state('');
 
 	const suggestions = [
-		'I was rear-ended',
+		'Rear-ended on highway',
 		'Slipped at grocery store',
 		'Back injury at work',
-		'Bit by a dog',
+		'Dispute with insurance',
 		'Botched surgery',
-		'Burned by a defective product'
+		'Injured by a defective product'
 	];
 
 	function handleSearch() {
@@ -27,7 +27,7 @@
 		<div class="hero-content">
 			<div class="hero-text">
 				<h1>
-					Injured in an accident?<br>
+					Injured or Wronged?<br>
 					Start your <span class="highlight-free">free</span> claim
 				</h1>
 				<p class="subheadline">Start your claim today with a <strong>free settlement estimate</strong>.</p>
@@ -35,7 +35,7 @@
 				<div class="search-form">
 					<SearchBarV2
 						bind:practiceAreaValue={searchQuery}
-						practiceAreaPlaceholder="I was rear-ended"
+						practiceAreaPlaceholder="Describe injury or wrongdoing"
 						buttonText="Get Free Estimate"
 						showLocationField={false}
 						on:search={handleSearch}
@@ -65,36 +65,28 @@
 					</div>
 					<div class="chat-bubbles">
 						<div class="chat-bubble bubble-1">
-							<div class="expert-avatar">
-								<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-									<path d="M3 21l1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/>
-								</svg>
+							<div class="expert-avatar-large">
+								<img src="/Gemini_Generated_Image_hw47tjhw47tjhw47.png" alt="Expert" />
 							</div>
-							<span>Don't settle for less...</span>
+							<div class="bubble-text">
+								<span>Let's review your case</span>
+							</div>
 						</div>
 						<div class="chat-bubble bubble-2">
-							<div class="expert-avatar">
-								<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-									<path d="M3 21l1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/>
-								</svg>
+							<div class="bubble-text-right">
+								<span>No fee unless you win</span>
 							</div>
-							<span>You have a strong case...</span>
-						</div>
-						<div class="chat-bubble bubble-3">
-							<div class="expert-avatar">
-								<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-									<path d="M3 21l1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/>
-								</svg>
+							<div class="expert-avatar-large">
+								<img src="/Gemini_Generated_Image_cu67evcu67evcu67.png" alt="Expert" />
 							</div>
-							<span>We'll handle it from here...</span>
 						</div>
 						<div class="chat-bubble bubble-4">
-							<div class="expert-avatar">
-								<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-									<path d="M3 21l1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/>
-								</svg>
+							<div class="bubble-text-right">
+								<span>Your estimated settlement is...</span>
 							</div>
-							<span>I've submitted you claim!</span>
+							<div class="expert-avatar-large">
+								<img src="/Gemini_Generated_Image_cu67evcu67evcu67.png" alt="Expert" />
+							</div>
 						</div>
 					</div>
 				</div>
@@ -263,29 +255,76 @@
 		color: white;
 	}
 
+	.expert-avatar-large {
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		overflow: hidden;
+		flex-shrink: 0;
+		box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+		background: #e5e7eb;
+	}
+
+	.expert-avatar-large img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.bubble-text {
+		background: #007AFF;
+		color: white;
+		border-radius: 20px;
+		padding: 8px 12px;
+		box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+		font-size: 13px;
+		font-weight: 600;
+	}
+
+	.bubble-text-right {
+		background: #007AFF;
+		color: white;
+		border-radius: 20px;
+		padding: 8px 12px;
+		box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+		font-size: 13px;
+		font-weight: 600;
+	}
+
 	.bubble-1 {
-		top: -10px;
-		left: -60px;
+		top: 135px;
+		left: -110px;
 		animation-delay: 0s;
+		display: flex;
+		align-items: flex-end;
+		gap: 4px;
+		background: none;
+		box-shadow: none;
+		padding: 0;
 	}
 
 	.bubble-2 {
-		top: 60px;
+		top: 45px;
 		right: -80px;
 		animation-delay: 0.5s;
-	}
-
-	.bubble-3 {
-		bottom: 60px;
-		left: -80px;
-		animation-delay: 1s;
+		display: flex;
+		align-items: flex-end;
+		gap: 4px;
+		background: none;
+		box-shadow: none;
+		padding: 0;
 	}
 
 	.bubble-4 {
-		bottom: 20px;
-		right: -70px;
+		bottom: 50px;
+		right: -90px;
 		animation-delay: 1.5s;
-		max-width: 220px;
+		display: flex;
+		align-items: flex-end;
+		gap: 4px;
+		background: none;
+		box-shadow: none;
+		padding: 0;
 	}
 
 	@keyframes float {

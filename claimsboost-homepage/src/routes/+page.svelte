@@ -19,8 +19,8 @@
 	<Header />
 	<main>
 		<Hero />
-		<RecentSettlements />
 		<LawFirms />
+		<RecentSettlements />
 		<SettlementRanges />
 		<FAQ />
 	</main>

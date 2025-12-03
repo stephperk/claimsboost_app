@@ -3,7 +3,7 @@
 		<div class="footer-content">
 			<div class="footer-section">
 				<div class="footer-logo">
-					<img src="/claimsboost-logo.png" alt="ClaimsBoost" class="footer-logo-img" />
+					<img src="/claimsboost_logo_no_bg_white.png" alt="ClaimsBoost" class="footer-logo-img" />
 				</div>
 				<div class="footer-links">
 					<a href="/about">About Us</a>
@@ -89,8 +89,9 @@
 	}
 
 	.footer-logo-img {
-		height: 45px;
-		width: auto;
+		height: auto;
+		width: 220px;
+		object-fit: contain;
 	}
 
 	.footer-links {

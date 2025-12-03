@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClaimsBoost Hero Banner Mockups</title>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .page-header {
+            max-width: 1200px;
+            margin: 0 auto 60px;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+        }
+
+        .page-header p {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .mockup-container {
+            max-width: 1200px;
+            margin: 0 auto 60px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .mockup-label {
+            background: #1a1a1a;
+            color: white;
+            padding: 20px 30px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .mockup-label span {
+            display: block;
+            font-size: 14px;
+            font-weight: 400;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .mockup-content {
+            padding: 0;
+        }
+
+        /* Common styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* OPTION 1: Trust Badges + Stats */
+        .trust-banner-1 {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 40px 20px;
+        }
+
+        .trust-content-1 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FF7B00 0%, #FF9500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .trust-badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 32px;
+            padding: 20px 0;
+        }
+
+        .badge-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .badge-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        /* OPTION 2: Social Proof Bar */
+        .trust-banner-2 {
+            background: #1a1a1a;
+            color: white;
+            padding: 24px 20px;
+        }
+
+        .social-proof-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 32px;
+            align-items: center;
+        }
+
+        .proof-item {
+            text-align: center;
+        }
+
+        .proof-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 12px;
+            background: linear-gradient(135deg, #FF7B00 0%, #FF9500 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .proof-stat {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .proof-label {
+            font-size: 13px;
+            color: #999;
+        }
+
+        /* OPTION 3: As Seen On / Partners */
+        .trust-banner-3 {
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 32px 20px;
+        }
+
+        .as-seen-header {
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+        }
+
+        .logos-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 48px;
+        }
+
+        .logo-placeholder {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -0.5px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .logo-placeholder:hover {
+            opacity: 1;
+        }
+
+        /* OPTION 4: Value Props Horizontal */
+        .trust-banner-4 {
+            background: linear-gradient(135deg, #007AFF 0%, #2563EB 100%);
+            color: white;
+            padding: 32px 20px;
+        }
+
+        .value-props {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 32px;
+        }
+
+        .value-prop {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .value-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .value-text h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .value-text p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.4;
+        }
+
+        /* OPTION 5: Testimonial Snippets Carousel */
+        .trust-banner-5 {
+            background: #f8fafc;
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 48px 20px;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #e5e7eb;
+        }
+
+        .stars {
+            color: #FF7B00;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .testimonial-text {
+            font-size: 14px;
+            color: #1a1a1a;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .testimonial-author {
+            font-size: 13px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .testimonial-case {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* OPTION 6: Trust + CTA Hybrid */
+        .trust-banner-6 {
+            background: linear-gradient(135deg, #FF7B00 0%, #FF9500 100%);
+            color: white;
+            padding: 40px 20px;
+        }
+
+        .trust-cta-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .trust-message {
+            text-align: center;
+        }
+
+        .trust-message h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .trust-message p {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 24px;
+        }
+
+        .trust-features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 24px;
+        }
+
+        .trust-feature {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .checkmark {
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (min-width: 768px) {
+            .trust-content-1 {
+                grid-template-columns: 1fr;
+            }
+
+            .trust-cta-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .trust-message {
+                text-align: left;
+            }
+
+            .trust-features {
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <h1>ClaimsBoost Hero Banner Mockups</h1>
+        <p>6 different banner concepts to appear below the hero section</p>
+    </div>
+
+    <!-- OPTION 1: Trust Badges + Stats -->
+    <div class="mockup-container">
+        <div class="mockup-label">
+            Option 1: Trust Badges + Statistics
+            <span>Combines social proof numbers with trust badges in a clean, professional layout</span>
+        </div>
+        <div class="mockup-content">
+            <section class="trust-banner-1">
+                <div class="container">
+                    <div class="trust-content-1">
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-number">50K+</div>
+                                <div class="stat-label">Claims Filed</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">$2.5B+</div>
+                                <div class="stat-label">Recovered for Clients</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">98%</div>
+                                <div class="stat-label">Client Satisfaction</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">24/7</div>
+                                <div class="stat-label">Support Available</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- OPTION 2: Social Proof Bar -->
+    <div class="mockup-container">
+        <div class="mockup-label">
+            Option 2: Dark Social Proof Bar
+            <span>Bold, high-contrast design that immediately establishes credibility</span>
+        </div>
+        <div class="mockup-content">
+            <section class="trust-banner-2">
+                <div class="container">
+                    <div class="social-proof-grid">
+                        <div class="proof-item">
+                            <div class="proof-icon">⚖️</div>
+                            <div class="proof-stat">15,000+</div>
+                            <div class="proof-label">Attorneys in Network</div>
+                        </div>
+                        <div class="proof-item">
+                            <div class="proof-icon">🏆</div>
+                            <div class="proof-stat">$2.5B+</div>
+                            <div class="proof-label">Total Recovered</div>
+                        </div>
+                        <div class="proof-item">
+                            <div class="proof-icon">⭐</div>
+                            <div class="proof-stat">4.9/5</div>
+                            <div class="proof-label">Average Rating</div>
+                        </div>
+                        <div class="proof-item">
+                            <div class="proof-icon">🔒</div>
+                            <div class="proof-stat">100%</div>
+                            <div class="proof-label">Confidential & Secure</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- OPTION 3: As Seen On -->
+    <div class="mockup-container">
+        <div class="mockup-label">
+            Option 3: "As Seen On" / Trust Logos
+            <span>Simple, elegant display of media mentions or partner organizations</span>
+        </div>
+        <div class="mockup-content">
+            <section class="trust-banner-3">
+                <div class="container">
+                    <div class="as-seen-header">Trusted by Leading Legal Professionals</div>
+                    <div class="logos-grid">
+                        <div class="logo-placeholder">ABA</div>
+                        <div class="logo-placeholder">AVVO</div>
+                        <div class="logo-placeholder">Martindale-Hubbell</div>
+                        <div class="logo-placeholder">Super Lawyers</div>
+                        <div class="logo-placeholder">BBB A+</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- OPTION 4: Value Props Horizontal -->
+    <div class="mockup-container">
+        <div class="mockup-label">
+            Option 4: Value Propositions Banner
+            <span>Blue gradient banner highlighting key benefits and features</span>
+        </div>
+        <div class="mockup-content">
+            <section class="trust-banner-4">
+                <div class="container">
+                    <div class="value-props">
+                        <div class="value-prop">
+                            <div class="value-icon">🎯</div>
+                            <div class="value-text">
+                                <h3>Free Case Review</h3>
+                                <p>No upfront costs or obligations</p>
+                            </div>
+                        </div>
+                        <div class="value-prop">
+                            <div class="value-icon">💼</div>
+                            <div class="value-text">
+                                <h3>Expert Attorneys</h3>
+                                <p>Vetted legal professionals nationwide</p>
+                            </div>
+                        </div>
+                        <div class="value-prop">
+                            <div class="value-icon">⚡</div>
+                            <div class="value-text">
+                                <h3>Fast Matching</h3>
+                                <p>Connected to lawyers in 24 hours</p>
+                            </div>
+                        </div>
+                        <div class="value-prop">
+                            <div class="value-icon">🛡️</div>
+                            <div class="value-text">
+                                <h3>No Win, No Fee</h3>
+                                <p>Only pay if you win your case</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- OPTION 5: Testimonial Snippets -->
+    <div class="mockup-container">
+        <div class="mockup-label">
+            Option 5: Client Testimonial Snippets
+            <span>Real client reviews to build trust through authentic experiences</span>
+        </div>
+        <div class="mockup-content">
+            <section class="trust-banner-5">
+                <div class="container">
+                    <div class="testimonials-grid">
+                        <div class="testimonial-card">
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                            <div class="testimonial-text">
+                                "ClaimsBoost connected me with an excellent attorney within 24 hours. They helped me recover $125,000 for my injury."
+                            </div>
+                            <div class="testimonial-author">Michael R.</div>
+                            <div class="testimonial-case">Car Accident • Los Angeles, CA</div>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                            <div class="testimonial-text">
+                                "The process was incredibly simple. No upfront fees, and my lawyer fought hard to get me the settlement I deserved."
+                            </div>
+                            <div class="testimonial-author">Sarah T.</div>
+                            <div class="testimonial-case">Slip & Fall • Miami, FL</div>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                            <div class="testimonial-text">
+                                "Professional, responsive, and results-driven. I'm so grateful I found ClaimsBoost when I needed legal help."
+                            </div>
+                            <div class="testimonial-author">David K.</div>
+                            <div class="testimonial-case">Medical Malpractice • Houston, TX</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- OPTION 6: Trust + CTA Hybrid -->
+    <div class="mockup-container">
+        <div class="mockup-label">
+            Option 6: Orange Trust Banner with Features
+            <span>Brand-focused banner using primary orange with key trust indicators</span>
+        </div>
+        <div class="mockup-content">
+            <section class="trust-banner-6">
+                <div class="container">
+                    <div class="trust-cta-grid">
+                        <div class="trust-message">
+                            <h2>Join 50,000+ People Who Got the Justice They Deserve</h2>
+                            <p>We connect you with top-rated attorneys who work on a no-win, no-fee basis</p>
+                            <div class="trust-features">
+                                <div class="trust-feature">
+                                    <div class="checkmark">✓</div>
+                                    <span>100% Free Consultation</span>
+                                </div>
+                                <div class="trust-feature">
+                                    <div class="checkmark">✓</div>
+                                    <span>No Upfront Costs</span>
+                                </div>
+                                <div class="trust-feature">
+                                    <div class="checkmark">✓</div>
+                                    <span>Confidential & Secure</span>
+                                </div>
+                                <div class="trust-feature">
+                                    <div class="checkmark">✓</div>
+                                    <span>Available 24/7</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div class="page-header" style="margin-top: 60px;">
+        <h2 style="font-size: 24px; color: #666;">Implementation Notes</h2>
+        <p style="max-width: 800px; margin: 16px auto; text-align: left;">
+            <strong>Option 1 (Trust Badges + Statistics):</strong> Clean and professional, great for establishing credibility with concrete numbers.<br><br>
+            <strong>Option 2 (Dark Social Proof):</strong> High contrast and bold, creates visual separation from hero section.<br><br>
+            <strong>Option 3 (As Seen On):</strong> Minimalist approach, works well if you have actual partner logos or media mentions.<br><br>
+            <strong>Option 4 (Value Props):</strong> Blue gradient maintains color consistency while highlighting key benefits.<br><br>
+            <strong>Option 5 (Testimonials):</strong> Strongest social proof through real client stories and ratings.<br><br>
+            <strong>Option 6 (Orange Trust Banner):</strong> Most brand-forward option using primary orange color with reassuring messaging.
+        </p>
+    </div>
+</body>
+</html>
