@@ -27,7 +27,7 @@
 		<div class="hero-content">
 			<div class="hero-text">
 				<h1>
-					Injured or Wronged?<br>
+					Wronged or Injured?<br>
 					Start your <span class="highlight-free">free</span> claim
 				</h1>
 				<p class="subheadline">Start your claim today with a <strong>free settlement estimate</strong>.</p>

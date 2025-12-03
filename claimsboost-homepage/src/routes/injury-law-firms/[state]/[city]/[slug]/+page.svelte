@@ -46,9 +46,9 @@
 			<nav class="breadcrumbs">
 				<a href="/" class="breadcrumb-link">Home</a>
 				<span class="breadcrumb-separator">›</span>
-				<a href="/injury-law-firms/search?state={firm.state}" class="breadcrumb-link">{firm.stateName}</a>
+				<a href="/injury-law-firms/locations#{firm.state}" class="breadcrumb-link">{firm.stateName}</a>
 				<span class="breadcrumb-separator">›</span>
-				<a href="/injury-law-firms/search?location={firm.city}, {firm.state}" class="breadcrumb-link">{firm.city}</a>
+				<a href="/injury-law-firms/locations#{firm.state}" class="breadcrumb-link">{firm.city}</a>
 				<span class="breadcrumb-separator">›</span>
 				<span class="breadcrumb-current">{firm.displayName || firm.name}</span>
 			</nav>
@@ -752,13 +752,20 @@
 
 	/* Mobile Responsive */
 	@media (max-width: 768px) {
+		.firm-page {
+			background: white;
+		}
+
 		.hero-background {
 			height: 200px;
 		}
 
 		.profile-card {
 			padding: 24px;
-			margin-top: -60px;
+			margin-top: 16px;
+			background: transparent;
+			box-shadow: none;
+			border-radius: 0;
 		}
 
 		.hero-section {
