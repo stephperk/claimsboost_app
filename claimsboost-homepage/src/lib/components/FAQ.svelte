@@ -24,10 +24,28 @@
 		}
 	];
 
+	// SEO: FAQPage structured data for rich snippets
+	const faqSchema = {
+		"@context": "https://schema.org",
+		"@type": "FAQPage",
+		"mainEntity": faqs.map(faq => ({
+			"@type": "Question",
+			"name": faq.question,
+			"acceptedAnswer": {
+				"@type": "Answer",
+				"text": faq.answer
+			}
+		}))
+	};
+
 	function toggleItem(id) {
 		openItems[id] = !openItems[id];
 	}
 </script>
+
+<svelte:head>
+	{@html `<script type="application/ld+json">${JSON.stringify(faqSchema)}</script>`}
+</svelte:head>
 
 <section class="faq">
 	<div class="container">

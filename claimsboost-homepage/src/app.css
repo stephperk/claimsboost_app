@@ -10,6 +10,12 @@ html {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	scroll-behavior: smooth;
+	--header-height: 70px;
+}
+
+/* Global anchor offset for fixed header */
+[id] {
+	scroll-margin-top: calc(var(--header-height) + 20px);
 }
 
 body {

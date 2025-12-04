@@ -3,28 +3,114 @@
 	import Footer from '$lib/components/Footer.svelte';
 	import StarRating from '$lib/components/StarRating.svelte';
 	import SettlementCard from '$lib/components/SettlementCard.svelte';
-	import { stateNameToUrl } from '$lib/utils/stateMapping.js';
+	import { stateNameToUrl, cityNameToUrl } from '$lib/utils/stateMapping.js';
 
-	export let data;
+	let { data } = $props();
 	const { firm, settlements } = data;
 
 	// State for expand/collapse
-	let isExpanded = false;
+	let isExpanded = $state(false);
 	const maxLength = 350; // Character limit for truncation
 
 	// Function to check if text needs truncation
-	$: needsTruncation = firm.longDescription && firm.longDescription.length > maxLength;
-	$: displayText = needsTruncation && !isExpanded
+	let needsTruncation = $derived(firm.longDescription && firm.longDescription.length > maxLength);
+	let displayText = $derived(needsTruncation && !isExpanded
 		? firm.longDescription.slice(0, maxLength)
-		: firm.longDescription;
+		: firm.longDescription);
 
-	// Star rating rendering is now handled by the StarRating component
-	// Old renderStars function removed - see StarRating.svelte for implementation
+	// Build canonical URL for this firm page
+	let firmUrl = $derived(`https://claimsboost.com/injury-law-firms/${firm.state.toLowerCase()}/${cityNameToUrl(firm.city)}/${firm.slug}`);
+
+	// SEO: Page title and description
+	let pageTitle = $derived(`${firm.displayName || firm.name} - Personal Injury Law Firm in ${firm.city}, ${firm.state} | ClaimsBoost`);
+	let pageDescription = $derived(firm.description || `Contact ${firm.displayName || firm.name}, a top-rated personal injury law firm in ${firm.city}, ${firm.state}. ${firm.yearsExperience ? `${firm.yearsExperience}+ years of experience.` : ''}`);
+
+	// SEO: LegalService structured data
+	let legalServiceSchema = $derived({
+		"@context": "https://schema.org",
+		"@type": "LegalService",
+		"name": firm.displayName || firm.name,
+		"description": firm.description || `Personal injury law firm in ${firm.city}, ${firm.state}`,
+		"url": firmUrl,
+		...(firm.phone && { "telephone": firm.phone }),
+		"address": {
+			"@type": "PostalAddress",
+			"addressLocality": firm.city,
+			"addressRegion": firm.state,
+			"addressCountry": "US"
+		},
+		...(firm.rating > 0 && firm.reviews > 0 && {
+			"aggregateRating": {
+				"@type": "AggregateRating",
+				"ratingValue": firm.rating,
+				"reviewCount": firm.reviews,
+				"bestRating": "5",
+				"worstRating": "1"
+			}
+		}),
+		"areaServed": {
+			"@type": "City",
+			"name": firm.city,
+			"containedInPlace": {
+				"@type": "State",
+				"name": firm.stateName
+			}
+		},
+		"knowsAbout": firm.practiceAreas || ["Personal Injury"],
+		"priceRange": "Free Consultation",
+		...(firm.website && {
+			"sameAs": firm.website.startsWith('http') ? firm.website : `https://${firm.website}`
+		})
+	});
+
+	// SEO: BreadcrumbList structured data
+	let breadcrumbSchema = $derived({
+		"@context": "https://schema.org",
+		"@type": "BreadcrumbList",
+		"itemListElement": [
+			{
+				"@type": "ListItem",
+				"position": 1,
+				"name": "Home",
+				"item": "https://claimsboost.com/"
+			},
+			{
+				"@type": "ListItem",
+				"position": 2,
+				"name": firm.stateName,
+				"item": `https://claimsboost.com/injury-law-firms/locations#${firm.state}`
+			},
+			{
+				"@type": "ListItem",
+				"position": 3,
+				"name": firm.city,
+				"item": `https://claimsboost.com/injury-law-firms/locations#${firm.state}`
+			},
+			{
+				"@type": "ListItem",
+				"position": 4,
+				"name": firm.displayName || firm.name
+			}
+		]
+	});
 </script>
 
 <svelte:head>
-	<title>{firm.displayName || firm.name} - Personal Injury Law Firm in {firm.city}, {firm.state} | ClaimsBoost</title>
-	<meta name="description" content="{firm.description || `Contact ${firm.displayName || firm.name}, a top-rated personal injury law firm in ${firm.city}, ${firm.state}. ${firm.yearsExperience ? `${firm.yearsExperience}+ years of experience.` : ''}`}" />
+	<title>{pageTitle}</title>
+	<meta name="description" content={pageDescription} />
+
+	<!-- Page-specific Open Graph tags -->
+	<meta property="og:title" content={pageTitle} />
+	<meta property="og:description" content={pageDescription} />
+	<meta property="og:url" content={firmUrl} />
+	<meta property="og:type" content="business.business" />
+
+	<!-- Page-specific Twitter tags -->
+	<meta name="twitter:title" content={pageTitle} />
+	<meta name="twitter:description" content={pageDescription} />
+
+	<!-- Structured Data: LegalService + BreadcrumbList -->
+	{@html `<script type="application/ld+json">${JSON.stringify([legalServiceSchema, breadcrumbSchema])}</script>`}
 </svelte:head>
 
 <div class="page">
@@ -149,7 +235,7 @@
 								{#if needsTruncation}
 									<button
 										class="read-more-button-inline"
-										on:click={() => isExpanded = !isExpanded}
+										onclick={() => isExpanded = !isExpanded}
 									>
 										{isExpanded ? 'Show less' : 'Read more'}
 									</button>

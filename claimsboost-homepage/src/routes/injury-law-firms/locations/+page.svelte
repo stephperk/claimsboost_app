@@ -3,9 +3,24 @@
 	import Footer from '$lib/components/Footer.svelte';
 	import { goto } from '$app/navigation';
 	import { searchLocation } from '$lib/stores/searchLocationStore.js';
+	import { onMount } from 'svelte';
 
 	// Receive data from server load function
 	let { data } = $props();
+
+	// Handle hash scrolling after page load (fixes cross-page navigation)
+	onMount(() => {
+		if (window.location.hash) {
+			const id = window.location.hash.slice(1);
+			const element = document.getElementById(id);
+			if (element) {
+				// Small delay to ensure layout is complete
+				setTimeout(() => {
+					element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+				}, 100);
+			}
+		}
+	});
 
 	function navigateToCity(city, stateAbbr) {
 		// Set the search location with pre-geocoded coordinates (matching Header behavior)
@@ -193,7 +208,6 @@
 		border-radius: 16px;
 		padding: 32px;
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-		scroll-margin-top: 100px;
 	}
 
 	.state-header {
