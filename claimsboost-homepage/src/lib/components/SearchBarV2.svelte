@@ -15,12 +15,17 @@
 	export let buttonText = 'Search';
 	export let showLocationField = true; // Toggle location field visibility
 
+	// Store pending location data from autocomplete selection
+	// This allows user to select from autocomplete without triggering an immediate search
+	let pendingLocationData = null;
+
 	// Handle location selection from autocomplete
 	function handleLocationSelect(event) {
 		const selected = event.detail;
-		// Update the search location store
-		searchLocation.setSearchLocation(selected);
-		// Update the bound value
+		// Store location data temporarily - don't update store yet
+		// Store will be updated when user clicks Search button
+		pendingLocationData = selected;
+		// Update the bound value (text display only)
 		locationValue = selected.city && selected.state
 			? `${selected.city}, ${selected.state}`
 			: selected.formatted;
@@ -33,6 +38,8 @@
 		// Don't clear the store here - let the parent component handle it
 		// after setting hasManuallyCleared to prevent race conditions
 		locationValue = '';
+		// Clear any pending location data from autocomplete selection
+		pendingLocationData = null;
 	}
 
 	// Handle location input events
@@ -66,11 +73,15 @@
 		e.preventDefault();
 
 		// Dispatch search event with current values
+		// Use pending location data if available (from autocomplete selection),
+		// otherwise fall back to current store value
 		dispatch('search', {
 			practiceArea: practiceAreaValue,
 			location: locationValue,
-			locationData: $searchLocation
+			locationData: pendingLocationData || $searchLocation
 		});
+		// Clear pending data after dispatching
+		pendingLocationData = null;
 	}
 </script>
 

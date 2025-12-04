@@ -212,7 +212,7 @@
 	}
 
 	async function handleSearch(event) {
-		const { practiceArea, location: searchLocationText } = event.detail;
+		const { practiceArea, location: searchLocationText, locationData } = event.detail;
 		console.log('Searching for:', practiceArea, 'in', searchLocationText);
 
 		// Set isSearching FIRST to prevent Effect 2 (URL sync) from interfering
@@ -225,9 +225,24 @@
 		// to prevent URL param effect from overwriting the location field)
 		isUserEditing = false;
 
+		// Check if locationData from autocomplete selection has coordinates
+		// This means user selected from autocomplete and we have pre-geocoded data
+		const hasAutocompleteCoords = locationData?.latitude && locationData?.longitude &&
+			locationData !== $searchLocation; // Ensure it's new data, not existing store value
+
+		if (hasAutocompleteCoords) {
+			// Use pre-geocoded data from autocomplete selection
+			console.log('Using autocomplete location data:', locationData);
+			searchLocation.setSearchLocation(locationData);
+			hasManuallyCleared = false;
+			updateUrlParams();
+			performSearch();
+			queueMicrotask(() => { isSearching = false; });
+			return;
+		}
+
 		// Check if we need to geocode
 		// Geocode if: no coordinates, OR location text doesn't match stored location
-		const needsGeocoding = !$searchLocation.latitude && !$location.latitude;
 		const locationChanged = locationValue && locationValue.trim() && (
 			!$searchLocation.city ||
 			locationValue !== ($searchLocation.zipCode || `${$searchLocation.city}, ${$searchLocation.state}`)
