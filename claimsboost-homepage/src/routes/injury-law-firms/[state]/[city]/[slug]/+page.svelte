@@ -104,10 +104,13 @@
 	<meta property="og:description" content={pageDescription} />
 	<meta property="og:url" content={firmUrl} />
 	<meta property="og:type" content="business.business" />
+	<meta property="og:image" content="https://claimsboost.com/og-image.png" />
 
 	<!-- Page-specific Twitter tags -->
+	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content={pageTitle} />
 	<meta name="twitter:description" content={pageDescription} />
+	<meta name="twitter:image" content="https://claimsboost.com/og-image.png" />
 
 	<!-- Structured Data: LegalService + BreadcrumbList -->
 	{@html `<script type="application/ld+json">${JSON.stringify([legalServiceSchema, breadcrumbSchema])}</script>`}
