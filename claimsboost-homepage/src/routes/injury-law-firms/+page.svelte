@@ -15,8 +15,8 @@
 	let sortBy = $state('relevance');
 	let showFilters = $state(false);
 
-	// Search states
-	let searchQuery = $state('');
+	// Search states - initialize searchQuery from URL param if present
+	let searchQuery = $state(browser ? ($page.url.searchParams.get('practice_area') || '') : '');
 	let locationValue = $state('');
 	let displayedLocation = $state({ city: null, state: null });
 
