@@ -14,10 +14,20 @@
 	export let locationPlaceholder = 'City, State';
 	export let buttonText = 'Search';
 	export let showLocationField = true; // Toggle location field visibility
+	export let autofocusPracticeArea = false; // Auto-focus practice area input on mount
 
 	// Store pending location data from autocomplete selection
 	// This allows user to select from autocomplete without triggering an immediate search
 	let pendingLocationData = null;
+
+	// Reference to practice area input for autofocus
+	let practiceAreaInput;
+
+	onMount(() => {
+		if (autofocusPracticeArea && practiceAreaInput) {
+			practiceAreaInput.focus();
+		}
+	});
 
 	// Handle location selection from autocomplete
 	function handleLocationSelect(event) {
@@ -102,6 +112,7 @@
 					class="practice-area-input"
 					class:no-icon={!showLocationField}
 					bind:value={practiceAreaValue}
+					bind:this={practiceAreaInput}
 					placeholder={practiceAreaPlaceholder}
 					on:input={handlePracticeAreaInput}
 					on:focus={handlePracticeAreaFocus}

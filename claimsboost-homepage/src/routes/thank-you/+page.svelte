@@ -22,25 +22,80 @@
 		{
 			type: 'Rear-end collision',
 			amount: 85000,
+			practiceArea: 'Vehicle Accidents',
 			description: 'Whiplash and back injury from highway collision. Medical bills and lost wages covered.',
-			matchingCriteria: ['Motor Vehicle Accident', 'Same injuries: Neck or back pain', 'Your area: Raleigh, NC']
+			lawFirm: 'Smith & Associates',
+			firmUrl: '/injury-law-firms',
+			matchingCriteria: ['Motor Vehicle Accident', 'Same injuries: Neck or back pain', 'Your area']
 		},
 		{
 			type: 'Slip & fall at grocery store',
 			amount: 125000,
+			practiceArea: 'Premises Liability',
 			description: 'Broken wrist and soft tissue damage from wet floor accident.',
-			matchingCriteria: ['Slip & Fall', 'Same injuries: Broken bone', 'Your area: Raleigh, NC']
+			lawFirm: 'Johnson Law Group',
+			firmUrl: '/injury-law-firms',
+			matchingCriteria: ['Slip & Fall', 'Same injuries: Broken bone', 'Your area']
 		},
 		{
 			type: 'Construction site accident',
 			amount: 240000,
+			practiceArea: 'Workplace Injuries',
 			description: 'Multiple fractures and spinal injury from scaffolding collapse.',
-			matchingCriteria: ['Workplace Injury', 'Same injuries: Severe injury', 'Your area: Raleigh, NC']
+			lawFirm: 'Williams & Partners',
+			firmUrl: '/injury-law-firms',
+			matchingCriteria: ['Workplace Injury', 'Same injuries: Severe injury', 'Your area']
 		}
 	];
 
-	// Default settlement range for demonstration
-	const defaultRange = { min: 15000, max: 350000 };
+	// Settlement data by injury type and severity (from SETTLEMENT_DATA.md)
+	const SETTLEMENT_RANGES = {
+		'vehicle-accident': {
+			minor: { min: 10000, max: 25000 },
+			moderate: { min: 25000, max: 100000 },
+			severe: { min: 100000, max: 250000 },
+			catastrophic: { min: 250000, max: 1000000 }
+		},
+		'slip-fall': {
+			minor: { min: 10000, max: 25000 },
+			moderate: { min: 25000, max: 75000 },
+			severe: { min: 75000, max: 350000 },
+			catastrophic: { min: 350000, max: 1000000 }
+		},
+		'work-injury': {
+			minor: { min: 5000, max: 15000 },
+			moderate: { min: 15000, max: 50000 },
+			severe: { min: 50000, max: 150000 },
+			catastrophic: { min: 150000, max: 500000 }
+		},
+		'medical-malpractice': {
+			minor: { min: 50000, max: 150000 },
+			moderate: { min: 150000, max: 400000 },
+			severe: { min: 400000, max: 1000000 },
+			catastrophic: { min: 1000000, max: 3000000 }
+		},
+		'product-liability': {
+			minor: { min: 15000, max: 50000 },
+			moderate: { min: 50000, max: 250000 },
+			severe: { min: 250000, max: 1000000 },
+			catastrophic: { min: 1000000, max: 10000000 }
+		},
+		'animal-attack': {
+			minor: { min: 15000, max: 30000 },
+			moderate: { min: 30000, max: 75000 },
+			severe: { min: 75000, max: 150000 },
+			catastrophic: { min: 150000, max: 500000 }
+		}
+	};
+
+	const DEFAULT_RANGE = { min: 15000, max: 350000 };
+
+	// Get settlement range based on injury type and severity
+	function getSettlementRange(injuryType, severity) {
+		const typeData = SETTLEMENT_RANGES[injuryType];
+		if (!typeData) return DEFAULT_RANGE;
+		return typeData[severity] || typeData.moderate || DEFAULT_RANGE;
+	}
 
 	function formatAmount(amount) {
 		return new Intl.NumberFormat('en-US', {
@@ -168,7 +223,7 @@
 		};
 	});
 
-	$: settlementRange = defaultRange;
+	$: settlementRange = getSettlementRange(responses.injuryType, responses.severity);
 	$: currentEstimate = getEstimateFromSlider(settlementRange.min, settlementRange.max, sliderValue);
 	$: percentile25 = get25thPercentile(settlementRange.min, settlementRange.max);
 	$: percentile75 = get75thPercentile(settlementRange.min, settlementRange.max);
@@ -227,7 +282,7 @@
 
 					<p class="estimate-basis" class:fade-in={showSubtext} class:hidden={!showSubtext}>Your estimate is based on similar personal injury cases in {$location.state || 'your state'}.</p>
 
-					<button class="consultation-button" class:fade-in={showButton} class:hidden={!showButton} onclick={() => goto('/injury-law-firms/search')}>
+					<button class="consultation-button" class:fade-in={showButton} class:hidden={!showButton} onclick={() => goto('/injury-law-firms')}>
 						Get Free Consultation
 						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 							<path d="M5 12h14M12 5l7 7-7 7"/>
@@ -257,7 +312,7 @@
 			<div class="cta-section below-content">
 			<h2>Prefer to browse on your own?</h2>
 			<p>Search over 20,000 verified personal injury law firms across the country.</p>
-			<button class="cta-button" onclick={() => goto('/injury-law-firms/search')}>
+			<button class="cta-button" onclick={() => goto('/injury-law-firms')}>
 				Search law firms
 				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 					<path d="M5 12h14M12 5l7 7-7 7"/>
@@ -671,7 +726,7 @@
 
 	.cta-button {
 		padding: 16px 32px;
-		background: linear-gradient(135deg, #FF7B00 0%, #D85A00 100%);
+		background: linear-gradient(135deg, #FF6800 0%, #FFA500 100%);
 		color: white;
 		border: none;
 		border-radius: 8px;
@@ -682,12 +737,12 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 8px;
-		box-shadow: 0 4px 15px rgba(255, 123, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
+		box-shadow: 0 4px 15px rgba(255, 104, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
 
 	.cta-button:hover {
-		background: linear-gradient(135deg, #FF9500 0%, #E06500 100%);
-		box-shadow: 0 6px 25px rgba(255, 123, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.15);
+		background: linear-gradient(135deg, #FF8000 0%, #FFB733 100%);
+		box-shadow: 0 6px 25px rgba(255, 104, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.15);
 		transform: translateY(-2px);
 	}
 </style>

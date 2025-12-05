@@ -63,9 +63,9 @@
 	<div class="container">
 		<h2>
 			{#if $location.hasLocation}
-				Recent settlements near <span class="location-highlight">{$location.city}, {$location.state}</span>
+				Top Settlements from law firms near <span class="location-highlight">{$location.city}, {$location.state}</span>
 			{:else}
-				Recent settlements
+				Top Settlements from law firms
 			{/if}
 		</h2>
 		<p class="subtitle">Real settlement amounts from personal injury cases in your area.</p>

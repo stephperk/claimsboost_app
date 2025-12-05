@@ -222,7 +222,7 @@
 	}
 
 	.section-content {
-		color: #1a1a1a;
+		color: #666666;
 		font-size: 14px;
 		font-weight: 500;
 		line-height: 1.5;

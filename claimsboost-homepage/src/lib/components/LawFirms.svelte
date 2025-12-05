@@ -190,12 +190,6 @@
 		{:else}
 			<!-- Firms loaded successfully -->
 			<div class="carousel-container">
-				<button class="carousel-button carousel-button-left" onclick={scrollLeft} disabled={currentIndex === 0} aria-label="Previous law firm">
-					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-						<path d="M15 18l-6-6 6-6"/>
-					</svg>
-				</button>
-
 				<div class="firms-carousel" bind:this={scrollContainer}>
 					{#each firms as firm (firm.id)}
 						<div class="firm-card">
@@ -217,7 +211,7 @@
 							<div class="info-section">
 								<div class="section-header">
 									<img src="/stars-gradient-black.svg" alt="AI" class="section-icon" />
-									<span class="section-title">AI OVERVIEW</span>
+									<span class="section-title">OVERVIEW</span>
 								</div>
 								<p class="section-content">{firm.description}</p>
 							</div>
@@ -244,11 +238,18 @@
 					{/each}
 				</div>
 
-				<button class="carousel-button carousel-button-right" onclick={scrollRight} disabled={currentIndex >= firms.length - 1} aria-label="Next law firm">
-					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-						<path d="M9 18l6-6-6-6"/>
-					</svg>
-				</button>
+				<div class="carousel-nav">
+					<button class="carousel-button" onclick={scrollLeft} disabled={currentIndex === 0} aria-label="Previous law firm">
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M15 18l-6-6 6-6"/>
+						</svg>
+					</button>
+					<button class="carousel-button" onclick={scrollRight} disabled={currentIndex >= firms.length - 1} aria-label="Next law firm">
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M9 18l6-6-6-6"/>
+						</svg>
+					</button>
+				</div>
 			</div>
 
 			<div class="see-more">
@@ -267,7 +268,7 @@
 <style>
 	.law-firms {
 		padding: 48px 20px;
-		background: #ffffff;
+		background: #f5f5f5;
 	}
 
 	.container {
@@ -359,7 +360,7 @@
 		height: 56px;
 		border-radius: 50%;
 		grid-row: 1 / 3;
-		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		background: #1a1a1a;
 		color: white;
 		display: flex;
 		align-items: center;
@@ -479,7 +480,7 @@
 	}
 
 	.section-content {
-		color: #1a1a1a;
+		color: #666666;
 		font-size: 14px;
 		font-weight: 400;
 		line-height: 1.6;
@@ -524,22 +525,25 @@
 		height: 16px;
 	}
 
-	.carousel-button {
+	.carousel-nav {
 		display: none;
-		position: absolute;
-		top: 50%;
-		transform: translateY(-50%);
+		justify-content: flex-end;
+		gap: 8px;
+		margin-top: 16px;
+	}
+
+	.carousel-button {
 		background: white;
 		border: 1px solid #e5e5e5;
 		border-radius: 50%;
-		width: 48px;
-		height: 48px;
+		width: 44px;
+		height: 44px;
+		display: flex;
 		align-items: center;
 		justify-content: center;
 		cursor: pointer;
 		transition: all 0.2s;
-		z-index: 10;
-		box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+		box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 	}
 
 	.carousel-button:hover:not(:disabled) {
@@ -549,21 +553,13 @@
 	}
 
 	.carousel-button:disabled {
-		opacity: 0.5;
+		opacity: 0.4;
 		cursor: not-allowed;
-	}
-
-	.carousel-button-left {
-		left: -24px;
-	}
-
-	.carousel-button-right {
-		right: -24px;
 	}
 
 	.see-more {
 		text-align: center;
-		margin-top: 48px;
+		margin-top: 32px;
 	}
 
 	.see-more p {
@@ -606,7 +602,7 @@
 			max-width: 350px;
 		}
 
-		.carousel-button {
+		.carousel-nav {
 			display: flex;
 		}
 	}

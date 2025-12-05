@@ -186,7 +186,7 @@
 <style>
 	.settlement-ranges {
 		padding: 60px 20px;
-		background: white;
+		background: #f5f5f5;
 	}
 
 	.container {

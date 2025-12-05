@@ -836,6 +836,7 @@
 					practiceAreaPlaceholder="How were you injured?"
 					locationPlaceholder="City, State or ZIP"
 					buttonText="Search"
+					autofocusPracticeArea={true}
 					on:search={handleSearch}
 					on:clear={handleLocationClear}
 					on:locationFocus={() => isUserEditing = true}
@@ -1235,7 +1236,8 @@
 									{#each firm.practiceAreas as area, i}
 										{@const score = firm.practiceAreaScores?.[area] || 0}
 										{@const isTopMatch = score >= 0.8}
-										<span class="practice-tag no-animation" class:top-match={isTopMatch}>
+										{@const isRelatedMatch = score >= 0.72 && score < 0.8}
+										<span class="practice-tag no-animation" class:top-match={isTopMatch} class:related-match={isRelatedMatch}>
 											{#if isTopMatch}
 												<span class="check">✓</span>
 											{/if}
@@ -1257,7 +1259,8 @@
 									{#each firm.practiceAreas.slice(0, pillCount) as area, i}
 										{@const score = firm.practiceAreaScores?.[area] || 0}
 										{@const isTopMatch = score >= 0.8}
-										<span class="practice-tag" class:no-animation={!isInitialRender} class:top-match={isTopMatch} style="animation-delay: {pillBaseDelay + (i * 100)}ms">
+										{@const isRelatedMatch = score >= 0.72 && score < 0.8}
+										<span class="practice-tag" class:no-animation={!isInitialRender} class:top-match={isTopMatch} class:related-match={isRelatedMatch} style="animation-delay: {pillBaseDelay + (i * 100)}ms">
 											{#if isTopMatch}
 												<span class="check">✓</span>
 											{/if}
@@ -1275,7 +1278,8 @@
 									{#each firm.practiceAreas as area}
 										{@const score = firm.practiceAreaScores?.[area] || 0}
 										{@const isTopMatch = score >= 0.8}
-										<span class="practice-tag measuring" class:top-match={isTopMatch} style="opacity: 0; pointer-events: none;">
+										{@const isRelatedMatch = score >= 0.72 && score < 0.8}
+										<span class="practice-tag measuring" class:top-match={isTopMatch} class:related-match={isRelatedMatch} style="opacity: 0; pointer-events: none;">
 											{#if isTopMatch}
 												<span class="check">✓</span>
 											{/if}
@@ -1293,7 +1297,7 @@
 						<div class="info-section ai-overview-section">
 							<div class="section-header">
 								<img src="/stars-gradient-black.svg" alt="AI" class="section-icon" />
-								<span class="section-title">AI OVERVIEW</span>
+								<span class="section-title">OVERVIEW</span>
 							</div>
 							<p class="section-content">{firm.description}</p>
 						</div>
@@ -1905,7 +1909,7 @@
 		width: 55px;
 		height: 55px;
 		border-radius: 50%;
-		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		background: #1a1a1a;
 		color: white;
 		display: flex;
 		align-items: center;
@@ -2081,7 +2085,7 @@
 	}
 
 	.section-content {
-		color: #1a1a1a;
+		color: #666666;
 		font-size: 15px;
 		font-weight: 500;
 		line-height: 1.5;
@@ -2315,6 +2319,14 @@
 		color: white;
 		font-weight: 600;
 		border: 1px solid #34d399;
+	}
+
+	.practice-tag.related-match {
+		background: linear-gradient(white, white) padding-box,
+					linear-gradient(135deg, #10b981, #34d399) border-box;
+		color: #10b981;
+		border: 2px solid transparent;
+		font-weight: 600;
 	}
 
 	.practice-tag .check {

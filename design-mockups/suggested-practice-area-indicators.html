@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secondary Practice Area Indicator - Design Options</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        .problem-statement {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 32px;
+            border-left: 4px solid #2563EB;
+        }
+
+        .problem-statement h2 {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .problem-statement p {
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        .legend {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .option-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .option-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .option-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .option-number {
+            background: #f3f4f6;
+            color: #666;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Mockup card styling - matches actual design */
+        .mockup-card {
+            background: #fafafa;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .section-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .practice-areas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        /* Base pill - gray (no match) */
+        .pill {
+            background: #f3f4f6;
+            color: #374151;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid transparent;
+        }
+
+        /* Exact match pill - green filled with checkmark */
+        .pill.top-match {
+            background: #10b981;
+            color: white;
+            font-weight: 600;
+            border: 1px solid #34d399;
+        }
+
+        .pill .check {
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        /* More pill */
+        .pill.more {
+            background: rgba(96, 165, 250, 0.15);
+            color: #2563EB;
+            font-weight: 600;
+        }
+
+        /* ========== SECONDARY INDICATOR OPTIONS ========== */
+
+        /* Option 1: Green outline */
+        .pill.related-v1 {
+            background: white;
+            color: #10b981;
+            border: 2px solid #10b981;
+            font-weight: 600;
+        }
+
+        /* Option 2: Lighter green fill */
+        .pill.related-v2 {
+            background: #d1fae5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+            font-weight: 500;
+        }
+
+        /* Option 3: Green outline with ~ icon */
+        .pill.related-v3 {
+            background: white;
+            color: #10b981;
+            border: 2px solid #10b981;
+            font-weight: 600;
+        }
+
+        .pill.related-v3 .tilde {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* Option 4: Dotted green outline */
+        .pill.related-v4 {
+            background: white;
+            color: #10b981;
+            border: 2px dashed #10b981;
+            font-weight: 600;
+        }
+
+        /* Option 5: Green gradient outline */
+        .pill.related-v5 {
+            background: linear-gradient(white, white) padding-box,
+                        linear-gradient(135deg, #10b981, #34d399) border-box;
+            color: #10b981;
+            border: 2px solid transparent;
+            font-weight: 600;
+        }
+
+        /* Option 6: Subtle green tint with left border accent */
+        .pill.related-v6 {
+            background: #f0fdf4;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+            border-left: 3px solid #10b981;
+            font-weight: 500;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .pros, .cons {
+            font-size: 14px;
+        }
+
+        .pros h4, .cons h4 {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .pros h4 {
+            color: #10b981;
+        }
+
+        .cons h4 {
+            color: #ef4444;
+        }
+
+        .pros ul, .cons ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .pros li, .cons li {
+            padding: 4px 0;
+            padding-left: 20px;
+            position: relative;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .pros li::before {
+            content: "+";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .cons li::before {
+            content: "-";
+            position: absolute;
+            left: 0;
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        .recommendation {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid #10b981;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 32px;
+        }
+
+        .recommendation h3 {
+            color: #047857;
+            margin-bottom: 12px;
+        }
+
+        .recommendation p {
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Secondary Practice Area Indicator</h1>
+
+        <div class="problem-statement">
+            <h2>Design Challenge</h2>
+            <p>We need a visual indicator for <strong>"related/suggested"</strong> practice areas - ones that are semantically similar to the user's search but not exact matches. This should be visually distinct from both the gray (no match) and green filled (exact match) pills, while clearly communicating "this could be relevant to your search."</p>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <span class="pill">Gray</span>
+                <span>= No match to search</span>
+            </div>
+            <div class="legend-item">
+                <span class="pill top-match"><span class="check">✓</span> Green Filled</span>
+                <span>= Exact match (score >= 0.8)</span>
+            </div>
+            <div class="legend-item">
+                <span class="pill related-v1">Green Outline</span>
+                <span>= Related match (NEW)</span>
+            </div>
+        </div>
+
+        <!-- Option 1: Green Outline -->
+        <div class="option-card">
+            <div class="option-header">
+                <h3 class="option-title">Option 1: Green Outline (Solid)</h3>
+                <span class="option-number">Your Initial Idea</span>
+            </div>
+
+            <div class="mockup-card">
+                <div class="section-header">
+                    <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    <span class="section-title">PRACTICE AREAS</span>
+                </div>
+                <div class="practice-areas">
+                    <span class="pill top-match"><span class="check">✓</span> Personal Injury</span>
+                    <span class="pill related-v1">Car Accident</span>
+                    <span class="pill related-v1">Negligence</span>
+                    <span class="pill">Medical Malpractice</span>
+                    <span class="pill more">+20 more</span>
+                </div>
+            </div>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Clear visual hierarchy: filled > outline > gray</li>
+                        <li>Stays within green color family (cohesive)</li>
+                        <li>Clearly distinguishable from both states</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>Bold outline may compete with filled pill</li>
+                        <li>Could look like a "selected" state (UI convention)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Option 2: Lighter Green Fill -->
+        <div class="option-card">
+            <div class="option-header">
+                <h3 class="option-title">Option 2: Light Green Fill</h3>
+                <span class="option-number">Subtle Tint</span>
+            </div>
+
+            <div class="mockup-card">
+                <div class="section-header">
+                    <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    <span class="section-title">PRACTICE AREAS</span>
+                </div>
+                <div class="practice-areas">
+                    <span class="pill top-match"><span class="check">✓</span> Personal Injury</span>
+                    <span class="pill related-v2">Car Accident</span>
+                    <span class="pill related-v2">Negligence</span>
+                    <span class="pill">Medical Malpractice</span>
+                    <span class="pill more">+20 more</span>
+                </div>
+            </div>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Very natural visual gradient: dark green > light green > gray</li>
+                        <li>Feels like a "partial match" intuitively</li>
+                        <li>Doesn't compete with exact match</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>Subtle - may not stand out enough</li>
+                        <li>Could be confused with hover state</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Option 3: Green Outline with ~ Icon -->
+        <div class="option-card">
+            <div class="option-header">
+                <h3 class="option-title">Option 3: Outline + "~" Icon</h3>
+                <span class="option-number">With Semantic Indicator</span>
+            </div>
+
+            <div class="mockup-card">
+                <div class="section-header">
+                    <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    <span class="section-title">PRACTICE AREAS</span>
+                </div>
+                <div class="practice-areas">
+                    <span class="pill top-match"><span class="check">✓</span> Personal Injury</span>
+                    <span class="pill related-v3"><span class="tilde">~</span> Car Accident</span>
+                    <span class="pill related-v3"><span class="tilde">~</span> Negligence</span>
+                    <span class="pill">Medical Malpractice</span>
+                    <span class="pill more">+20 more</span>
+                </div>
+            </div>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>~ symbol universally means "approximately"</li>
+                        <li>Clear semantic meaning: ✓ = yes, ~ = similar</li>
+                        <li>Accessible (not color-dependent)</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>~ may look like a typo to some users</li>
+                        <li>Adds visual noise</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Option 4: Dotted Green Outline -->
+        <div class="option-card">
+            <div class="option-header">
+                <h3 class="option-title">Option 4: Dotted/Dashed Outline</h3>
+                <span class="option-number">Pattern Differentiation</span>
+            </div>
+
+            <div class="mockup-card">
+                <div class="section-header">
+                    <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    <span class="section-title">PRACTICE AREAS</span>
+                </div>
+                <div class="practice-areas">
+                    <span class="pill top-match"><span class="check">✓</span> Personal Injury</span>
+                    <span class="pill related-v4">Car Accident</span>
+                    <span class="pill related-v4">Negligence</span>
+                    <span class="pill">Medical Malpractice</span>
+                    <span class="pill more">+20 more</span>
+                </div>
+            </div>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Dashed = "partial/incomplete" in many UI conventions</li>
+                        <li>Visually distinct without adding icons</li>
+                        <li>Maintains green color family</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>Dashed borders can look "unfinished"</li>
+                        <li>May feel less polished</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Option 5: Gradient Border -->
+        <div class="option-card">
+            <div class="option-header">
+                <h3 class="option-title">Option 5: Gradient Border</h3>
+                <span class="option-number">Premium Feel</span>
+            </div>
+
+            <div class="mockup-card">
+                <div class="section-header">
+                    <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    <span class="section-title">PRACTICE AREAS</span>
+                </div>
+                <div class="practice-areas">
+                    <span class="pill top-match"><span class="check">✓</span> Personal Injury</span>
+                    <span class="pill related-v5">Car Accident</span>
+                    <span class="pill related-v5">Negligence</span>
+                    <span class="pill">Medical Malpractice</span>
+                    <span class="pill more">+20 more</span>
+                </div>
+            </div>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Polished, modern appearance</li>
+                        <li>Subtle but noticeable difference</li>
+                        <li>Works well with existing brand</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>Very similar to solid outline visually</li>
+                        <li>Gradient may not render well at small sizes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Option 6: Light Fill + Left Accent -->
+        <div class="option-card">
+            <div class="option-header">
+                <h3 class="option-title">Option 6: Light Fill + Left Accent</h3>
+                <span class="option-number">Hybrid Approach</span>
+            </div>
+
+            <div class="mockup-card">
+                <div class="section-header">
+                    <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    <span class="section-title">PRACTICE AREAS</span>
+                </div>
+                <div class="practice-areas">
+                    <span class="pill top-match"><span class="check">✓</span> Personal Injury</span>
+                    <span class="pill related-v6">Car Accident</span>
+                    <span class="pill related-v6">Negligence</span>
+                    <span class="pill">Medical Malpractice</span>
+                    <span class="pill more">+20 more</span>
+                </div>
+            </div>
+
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>Pros</h4>
+                    <ul>
+                        <li>Combines tint + accent for stronger signal</li>
+                        <li>Left border draws eye without being loud</li>
+                        <li>Good balance of subtle and noticeable</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Cons</h4>
+                    <ul>
+                        <li>Left border breaks pill symmetry</li>
+                        <li>More complex styling</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendation -->
+        <div class="recommendation">
+            <h3>Recommendation</h3>
+            <p><strong>Option 2 (Light Green Fill)</strong> creates the most natural visual hierarchy: the filled green pill clearly says "yes, this matches," the light green tint says "this is related," and gray says "no connection." It's intuitive and doesn't add visual noise.</p>
+            <p style="margin-top: 12px;"><strong>Alternative:</strong> If you want something more prominent, <strong>Option 1 (Solid Green Outline)</strong> is clean and professional. The outline style clearly differentiates from both the filled and gray states.</p>
+        </div>
+    </div>
+</body>
+</html>

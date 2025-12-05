@@ -1,5 +1,5 @@
 <script>
-	import { goto } from '$app/navigation';
+	import { goto, pushState, replaceState } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import lottie from 'lottie-web';
 	import { surveyResponses } from '$lib/stores/surveyStore.js';
@@ -10,7 +10,7 @@
 		timeframe: '',
 		medicalTreatment: '',
 		fault: '',
-		injuries: [],
+		severity: '',
 		firstName: '',
 		lastName: '',
 		email: '',
@@ -184,14 +184,11 @@
 		{ id: 'not-sure', label: 'Not sure' }
 	];
 
-	const injurySymptoms = [
-		{ id: 'neck-back-pain', label: 'Neck or back pain' },
-		{ id: 'soft-tissue', label: 'Sprain, strain, or soft tissue injury' },
-		{ id: 'broken-bone', label: 'Broken bone or fracture' },
-		{ id: 'head-injury', label: 'Head injury or concussion' },
-		{ id: 'cuts-bruises', label: 'Cuts, bruises, or burns' },
-		{ id: 'severe-injury', label: 'Severe or permanent injury' },
-		{ id: 'fatal-injury', label: 'Fatal injury to a loved one' }
+	const severityOptions = [
+		{ id: 'minor', label: "Minor - I'm recovering quickly" },
+		{ id: 'moderate', label: 'Moderate - I needed ongoing treatment' },
+		{ id: 'severe', label: 'Severe - I required surgery or extended care' },
+		{ id: 'catastrophic', label: 'Life-changing - Permanent injury or loss' }
 	];
 
 	function goBack() {
@@ -207,7 +204,7 @@
 			if (currentStep < totalSteps) {
 				currentStep++;
 				// Push state to history for browser back button support
-				window.history.pushState({ step: currentStep }, '', '');
+				pushState('', { step: currentStep });
 			} else {
 				handleSubmit();
 			}
@@ -225,7 +222,7 @@
 			case 4:
 				return responses.fault !== '';
 			case 5:
-				return responses.injuries.length > 0;
+				return responses.severity !== '';
 			case 6:
 				return false; // Loading screen - no manual proceed
 			case 7:
@@ -256,14 +253,6 @@
 		}, 400);
 	}
 
-	function toggleInjury(injuryId) {
-		if (responses.injuries.includes(injuryId)) {
-			responses.injuries = responses.injuries.filter(id => id !== injuryId);
-		} else {
-			responses.injuries = [...responses.injuries, injuryId];
-		}
-	}
-
 	function handleKeyDown(event) {
 		if (event.key === 'Enter' && canProceed()) {
 			event.preventDefault();
@@ -280,7 +269,7 @@
 
 	$effect(() => {
 		// Set initial history state
-		window.history.replaceState({ step: currentStep }, '', '');
+		replaceState('', { step: currentStep });
 
 		// Handle browser back button
 		function handlePopState(event) {
@@ -430,25 +419,23 @@
 				</div>
 			{/if}
 
-			<!-- Step 5: Injury Symptoms -->
+			<!-- Step 5: Injury Severity -->
 			{#if currentStep === 5}
 				<div class="step-content">
-					<h1 class="step-title">Which best describe your injuries?</h1>
+					<h1 class="step-title">How would you describe the severity of your injuries?</h1>
 
 					<div class="options-list">
-						{#each injurySymptoms as symptom}
+						{#each severityOptions as option}
 							<button
-								class="option-button multi-select-button {responses.injuries.includes(symptom.id) ? 'selected' : ''}"
-								onclick={() => toggleInjury(symptom.id)}
+								class="option-button {responses.severity === option.id ? 'selected' : ''}"
+								onclick={() => selectOption('severity', option.id)}
 							>
-								<div class="checkbox {responses.injuries.includes(symptom.id) ? 'checked' : ''}">
-									{#if responses.injuries.includes(symptom.id)}
-										<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-											<polyline points="20 6 9 17 4 12"/>
-										</svg>
-									{/if}
-								</div>
-								<span class="option-label">{symptom.label}</span>
+								<span class="option-label">{option.label}</span>
+								{#if responses.severity === option.id}
+									<svg class="checkmark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+										<polyline points="20 6 9 17 4 12"/>
+									</svg>
+								{/if}
 							</button>
 						{/each}
 					</div>
@@ -789,38 +776,6 @@
 	.checkmark {
 		flex-shrink: 0;
 		color: #2563EB;
-	}
-
-	.multi-select-button {
-		display: flex;
-		align-items: center;
-		gap: 12px;
-	}
-
-	.checkbox {
-		width: 20px;
-		height: 20px;
-		border: 2px solid #d1d5db;
-		border-radius: 4px;
-		flex-shrink: 0;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		transition: all 0.2s;
-		background: white;
-	}
-
-	.checkbox.checked {
-		background: #2563EB;
-		border-color: #2563EB;
-	}
-
-	.checkbox.checked svg {
-		color: white;
-	}
-
-	.multi-select-button .option-label {
-		text-align: left;
 	}
 
 	.final-step {
@@ -1199,6 +1154,7 @@
 	.progress-steps {
 		text-align: left;
 		margin-bottom: 32px;
+		padding: 0 20px;
 	}
 
 	.progress-step {
