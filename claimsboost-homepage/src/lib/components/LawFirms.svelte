@@ -192,7 +192,7 @@
 			<div class="carousel-container">
 				<div class="firms-carousel" bind:this={scrollContainer}>
 					{#each firms as firm (firm.id)}
-						<div class="firm-card">
+						<a href="/injury-law-firms/{firm.stateUrl}/{firm.cityUrl}/{firm.slug}" class="firm-card">
 							<!-- Row 1: Logo, Name, and Rating -->
 							<div class="firm-header">
 								<div class="firm-avatar">
@@ -227,14 +227,14 @@
 
 							<!-- Row 5: Footer with View Profile Link -->
 							<div class="firm-footer">
-								<a href="/injury-law-firms/{firm.stateUrl}/{firm.cityUrl}/{firm.slug}" class="view-profile-link">
+								<span class="view-profile-link">
 									View profile
 									<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 										<path d="M5 12h14M12 5l7 7-7 7"/>
 									</svg>
-								</a>
+								</span>
 							</div>
-						</div>
+						</a>
 					{/each}
 				</div>
 
@@ -268,7 +268,7 @@
 <style>
 	.law-firms {
 		padding: 48px 20px;
-		background: #f5f5f5;
+		background: #f9f9f9;
 	}
 
 	.container {
@@ -332,6 +332,8 @@
 		cursor: pointer;
 		display: flex;
 		flex-direction: column;
+		text-decoration: none;
+		color: inherit;
 	}
 
 	.firm-card:hover {
@@ -421,7 +423,7 @@
 		display: flex;
 		align-items: center;
 		gap: 6px;
-		margin-bottom: 16px;
+		margin-bottom: 20px;
 	}
 
 	.location-icon {
@@ -498,7 +500,7 @@
 		justify-content: center;
 		align-items: center;
 		padding: 10px 16px;
-		margin: 0 -20px -20px -20px;
+		margin: 0 -20px -24px -20px;
 		background: #f9fafb;
 		border-radius: 0 0 16px 16px;
 		border-top: 1px solid #e5e7eb;
@@ -523,6 +525,12 @@
 	.view-profile-link svg {
 		width: 16px;
 		height: 16px;
+		transition: transform 0.2s;
+	}
+
+	.firm-footer:hover .view-profile-link svg,
+	.firm-card:hover .view-profile-link svg {
+		transform: translateX(4px);
 	}
 
 	.carousel-nav {
@@ -589,6 +597,14 @@
 	.see-more-btn:hover {
 		background: linear-gradient(135deg, #FF8000 0%, #FFB733 100%);
 		box-shadow: 0 6px 25px rgba(255, 104, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.15);
+	}
+
+	.see-more-btn svg {
+		transition: transform 0.2s;
+	}
+
+	.see-more-btn:hover svg {
+		transform: translateX(4px);
 	}
 
 	@media (min-width: 768px) {

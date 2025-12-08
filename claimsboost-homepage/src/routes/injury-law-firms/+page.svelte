@@ -1235,8 +1235,8 @@
 									<!-- Expanded state: show all -->
 									{#each firm.practiceAreas as area, i}
 										{@const score = firm.practiceAreaScores?.[area] || 0}
-										{@const isTopMatch = score >= 0.8}
-										{@const isRelatedMatch = score >= 0.72 && score < 0.8}
+										{@const isTopMatch = score >= 0.82}
+										{@const isRelatedMatch = score >= 0.72 && score < 0.82}
 										<span class="practice-tag no-animation" class:top-match={isTopMatch} class:related-match={isRelatedMatch}>
 											{#if isTopMatch}
 												<span class="check">✓</span>
@@ -1258,8 +1258,8 @@
 									{@const pillBaseDelay = cardDelay + cardAnimDuration}
 									{#each firm.practiceAreas.slice(0, pillCount) as area, i}
 										{@const score = firm.practiceAreaScores?.[area] || 0}
-										{@const isTopMatch = score >= 0.8}
-										{@const isRelatedMatch = score >= 0.72 && score < 0.8}
+										{@const isTopMatch = score >= 0.82}
+										{@const isRelatedMatch = score >= 0.72 && score < 0.82}
 										<span class="practice-tag" class:no-animation={!isInitialRender} class:top-match={isTopMatch} class:related-match={isRelatedMatch} style="animation-delay: {pillBaseDelay + (i * 100)}ms">
 											{#if isTopMatch}
 												<span class="check">✓</span>
@@ -1277,8 +1277,8 @@
 									<!-- Loading state: measure all pills invisibly to calculate -->
 									{#each firm.practiceAreas as area}
 										{@const score = firm.practiceAreaScores?.[area] || 0}
-										{@const isTopMatch = score >= 0.8}
-										{@const isRelatedMatch = score >= 0.72 && score < 0.8}
+										{@const isTopMatch = score >= 0.82}
+										{@const isRelatedMatch = score >= 0.72 && score < 0.82}
 										<span class="practice-tag measuring" class:top-match={isTopMatch} class:related-match={isRelatedMatch} style="opacity: 0; pointer-events: none;">
 											{#if isTopMatch}
 												<span class="check">✓</span>
@@ -1737,6 +1737,7 @@
 		display: grid;
 		gap: 20px;
 		position: relative;
+		align-items: start;
 	}
 
 	/* Skeleton Grid - overlays during transition */
@@ -1809,7 +1810,6 @@
 		position: relative;
 		min-width: 0;
 		width: 100%;
-		cursor: pointer;
 		/* Start invisible but in the DOM */
 		visibility: hidden;
 		opacity: 0;
@@ -2270,6 +2270,8 @@
 		overflow: hidden;
 		position: relative;
 		padding-left: 4px;
+		padding-bottom: 6px;
+		margin-bottom: -6px;
 		min-height: 32px; /* Prevent layout shift */
 	}
 
@@ -2337,18 +2339,32 @@
 	}
 
 	.more-pill {
-		background: rgba(96, 165, 250, 0.15);
+		background: #ffffff;
+		border: 2px solid transparent;
+		background-image: linear-gradient(white, white), linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+		background-origin: border-box;
+		background-clip: padding-box, border-box;
 		color: #2563EB;
 		font-weight: 600;
 		cursor: pointer;
-		border: none;
 		transition: all 0.2s ease;
+		box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
 	}
 
 	button.practice-tag:hover {
 		background: rgba(96, 165, 250, 0.25);
 		transform: translateY(-1px);
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	button.more-pill:hover {
+		background: #ffffff;
+		background-image: linear-gradient(white, white), linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+		background-origin: border-box;
+		background-clip: padding-box, border-box;
+		color: #2563EB;
+		box-shadow: 0 3px 8px rgba(37, 99, 235, 0.3);
+		transform: translateY(-1px);
 	}
 
 	button.practice-tag:focus {

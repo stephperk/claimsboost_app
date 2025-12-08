@@ -195,6 +195,14 @@
 		box-shadow: 0 6px 25px rgba(255, 104, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.15);
 	}
 
+	.cta-button svg {
+		transition: transform 0.2s;
+	}
+
+	.cta-button:hover svg {
+		transform: translateX(4px);
+	}
+
 	@media (min-width: 768px) {
 		.settlements-grid {
 			grid-template-columns: repeat(2, 1fr);

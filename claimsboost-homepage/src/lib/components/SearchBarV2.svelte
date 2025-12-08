@@ -106,11 +106,15 @@
 						<circle cx="11" cy="11" r="8"/>
 						<path d="m21 21-4.35-4.35"/>
 					</svg>
+				{:else}
+					<!-- Right arrow icon for hero -->
+					<svg class="search-icon arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path d="M5 12h14M12 5l7 7-7 7"/>
+					</svg>
 				{/if}
 				<input
 					type="text"
 					class="practice-area-input"
-					class:no-icon={!showLocationField}
 					bind:value={practiceAreaValue}
 					bind:this={practiceAreaInput}
 					placeholder={practiceAreaPlaceholder}
@@ -201,10 +205,7 @@
 		line-height: 1.5;
 	}
 
-	.practice-area-input.no-icon {
-		padding-left: 20px;
-	}
-
+	
 	.practice-area-input::placeholder {
 		color: #9ca3af;
 	}

@@ -588,12 +588,13 @@
 	<!-- Footer -->
 	<footer class="survey-footer">
 		<div class="footer-content">
-			<p class="copyright">© 2013-2025 ClaimsBoost, Inc. All rights reserved.</p>
+			<p class="copyright">© 2025 ClaimsBoost, Inc. All rights reserved.</p>
 			<p class="disclaimer">ClaimsBoost connects injury victims with qualified personal injury attorneys.</p>
 			<div class="footer-links">
 				<a href="/privacy">Privacy Policy</a>
 				<a href="/terms">Terms of Service</a>
-				<a href="/privacy-choices">Your privacy choices</a>
+				<a href="/disclaimer">Disclaimer</a>
+				<a href="/accessibility">Accessibility</a>
 			</div>
 		</div>
 		<br><br><br><br><br>
@@ -914,7 +915,7 @@
 
 	.next-button {
 		padding: 16px 32px;
-		background: linear-gradient(135deg, #FF7B00 0%, #D85A00 100%);
+		background: linear-gradient(135deg, #FF6800 0%, #FFA500 100%);
 		color: white;
 		border: none;
 		border-radius: 8px;
@@ -923,7 +924,7 @@
 		cursor: pointer;
 		transition: all 0.3s ease;
 		min-width: 180px;
-		box-shadow: 0 4px 15px rgba(255, 123, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
+		box-shadow: 0 4px 15px rgba(255, 104, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -931,8 +932,8 @@
 	}
 
 	.next-button:hover:not(:disabled) {
-		background: linear-gradient(135deg, #FF9500 0%, #E06500 100%);
-		box-shadow: 0 6px 25px rgba(255, 123, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.15);
+		background: linear-gradient(135deg, #FF8000 0%, #FFB733 100%);
+		box-shadow: 0 6px 25px rgba(255, 104, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.15);
 		transform: translateY(-2px);
 	}
 

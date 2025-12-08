@@ -191,7 +191,7 @@
 	.hero-section {
 		padding: 60px 20px;
 		text-align: center;
-		background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+		background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
 	}
 
 	.hero-section h1 {
@@ -264,7 +264,7 @@
 	/* Process Section */
 	.process-section {
 		padding: 60px 20px;
-		background: #f8f9fa;
+		background: #f9f9f9;
 	}
 
 	.process-section h2 {

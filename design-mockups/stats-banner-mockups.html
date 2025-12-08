@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stats Banner Design Mockups - ClaimsBoost</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+            line-height: 1.5;
+        }
+
+        .mockup-header {
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            text-align: center;
+        }
+
+        .mockup-header h1 {
+            font-size: 32px;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .mockup-header p {
+            color: #666;
+            font-size: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .option-container {
+            max-width: 1200px;
+            margin: 0 auto 60px;
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .option-header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .option-header h2 {
+            font-size: 24px;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .option-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .preview-container {
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .pros, .cons {
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        .pros {
+            background: #f0fdf4;
+        }
+
+        .cons {
+            background: #fef2f2;
+        }
+
+        .pros h4, .cons h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .pros h4 { color: #16a34a; }
+        .cons h4 { color: #dc2626; }
+
+        .pros ul, .cons ul {
+            list-style: none;
+            font-size: 13px;
+        }
+
+        .pros li, .cons li {
+            padding: 4px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .pros li::before {
+            content: "+";
+            position: absolute;
+            left: 0;
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        .cons li::before {
+            content: "-";
+            position: absolute;
+            left: 0;
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .recommendation {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            border-radius: 16px;
+            padding: 32px;
+            color: white;
+        }
+
+        .recommendation h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .recommendation p {
+            font-size: 16px;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        /* ============================================
+           OPTION PREVIEWS
+           ============================================ */
+
+        /* Option 1: Minimal Gradient Bar */
+        .banner-opt1 {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 24px 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .banner-opt1 .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .banner-opt1 .stat-text {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .banner-opt1 .divider {
+            width: 1px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            margin: 0 32px;
+        }
+
+        /* Option 2: Split Stats with Icons */
+        .banner-opt2 {
+            background: #f9fafb;
+            padding: 32px 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 80px;
+        }
+
+        .banner-opt2 .stat-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .banner-opt2 .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .banner-opt2 .stat-icon svg {
+            width: 28px;
+            height: 28px;
+            color: white;
+        }
+
+        .banner-opt2 .stat-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .banner-opt2 .stat-number {
+            font-size: 42px;
+            font-weight: 700;
+            color: #1a1a1a;
+            line-height: 1;
+        }
+
+        .banner-opt2 .stat-label {
+            font-size: 15px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .banner-opt2 .connecting-text {
+            font-size: 18px;
+            color: #999;
+            font-weight: 400;
+        }
+
+        /* Option 3: Centered Headline with Gradient Numbers */
+        .banner-opt3 {
+            background: #ffffff;
+            padding: 40px 40px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .banner-opt3 .headline {
+            font-size: 22px;
+            color: #1a1a1a;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .banner-opt3 .highlight-number {
+            font-size: 44px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1;
+            margin: 0 4px;
+        }
+
+        /* Option 4: Premium Dark with Gold Accents */
+        .banner-opt4 {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            padding: 36px 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .banner-opt4::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, #FFA500 50%, transparent 100%);
+        }
+
+        .banner-opt4 .stat-number {
+            font-size: 56px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FFA500 0%, #FF6800 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .banner-opt4 .stat-text {
+            color: rgba(255,255,255,0.9);
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        .banner-opt4 .stat-text strong {
+            font-weight: 600;
+        }
+
+        .banner-opt4 .divider {
+            width: 1px;
+            height: 48px;
+            background: linear-gradient(180deg, transparent, rgba(255,165,0,0.5), transparent);
+            margin: 0 40px;
+        }
+
+        /* Option 5: Modern Card Style */
+        .banner-opt5-wrapper {
+            background: #f9fafb;
+            padding: 32px 40px;
+        }
+
+        .banner-opt5 {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 32px 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e5e7eb;
+        }
+
+        .banner-opt5 .stat-block {
+            text-align: center;
+        }
+
+        .banner-opt5 .stat-number {
+            font-size: 52px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .banner-opt5 .stat-label {
+            font-size: 13px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .banner-opt5 .connecting-text {
+            font-size: 17px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Option 6: Animated Gradient Background */
+        .banner-opt6 {
+            background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 50%, #1e3a5f 100%);
+            background-size: 200% 200%;
+            padding: 40px 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+        }
+
+        .banner-opt6 .stat-number {
+            font-size: 52px;
+            font-weight: 700;
+            color: white;
+            line-height: 1;
+            text-shadow: 0 0 30px rgba(96, 165, 250, 0.5);
+        }
+
+        .banner-opt6 .stat-text {
+            color: rgba(255,255,255,0.85);
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        .banner-opt6 .divider {
+            width: 2px;
+            height: 44px;
+            background: linear-gradient(180deg, transparent, #60A5FA, transparent);
+            margin: 0 36px;
+        }
+
+        .banner-opt6 .glow-orb {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(96,165,250,0.3) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .banner-opt6 .glow-orb.left { left: 10%; top: 50%; transform: translateY(-50%); }
+        .banner-opt6 .glow-orb.right { right: 10%; top: 50%; transform: translateY(-50%); }
+
+        @media (max-width: 768px) {
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+
+            .banner-opt1,
+            .banner-opt2,
+            .banner-opt4,
+            .banner-opt5,
+            .banner-opt6 {
+                flex-direction: column;
+                gap: 24px;
+                padding: 32px 24px;
+            }
+
+            .banner-opt1 .divider,
+            .banner-opt4 .divider,
+            .banner-opt6 .divider {
+                width: 60px;
+                height: 1px;
+                margin: 0;
+            }
+
+            .banner-opt2 {
+                gap: 32px;
+            }
+
+            .banner-opt3 .headline {
+                font-size: 18px;
+            }
+
+            .banner-opt3 .highlight-number {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="mockup-header">
+        <h1>Stats Banner Design Mockups</h1>
+        <p>Premium banner designs for displaying "Search 5,000 law firms representing over $5B+ recovered for victims" below the hero section.</p>
+    </header>
+
+    <!-- Option 1: Minimal Gradient Bar -->
+    <div class="option-container">
+        <div class="option-header">
+            <h2>Option 1: Minimal Dark Bar</h2>
+            <p>Clean, dark background with large gradient numbers. Sophisticated and modern.</p>
+        </div>
+        <div class="preview-container">
+            <div class="banner-opt1">
+                <span class="stat-number">5,000</span>
+                <span class="stat-text">law firms</span>
+                <div class="divider"></div>
+                <span class="stat-number">$5B+</span>
+                <span class="stat-text">recovered for victims</span>
+            </div>
+        </div>
+        <div class="pros-cons">
+            <div class="pros">
+                <h4>Pros</h4>
+                <ul>
+                    <li>High contrast makes numbers pop</li>
+                    <li>Minimal and sophisticated feel</li>
+                    <li>Dark theme adds visual separation from hero</li>
+                    <li>Blue gradient ties into site brand</li>
+                </ul>
+            </div>
+            <div class="cons">
+                <h4>Cons</h4>
+                <ul>
+                    <li>Dark section may feel disconnected from white hero</li>
+                    <li>Less warm/approachable than other options</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Option 2: Split Stats with Icons -->
+    <div class="option-container">
+        <div class="option-header">
+            <h2>Option 2: Icon Stats Grid</h2>
+            <p>Two stat blocks with circular icons, connected by descriptive text. Professional and trustworthy.</p>
+        </div>
+        <div class="preview-container">
+            <div class="banner-opt2">
+                <div class="stat-group">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-number">5,000</span>
+                        <span class="stat-label">Law Firms</span>
+                    </div>
+                </div>
+                <span class="connecting-text">representing</span>
+                <div class="stat-group">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"/>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-number">$5B+</span>
+                        <span class="stat-label">Recovered for Victims</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pros-cons">
+            <div class="pros">
+                <h4>Pros</h4>
+                <ul>
+                    <li>Icons add visual interest and meaning</li>
+                    <li>Light background flows naturally from hero</li>
+                    <li>Clear hierarchy and readability</li>
+                    <li>Professional and institutional feel</li>
+                </ul>
+            </div>
+            <div class="cons">
+                <h4>Cons</h4>
+                <ul>
+                    <li>Takes more vertical space</li>
+                    <li>Icons may be unnecessary visual noise</li>
+                    <li>Less dramatic impact than dark options</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Option 3: Centered Headline -->
+    <div class="option-container">
+        <div class="option-header">
+            <h2>Option 3: Inline Sentence</h2>
+            <p>Numbers integrated into a readable sentence. Natural and conversational.</p>
+        </div>
+        <div class="preview-container">
+            <div class="banner-opt3">
+                <p class="headline">
+                    Search <span class="highlight-number">5,000</span> law firms representing over <span class="highlight-number">$5B+</span> recovered for victims
+                </p>
+            </div>
+        </div>
+        <div class="pros-cons">
+            <div class="pros">
+                <h4>Pros</h4>
+                <ul>
+                    <li>Reads naturally as a complete message</li>
+                    <li>Numbers pop within context</li>
+                    <li>Minimal and elegant design</li>
+                    <li>Easy to scan and understand</li>
+                </ul>
+            </div>
+            <div class="cons">
+                <h4>Cons</h4>
+                <ul>
+                    <li>Less visual impact than grid layouts</li>
+                    <li>May feel too simple for "premium" goal</li>
+                    <li>Mixed sizes can look unbalanced on mobile</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Option 4: Premium Dark with Gold Accents -->
+    <div class="option-container">
+        <div class="option-header">
+            <h2>Option 4: Premium Gold</h2>
+            <p>Dark background with orange/gold gradient numbers. Luxury and prestige feel.</p>
+        </div>
+        <div class="preview-container">
+            <div class="banner-opt4">
+                <span class="stat-number">5,000</span>
+                <span class="stat-text"><strong>law firms</strong></span>
+                <div class="divider"></div>
+                <span class="stat-number">$5B+</span>
+                <span class="stat-text">recovered <strong>for victims</strong></span>
+            </div>
+        </div>
+        <div class="pros-cons">
+            <div class="pros">
+                <h4>Pros</h4>
+                <ul>
+                    <li>Very premium and luxurious appearance</li>
+                    <li>Gold accents evoke success and wealth</li>
+                    <li>Strong visual impact</li>
+                    <li>Orange ties into brand CTA colors</li>
+                </ul>
+            </div>
+            <div class="cons">
+                <h4>Cons</h4>
+                <ul>
+                    <li>Gold may feel too "flashy" for injury context</li>
+                    <li>Dark sections can feel heavy</li>
+                    <li>Competes with hero section</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Option 5: Modern Card Style -->
+    <div class="option-container">
+        <div class="option-header">
+            <h2>Option 5: Floating Card</h2>
+            <p>Elevated white card with subtle shadow. Clean and modern SaaS aesthetic.</p>
+        </div>
+        <div class="preview-container">
+            <div class="banner-opt5-wrapper">
+                <div class="banner-opt5">
+                    <div class="stat-block">
+                        <span class="stat-number">5,000</span>
+                        <span class="stat-label">Law Firms</span>
+                    </div>
+                    <span class="connecting-text">representing over</span>
+                    <div class="stat-block">
+                        <span class="stat-number">$5B+</span>
+                        <span class="stat-label">Recovered for Victims</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pros-cons">
+            <div class="pros">
+                <h4>Pros</h4>
+                <ul>
+                    <li>Modern and clean SaaS aesthetic</li>
+                    <li>Card creates visual hierarchy</li>
+                    <li>Feels approachable and trustworthy</li>
+                    <li>Gradient numbers tie to brand</li>
+                </ul>
+            </div>
+            <div class="cons">
+                <h4>Cons</h4>
+                <ul>
+                    <li>Takes significant vertical space</li>
+                    <li>Card-within-page may feel disconnected</li>
+                    <li>Less impactful than full-width options</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Option 6: Animated Gradient Background -->
+    <div class="option-container">
+        <div class="option-header">
+            <h2>Option 6: Glow Effect</h2>
+            <p>Deep blue gradient with glowing orb effects. Premium tech feel with subtle sophistication.</p>
+        </div>
+        <div class="preview-container">
+            <div class="banner-opt6">
+                <div class="glow-orb left"></div>
+                <div class="glow-orb right"></div>
+                <span class="stat-number">5,000</span>
+                <span class="stat-text">law firms</span>
+                <div class="divider"></div>
+                <span class="stat-number">$5B+</span>
+                <span class="stat-text">recovered for victims</span>
+            </div>
+        </div>
+        <div class="pros-cons">
+            <div class="pros">
+                <h4>Pros</h4>
+                <ul>
+                    <li>Very premium and modern appearance</li>
+                    <li>Glow effects add depth and interest</li>
+                    <li>Deep blue feels professional and trustworthy</li>
+                    <li>Memorable and distinctive</li>
+                </ul>
+            </div>
+            <div class="cons">
+                <h4>Cons</h4>
+                <ul>
+                    <li>May feel too "tech startup" for legal context</li>
+                    <li>Glow effects could distract from content</li>
+                    <li>Complex styling harder to maintain</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommendation -->
+    <div class="recommendation">
+        <h2>Recommendation</h2>
+        <p>
+            <strong>Option 1 (Minimal Dark Bar)</strong> offers the best balance of premium feel and usability. The dark background creates a clear visual break from the white hero section, while the blue gradient numbers maintain brand consistency. It's impactful without being overwhelming, and the horizontal layout works well on all screen sizes.
+        </p>
+        <p style="margin-top: 16px;">
+            <strong>Alternative:</strong> If you want a warmer, more approachable feel, <strong>Option 5 (Floating Card)</strong> is excellent. For maximum premium impact, consider <strong>Option 4 (Premium Gold)</strong> which ties into your orange CTA buttons while feeling luxurious.
+        </p>
+    </div>
+</body>
+</html>

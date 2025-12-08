@@ -56,6 +56,7 @@
 	}
 </script>
 
+{#if isProfilePage}
 <div class="settlement-card-wrapper">
 	<div class="settlement-card">
 		<div class="settlement-header">
@@ -91,29 +92,69 @@
 
 	<div class="settlement-footer">
 		<span class="footer-text">via {settlement.lawFirm}</span>
-		{#if isProfilePage}
-			<a href="{settlement.websiteUrl || '#'}" target="_blank" rel="noopener noreferrer" class="view-profile-button">
-				Visit website
-				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<path d="M5 12h14M12 5l7 7-7 7"/>
-				</svg>
-			</a>
-		{:else}
-			<a href={settlement.firmUrl} class="view-profile-button">
-				View profile
-				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<path d="M5 12h14M12 5l7 7-7 7"/>
-				</svg>
-			</a>
-		{/if}
+		<a href="{settlement.websiteUrl || '#'}" target="_blank" rel="noopener noreferrer" class="view-profile-button">
+			Visit website
+			<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<path d="M5 12h14M12 5l7 7-7 7"/>
+			</svg>
+		</a>
 	</div>
 	</div>
 </div>
+{:else}
+<a href={settlement.firmUrl} class="settlement-card-wrapper">
+	<div class="settlement-card">
+		<div class="settlement-header">
+			<div class="practice-area-label" style="color: {getPracticeAreaColor(settlement.practiceArea)}">
+				{getCategoryDisplayLabel(settlement.practiceArea).toUpperCase()}
+			</div>
+			<span class="amount">{formatAmount(settlement.amount)}</span>
+		</div>
+
+		<h3 class="settlement-title">{settlement.type}</h3>
+
+	<div class="info-section">
+		<div class="section-header">
+			<img src="/stars-gradient-black.svg" alt="Summary" class="section-icon" />
+			<span class="section-title">SUMMARY</span>
+		</div>
+		<p class="section-content">{settlement.description}</p>
+	</div>
+
+	{#if matchingCriteria.length > 0}
+		<div class="badges">
+			{#each matchingCriteria as criterion}
+				<span class="badge">
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+						<polyline points="22 4 12 14.01 9 11.01"/>
+					</svg>
+					{criterion}
+				</span>
+			{/each}
+		</div>
+	{/if}
+
+	<div class="settlement-footer">
+		<span class="footer-text">via {settlement.lawFirm}</span>
+		<span class="view-profile-button">
+			View profile
+			<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<path d="M5 12h14M12 5l7 7-7 7"/>
+			</svg>
+		</span>
+	</div>
+	</div>
+</a>
+{/if}
 
 <style>
 	.settlement-card-wrapper {
 		position: relative;
 		transition: transform 0.2s;
+		text-decoration: none;
+		color: inherit;
+		display: block;
 	}
 
 	.settlement-card-wrapper:hover {
@@ -176,7 +217,7 @@
 		font-size: 20px;
 		font-weight: 600;
 		color: #1a1a1a;
-		margin: 0 0 20px 0;
+		margin: 0 0 12px 0;
 		line-height: 1.3;
 		min-height: calc(1.3em * 2); /* Fixed height for 2 lines */
 		display: flex;
@@ -234,17 +275,16 @@
 		justify-content: space-between;
 		align-items: center;
 		margin-top: auto;
-		padding-top: 12px;
-		border-top: 1px solid #e5e7eb;
 		background: #f9fafb;
-		padding: 12px 16px;
+		padding: 10px 16px;
 		margin: auto -20px -20px -20px;
 		border-radius: 0 0 16px 16px;
+		border-top: 1px solid #e5e7eb;
 	}
 
 	.footer-text {
 		font-size: 13px;
-		color: #6b7280;
+		color: #666;
 		font-weight: 400;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -274,5 +314,11 @@
 	.view-profile-button svg {
 		width: 16px;
 		height: 16px;
+		transition: transform 0.2s;
+	}
+
+	.settlement-footer:hover .view-profile-button svg,
+	.settlement-card-wrapper:hover .view-profile-button svg {
+		transform: translateX(4px);
 	}
 </style>

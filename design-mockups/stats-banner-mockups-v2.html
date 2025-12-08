@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stats Banner V2 - Inline Sentence Variations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+            line-height: 1.5;
+        }
+
+        .mockup-header {
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            text-align: center;
+        }
+
+        .mockup-header h1 {
+            font-size: 32px;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .mockup-header p {
+            color: #666;
+            font-size: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .option-container {
+            max-width: 1200px;
+            margin: 0 auto 60px;
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .option-header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .option-header h2 {
+            font-size: 24px;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .option-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .preview-container {
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .pros, .cons {
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        .pros {
+            background: #f0fdf4;
+        }
+
+        .cons {
+            background: #fef2f2;
+        }
+
+        .pros h4, .cons h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .pros h4 { color: #16a34a; }
+        .cons h4 { color: #dc2626; }
+
+        .pros ul, .cons ul {
+            list-style: none;
+            font-size: 13px;
+        }
+
+        .pros li, .cons li {
+            padding: 4px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .pros li::before {
+            content: "+";
+            position: absolute;
+            left: 0;
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        .cons li::before {
+            content: "-";
+            position: absolute;
+            left: 0;
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .recommendation {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            border-radius: 16px;
+            padding: 32px;
+            color: white;
+        }
+
+        .recommendation h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .recommendation p {
+            font-size: 16px;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        /* ============================================
+           OPTION PREVIEWS - Inline Sentence Variations
+           ============================================ */
+
+        /* Option 1: Original with Larger Numbers */
+        .banner-v2-1 {
+            background: #ffffff;
+            padding: 48px 40px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .banner-v2-1 .headline {
+            font-size: 20px;
+            color: #1a1a1a;
+            font-weight: 500;
+            line-height: 1.8;
+        }
+
+        .banner-v2-1 .highlight-number {
+            font-size: 56px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1;
+            margin: 0 8px;
+        }
+
+        /* Option 2: Stacked Layout */
+        .banner-v2-2 {
+            background: #ffffff;
+            padding: 40px 40px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .banner-v2-2 .headline-row {
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .banner-v2-2 .text-part {
+            font-size: 18px;
+            color: #666;
+            font-weight: 400;
+        }
+
+        .banner-v2-2 .highlight-number {
+            font-size: 52px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .banner-v2-2 .highlight-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-left: -4px;
+        }
+
+        /* Option 3: Subtle Background Gradient */
+        .banner-v2-3 {
+            background: linear-gradient(135deg, #f8faff 0%, #eef4ff 100%);
+            padding: 44px 40px;
+            text-align: center;
+        }
+
+        .banner-v2-3 .headline {
+            font-size: 20px;
+            color: #1a1a1a;
+            font-weight: 500;
+            line-height: 1.7;
+        }
+
+        .banner-v2-3 .highlight-number {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2563EB 0%, #1d4ed8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1;
+            margin: 0 6px;
+        }
+
+        /* Option 4: Two-Line with Emphasis */
+        .banner-v2-4 {
+            background: #ffffff;
+            padding: 40px 40px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .banner-v2-4 .line1 {
+            font-size: 18px;
+            color: #666;
+            font-weight: 400;
+            margin-bottom: 8px;
+        }
+
+        .banner-v2-4 .line2 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .banner-v2-4 .stat-group {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .banner-v2-4 .highlight-number {
+            font-size: 54px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .banner-v2-4 .stat-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .banner-v2-4 .separator {
+            font-size: 18px;
+            color: #999;
+        }
+
+        /* Option 5: Dark Inline */
+        .banner-v2-5 {
+            background: #1a1a1a;
+            padding: 40px 40px;
+            text-align: center;
+        }
+
+        .banner-v2-5 .headline {
+            font-size: 20px;
+            color: rgba(255,255,255,0.8);
+            font-weight: 400;
+            line-height: 1.7;
+        }
+
+        .banner-v2-5 .highlight-number {
+            font-size: 50px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60A5FA 0%, #93c5fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1;
+            margin: 0 8px;
+        }
+
+        /* Option 6: Compact with Underline Accent */
+        .banner-v2-6 {
+            background: #ffffff;
+            padding: 36px 40px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .banner-v2-6 .headline {
+            font-size: 19px;
+            color: #444;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .banner-v2-6 .highlight-number {
+            font-size: 44px;
+            font-weight: 700;
+            color: #2563EB;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1;
+            margin: 0 6px;
+            position: relative;
+        }
+
+        .banner-v2-6 .highlight-number::after {
+            content: "";
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+            border-radius: 2px;
+            opacity: 0.3;
+        }
+
+        @media (max-width: 768px) {
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+
+            .banner-v2-1 .highlight-number,
+            .banner-v2-2 .highlight-number,
+            .banner-v2-3 .highlight-number,
+            .banner-v2-4 .highlight-number,
+            .banner-v2-5 .highlight-number,
+            .banner-v2-6 .highlight-number {
+                font-size: 36px;
+            }
+
+            .banner-v2-1 .headline,
+            .banner-v2-2 .text-part,
+            .banner-v2-3 .headline,
+            .banner-v2-4 .line1,
+            .banner-v2-4 .stat-label,
+            .banner-v2-5 .headline,
+            .banner-v2-6 .headline {
+                font-size: 16px;
+            }
+
+            .banner-v2-4 .line2 {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="mockup-header">
+        <h1>Stats Banner V2 - Inline Variations</h1>
+        <p>Six variations on the inline sentence style (Option 3), exploring different layouts, backgrounds, and number treatments.</p>
+    </header>
+
+    <!-- Option 1: Original with Larger Numbers -->
+    <div class="option-container">
+        <div class="option-header">
+            <h2>Option 1: Extra Large Numbers</h2>
+            <p>Same inline flow but with significantly larger numbers for maximum impact.</p>
+        </div>
+        <div class="preview-container">
+            <div class="banner-v2-1">
+                <p class="headline">
+                    Search <span class="highlight-number">5,000</span> law firms representing over <span class="highlight-number">$5B+</span> recovered for victims
+                </p>
+            </div>
+        </div>
+        <div class="pros-cons">
+            <div class="pros">
+                <h4>Pros</h4>
+                <ul>
+                    <li>Numbers create strong visual anchor</li>
+                    <li>Maintains readable sentence flow</li>
+                    <li>Clear hierarchy between numbers and text</li>
+                    <li>Very premium and confident feel</li>
+                </ul>
+            </div>
+            <div class="cons">
+                <h4>Cons</h4>
+                <ul>
+                    <li>Large size difference may feel unbalanced</li>
+                    <li>Requires more vertical space for line height</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Option 2: Stacked Layout -->
+    <div class="option-container">
+        <div class="option-header">
+            <h2>Option 2: Baseline Aligned</h2>
+            <p>Numbers and labels aligned on baseline with lighter connecting text.</p>
+        </div>
+        <div class="preview-container">
+            <div class="banner-v2-2">
+                <div class="headline-row">
+                    <span class="text-part">Search</span>
+                    <span class="highlight-number">5,000</span>
+                    <span class="highlight-label">law firms</span>
+                    <span class="text-part">representing over</span>
+                    <span class="highlight-number">$5B+</span>
+                    <span class="highlight-label">recovered for victims</span>
+                </div>
+            </div>
+        </div>
+        <div class="pros-cons">
+            <div class="pros">
+                <h4>Pros</h4>
+                <ul>
+                    <li>Clear pairing of numbers with their labels</li>
+                    <li>Connecting text is de-emphasized elegantly</li>
+                    <li>Flexible wrapping on smaller screens</li>
+                    <li>Professional editorial feel</li>
+                </ul>
+            </div>
+            <div class="cons">
+                <h4>Cons</h4>
+                <ul>
+                    <li>Multiple font weights may feel busy</li>
+                    <li>Wrapping behavior needs careful testing</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Option 3: Subtle Background Gradient -->
+    <div class="option-container">
+        <div class="option-header">
+            <h2>Option 3: Soft Blue Background</h2>
+            <p>Subtle blue gradient background adds depth and visual separation.</p>
+        </div>
+        <div class="preview-container">
+            <div class="banner-v2-3">
+                <p class="headline">
+                    Search <span class="highlight-number">5,000</span> law firms representing over <span class="highlight-number">$5B+</span> recovered for victims
+                </p>
+            </div>
+        </div>
+        <div class="pros-cons">
+            <div class="pros">
+                <h4>Pros</h4>
+                <ul>
+                    <li>Background adds visual interest without distraction</li>
+                    <li>Blue tones reinforce brand identity</li>
+                    <li>Creates clear section break from hero</li>
+                    <li>Feels trustworthy and professional</li>
+                </ul>
+            </div>
+            <div class="cons">
+                <h4>Cons</h4>
+                <ul>
+                    <li>Subtle effect may go unnoticed</li>
+                    <li>Could clash with hero if not carefully positioned</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Option 4: Two-Line with Emphasis -->
+    <div class="option-container">
+        <div class="option-header">
+            <h2>Option 4: Two-Line Split</h2>
+            <p>Intro text on first line, stats prominently displayed on second line.</p>
+        </div>
+        <div class="preview-container">
+            <div class="banner-v2-4">
+                <p class="line1">Search our network of</p>
+                <div class="line2">
+                    <div class="stat-group">
+                        <span class="highlight-number">5,000</span>
+                        <span class="stat-label">law firms</span>
+                    </div>
+                    <span class="separator">representing</span>
+                    <div class="stat-group">
+                        <span class="highlight-number">$5B+</span>
+                        <span class="stat-label">recovered for victims</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pros-cons">
+            <div class="pros">
+                <h4>Pros</h4>
+                <ul>
+                    <li>Stats are the clear focal point</li>
+                    <li>Very scannable - numbers jump out</li>
+                    <li>Labels directly paired with numbers</li>
+                    <li>Clean mobile adaptation</li>
+                </ul>
+            </div>
+            <div class="cons">
+                <h4>Cons</h4>
+                <ul>
+                    <li>Loses the natural sentence flow</li>
+                    <li>Takes more vertical space</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Option 5: Dark Inline -->
+    <div class="option-container">
+        <div class="option-header">
+            <h2>Option 5: Dark Mode Inline</h2>
+            <p>Same inline sentence on dark background for contrast and premium feel.</p>
+        </div>
+        <div class="preview-container">
+            <div class="banner-v2-5">
+                <p class="headline">
+                    Search <span class="highlight-number">5,000</span> law firms representing over <span class="highlight-number">$5B+</span> recovered for victims
+                </p>
+            </div>
+        </div>
+        <div class="pros-cons">
+            <div class="pros">
+                <h4>Pros</h4>
+                <ul>
+                    <li>Strong visual break from white hero</li>
+                    <li>Numbers glow beautifully on dark</li>
+                    <li>Very premium and authoritative</li>
+                    <li>Maintains readable sentence flow</li>
+                </ul>
+            </div>
+            <div class="cons">
+                <h4>Cons</h4>
+                <ul>
+                    <li>Dark band may feel heavy</li>
+                    <li>Could disrupt page flow</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Option 6: Compact with Underline Accent -->
+    <div class="option-container">
+        <div class="option-header">
+            <h2>Option 6: Underlined Numbers</h2>
+            <p>Compact layout with subtle gradient underlines on numbers for accent.</p>
+        </div>
+        <div class="preview-container">
+            <div class="banner-v2-6">
+                <p class="headline">
+                    Search <span class="highlight-number">5,000</span> law firms representing over <span class="highlight-number">$5B+</span> recovered for victims
+                </p>
+            </div>
+        </div>
+        <div class="pros-cons">
+            <div class="pros">
+                <h4>Pros</h4>
+                <ul>
+                    <li>Underlines add visual interest subtly</li>
+                    <li>Most compact vertical footprint</li>
+                    <li>Solid color numbers with gradient accent</li>
+                    <li>Elegant and refined appearance</li>
+                </ul>
+            </div>
+            <div class="cons">
+                <h4>Cons</h4>
+                <ul>
+                    <li>Underlines may be too subtle</li>
+                    <li>Less dramatic impact than larger options</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommendation -->
+    <div class="recommendation">
+        <h2>Recommendation</h2>
+        <p>
+            <strong>Option 1 (Extra Large Numbers)</strong> delivers the most premium feel while preserving the natural sentence flow you liked. The 56px numbers create immediate visual impact while the surrounding text remains readable.
+        </p>
+        <p style="margin-top: 16px;">
+            <strong>Alternative:</strong> If you want more visual separation from the hero, <strong>Option 3 (Soft Blue Background)</strong> adds depth while staying light and approachable. For maximum scannability, <strong>Option 4 (Two-Line Split)</strong> makes the numbers impossible to miss.
+        </p>
+    </div>
+</body>
+</html>
