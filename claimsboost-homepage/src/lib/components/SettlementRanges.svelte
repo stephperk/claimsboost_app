@@ -305,7 +305,7 @@
 
 	.cta-section p {
 		font-size: 18px;
-		color: #666;
+		color: #1a1a1a;
 		margin-bottom: 20px;
 	}
 
