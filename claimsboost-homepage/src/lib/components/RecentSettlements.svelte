@@ -123,7 +123,7 @@
 <style>
 	.settlements {
 		padding: 32px 20px;
-		background: #ffffff;
+		background: #f9f9f9;
 	}
 
 	.container {

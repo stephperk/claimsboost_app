@@ -88,7 +88,7 @@
 <style>
 	.faq {
 		padding: 60px 20px;
-		background: white;
+		background: #f9f9f9;
 	}
 
 	.container {

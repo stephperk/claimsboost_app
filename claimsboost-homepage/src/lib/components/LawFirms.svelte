@@ -268,7 +268,7 @@
 <style>
 	.law-firms {
 		padding: 48px 20px;
-		background: #f9f9f9;
+		background: #ffffff;
 	}
 
 	.container {

@@ -19,6 +19,16 @@
 	<Header />
 	<main>
 		<Hero />
+
+		<!-- Stats Banner -->
+		<section class="stats-banner">
+			<div class="banner-content">
+				<p class="headline">
+					Search <span class="highlight-number">5,000+</span> law firms representing over <span class="highlight-number">$5B+</span> recovered
+				</p>
+			</div>
+		</section>
+
 		<LawFirms />
 		<RecentSettlements />
 		<SettlementRanges />
@@ -36,5 +46,52 @@
 
 	main {
 		flex: 1;
+	}
+
+	/* Stats Banner */
+	.stats-banner {
+		background: #f9f9f9;
+		padding: 32px 20px;
+		text-align: center;
+		box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+	}
+
+	.banner-content {
+		max-width: 1200px;
+		margin: 0 auto;
+	}
+
+	.headline {
+		font-size: 20px;
+		color: #1a1a1a;
+		font-weight: 500;
+		line-height: 1.6;
+		margin: 0;
+	}
+
+	.highlight-number {
+		font-size: 48px;
+		font-weight: 700;
+		background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+		display: inline;
+		vertical-align: middle;
+		line-height: 1;
+	}
+
+	@media (max-width: 768px) {
+		.stats-banner {
+			padding: 32px 20px;
+		}
+
+		.headline {
+			font-size: 18px;
+		}
+
+		.highlight-number {
+			font-size: 36px;
+		}
 	}
 </style>
