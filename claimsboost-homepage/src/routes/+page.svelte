@@ -24,7 +24,7 @@
 		<section class="stats-banner">
 			<div class="banner-content">
 				<p class="headline">
-					Search <span class="highlight-number">5,000+</span> law firms representing over <span class="highlight-number">$5B+</span> recovered
+					Search <span class="highlight-number">5,000+</span> law firms representing over <span class="highlight-number">$5B</span> recovered
 				</p>
 			</div>
 		</section>
@@ -53,7 +53,9 @@
 		background: #f9f9f9;
 		padding: 32px 20px;
 		text-align: center;
-		box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		position: relative;
+		z-index: 10;
 	}
 
 	.banner-content {
@@ -79,6 +81,9 @@
 		display: inline;
 		vertical-align: middle;
 		line-height: 1;
+		margin: 0 8px;
+		position: relative;
+		top: -8px;
 	}
 
 	@media (max-width: 768px) {
