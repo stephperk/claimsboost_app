@@ -140,11 +140,13 @@
 							</div>
 							<div class="skeleton-text" style="width: 100%; height: 14px; margin-bottom: 6px;"></div>
 							<div class="skeleton-text" style="width: 95%; height: 14px; margin-bottom: 6px;"></div>
-							<div class="skeleton-text" style="width: 85%; height: 14px;"></div>
+							<div class="skeleton-text" style="width: 100%; height: 14px; margin-bottom: 6px;"></div>
+							<div class="skeleton-text" style="width: 90%; height: 14px; margin-bottom: 6px;"></div>
+							<div class="skeleton-text" style="width: 70%; height: 14px;"></div>
 						</div>
 
 						<!-- Row 4: Location -->
-						<div style="display: flex; align-items: center; gap: 6px; margin-bottom: 16px;">
+						<div style="display: flex; align-items: center; gap: 6px; margin-bottom: 20px;">
 							<div class="skeleton-text" style="width: 16px; height: 16px; border-radius: 4px;"></div>
 							<div style="display: flex; gap: 12px;">
 								<div class="skeleton-text" style="width: 100px; height: 16px;"></div>
@@ -152,8 +154,10 @@
 							</div>
 						</div>
 
-						<!-- Row 5: Button -->
-						<div class="skeleton-text" style="width: 100%; height: 40px; border-radius: 8px;"></div>
+						<!-- Row 5: Footer -->
+						<div class="firm-footer">
+							<div class="skeleton-text" style="width: 100px; height: 16px;"></div>
+						</div>
 					</div>
 				{/each}
 			</div>
@@ -323,7 +327,7 @@
 		background: white;
 		border: none;
 		border-radius: 16px;
-		padding: 20px 20px 24px 20px;
+		padding: 20px 20px 0 20px;
 		width: calc(100vw - 100px);
 		flex: 0 0 auto;
 		scroll-snap-align: center;
@@ -499,8 +503,8 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		padding: 10px 16px;
-		margin: 0 -20px -24px -20px;
+		padding: 12px;
+		margin: auto -20px 0 -20px;
 		background: #f9fafb;
 		border-radius: 0 0 16px 16px;
 		border-top: 1px solid #e5e7eb;
