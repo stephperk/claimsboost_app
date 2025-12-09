@@ -78,25 +78,29 @@
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 		background-clip: text;
-		display: inline;
+		display: inline-block;
 		vertical-align: middle;
 		line-height: 1;
 		margin: 0 8px;
 		position: relative;
 		top: -8px;
+		padding-bottom: 8px;
+	}
+
+	.highlight-number::after {
+		content: '';
+		position: absolute;
+		bottom: 6px;
+		left: 0;
+		right: 0;
+		height: 6px;
+		background: linear-gradient(90deg, #bfdbfe 0%, #93c5fd 100%);
+		border-radius: 3px;
 	}
 
 	@media (max-width: 768px) {
 		.stats-banner {
-			padding: 32px 20px;
-		}
-
-		.headline {
-			font-size: 18px;
-		}
-
-		.highlight-number {
-			font-size: 36px;
+			display: none;
 		}
 	}
 </style>

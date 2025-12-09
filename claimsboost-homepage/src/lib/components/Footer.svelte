@@ -179,15 +179,30 @@
 	}
 
 	@media (max-width: 767px) {
-		.footer-top-row,
-		.footer-middle-row {
+		.footer-content {
+			gap: 24px;
+		}
+
+		.footer-top-row {
 			flex-direction: column;
-			align-items: flex-start;
-			gap: 16px;
+			align-items: center;
+			gap: 20px;
+			width: 100%;
+		}
+
+		.footer-middle-row {
+			flex-direction: column-reverse;
+			align-items: center;
+			gap: 20px;
+			width: 100%;
+		}
+
+		.footer-links {
+			justify-content: center;
 		}
 
 		.connect-heading {
-			margin-top: 8px;
+			margin-top: 0;
 		}
 	}
 </style>
