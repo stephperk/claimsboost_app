@@ -317,6 +317,7 @@
 		margin: 0px;
 		scrollbar-width: none;
 		-ms-overflow-style: none;
+		align-items: stretch; /* Make all cards equal height */
 	}
 
 	.firms-carousel::-webkit-scrollbar {
@@ -456,8 +457,8 @@
 	/* Row 3: AI Overview */
 	.info-section {
 		margin-bottom: 12px;
-		min-height: 126px; /* Fixed height for consistent layout (5 lines × 22.4px + spacing) */
-		/* Removed flex: 1 to prevent variable expansion */
+		min-height: 126px; /* Minimum height for consistent layout */
+		flex: 1; /* Grow to fill available space, pushing location to bottom */
 		display: flex;
 		flex-direction: column;
 	}
