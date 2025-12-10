@@ -3,6 +3,10 @@
 	import { searchLocation } from '$lib/stores/searchLocationStore.js';
 	import { location } from '$lib/stores/locationStore.js';
 
+	function handleLogin() {
+		goto('/login');
+	}
+
 	let menuOpen = $state(false);
 	let locationDropdownOpen = $state(false);
 	let practiceAreaDropdownOpen = $state(false);
@@ -195,7 +199,7 @@
 					</svg>
 					<span class="phone-number">(888) 866-0849</span>
 				</a>
-				<button class="login-button">Login</button>
+				<button class="login-button" onclick={handleLogin}>Login</button>
 			</div>
 
 			<button
@@ -236,7 +240,7 @@
 						</svg>
 						Call Now
 					</a>
-					<button class="login-button-mobile">Login</button>
+					<button class="login-button-mobile" onclick={handleLogin}>Login</button>
 				</div>
 			</nav>
 		</div>

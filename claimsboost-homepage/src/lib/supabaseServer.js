@@ -1,11 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
-import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
+import { PUBLIC_SUPABASE_URL } from '$env/static/public';
+import { SUPABASE_SERVICE_ROLE_KEY } from '$env/static/private';
 
-// For server-side operations, we use the anon key with RLS policies
-// If you need service role access later, add SUPABASE_SERVICE_ROLE_KEY to .env
+// Server-side client uses service role key to bypass RLS
+// This is safe because this code only runs on the server
 export const supabaseServer = createClient(
 	PUBLIC_SUPABASE_URL,
-	PUBLIC_SUPABASE_ANON_KEY,
+	SUPABASE_SERVICE_ROLE_KEY,
 	{
 		auth: {
 			autoRefreshToken: false,
