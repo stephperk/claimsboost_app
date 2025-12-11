@@ -187,7 +187,7 @@
 	<header class="login-header">
 		<div class="header-content">
 			<a href="/">
-				<img src="/claimsboost-logo.webp" alt="ClaimsBoost" class="logo" width="225" height="49" />
+				<img src="/claimsboost-logo.webp" alt="ClaimsBoost" class="logo" width="450" height="98" />
 			</a>
 		</div>
 	</header>
