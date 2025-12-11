@@ -87,7 +87,8 @@ For each design challenge, create a document with:
 
 ## Files and Organization
 
-- Save mockups as standalone HTML files in the project root or a `/design-mockups/` directory
+- **IMPORTANT**: Save all mockups to `/Users/sperk/Projects/claimsboost.com/claimsboost_app/design-mockups/`
+- Never save mockups inside `claimsboost-homepage/` - always use the repo root `design-mockups/` directory
 - Use descriptive filenames: `[feature]-[component]-mockups.html`
 - Include the date if iterating: `[feature]-[component]-mockups-2024-11-13.html`
 
