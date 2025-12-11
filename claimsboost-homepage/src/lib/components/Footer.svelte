@@ -3,7 +3,7 @@
 		<div class="footer-content">
 			<!-- Row 1: Logo and Connect With Us on same line -->
 			<div class="footer-top-row">
-				<img src="/claimsboost_logo_no_bg_white.png" alt="ClaimsBoost" class="footer-logo-img" />
+				<img src="/claimsboost_logo_no_bg_white.webp" alt="ClaimsBoost" class="footer-logo-img" width="220" height="43" />
 				<h4 class="connect-heading">Connect With Us</h4>
 			</div>
 

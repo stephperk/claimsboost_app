@@ -136,7 +136,7 @@
 	<div class="container">
 		<div class="header-content">
 			<a href="/" class="logo">
-				<img src="/claimsboost-logo.png" alt="ClaimsBoost" class="logo-img" />
+				<img src="/claimsboost-logo.webp" alt="ClaimsBoost" class="logo-img" width="225" height="49" />
 			</a>
 
 			<nav class="desktop-nav">

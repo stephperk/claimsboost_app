@@ -307,7 +307,7 @@
 	<header class="survey-header">
 		<div class="header-content">
 			<a href="/">
-				<img src="/claimsboost-logo.png" alt="ClaimsBoost" class="logo" />
+				<img src="/claimsboost-logo.webp" alt="ClaimsBoost" class="logo" width="225" height="49" />
 			</a>
 		</div>
 	</header>

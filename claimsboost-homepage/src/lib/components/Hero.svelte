@@ -61,12 +61,12 @@
 			<div class="hero-visual">
 				<div class="main-image">
 					<div class="consultant-image">
-						<img src="/hero-person.png" alt="Happy client" class="hero-person-image" />
+						<img src="/hero-person.webp" alt="Happy client" class="hero-person-image" width="800" height="533" fetchpriority="high" />
 					</div>
 					<div class="chat-bubbles">
 						<div class="chat-bubble bubble-1">
 							<div class="expert-avatar-large">
-								<img src="/Gemini_Generated_Image_hw47tjhw47tjhw47.png" alt="Expert" />
+								<img src="/avatar-expert-1.webp" alt="Expert" width="48" height="48" />
 							</div>
 							<div class="bubble-text">
 								<span>Let's review your case</span>
@@ -77,7 +77,7 @@
 								<span>No fee unless you win</span>
 							</div>
 							<div class="expert-avatar-large">
-								<img src="/Gemini_Generated_Image_cu67evcu67evcu67.png" alt="Expert" />
+								<img src="/avatar-expert-2.webp" alt="Expert" width="48" height="48" />
 							</div>
 						</div>
 						<div class="chat-bubble bubble-4">
@@ -85,7 +85,7 @@
 								<span>Your estimated settlement is...</span>
 							</div>
 							<div class="expert-avatar-large">
-								<img src="/Gemini_Generated_Image_cu67evcu67evcu67.png" alt="Expert" />
+								<img src="/avatar-expert-2.webp" alt="Expert" width="48" height="48" />
 							</div>
 						</div>
 					</div>
