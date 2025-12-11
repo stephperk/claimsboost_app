@@ -1,0 +1,8 @@
+# Playwright MCP screenshots
+.playwright-mcp/
+
+# UX Designer agent mockups
+design-mockups/
+
+# OS
+.DS_Store
